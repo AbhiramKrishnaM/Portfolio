@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import Maintenance from "../components/maintenance.vue";
+</script>
 <template>
-  <h1>Hello world!</h1>
+  <Maintenance />
 </template>
