@@ -26,14 +26,17 @@ function animateWords() {
 
   underConstructionPage.value.sentences.forEach((sentence) => {
     let tl = gsap.timeline({ repeat: 1, yoyo: true, repeatDelay: 1 });
-    tl.to("#sentence", { duration: 2, text: sentence });
+    tl.to("#sentence", { duration: 3.6, text: sentence, ease: "none" });
 
     masterTl.add(tl);
   });
 }
 </script>
 <template>
-  <h1 id="title" class="text-4xl font-semibold text-center leading-loose">
+  <h1
+    id="title"
+    class="text-4xl font-medium text-center leading-loose text-accent-color"
+  >
     <span id="sentence"></span>
     <span id="cursor">|</span>
   </h1>

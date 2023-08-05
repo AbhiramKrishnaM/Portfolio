@@ -1,11 +1,11 @@
 <script setup>
-import Underconstruction from "./components/Underconstruction.vue";
+import Maintenance from "./components/maintenance.vue";
 </script>
 
 <template>
   <div
-    class="min-w-full min-h-screen bg-accent-variable flex items-center justify-center"
+    class="min-w-full min-h-screen bg-theme-main flex items-center justify-center"
   >
-    <Underconstruction />
+    <Maintenance />
   </div>
 </template>
