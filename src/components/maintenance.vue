@@ -33,10 +33,7 @@ function animateWords() {
 }
 </script>
 <template>
-  <h1
-    id="title"
-    class="text-4xl font-medium text-center leading-loose text-accent-color"
-  >
+  <h1 id="title" class="text-4xl font-medium text-center leading-loose">
     <span id="sentence"></span>
     <span id="cursor">|</span>
   </h1>
