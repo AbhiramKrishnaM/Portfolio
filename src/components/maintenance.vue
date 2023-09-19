@@ -6,6 +6,8 @@ import { TextPlugin } from "gsap/TextPlugin";
 
 import { useAdditional } from "../composables/additional";
 
+const emits = defineEmits(["animation-complete"]);
+
 const { underConstructionPage } = useAdditional();
 
 // hooks
@@ -18,7 +20,11 @@ onMounted(() => {
 
 // methods
 function cursorAnimate() {
-  gsap.from("#cursor", { opacity: 0, ease: "power2.inOut", repeat: -1 });
+  gsap.from("#cursor", {
+    opacity: 0,
+    ease: "power2.inOut",
+    repeat: -1,
+  });
 }
 
 function animateWords() {
