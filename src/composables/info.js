@@ -13,7 +13,32 @@ export function useInfo() {
     github: "https://github.com/example/url",
   });
 
+  const footer = ref({
+    linkText: "Find me",
+    li: [
+      {
+        id: 0,
+        name: "Twitter",
+        url: "https://twitter-url",
+        icon: "twitter",
+      },
+      {
+        id: 1,
+        name: "Linkedin",
+        url: "https://linkedin-url",
+        icon: "linkedin",
+      },
+    ],
+
+    github: {
+      username: "Abhiram Krishna M",
+      url: "http://github.com",
+      icon: "github",
+    },
+  });
+
   return {
     landing,
+    footer,
   };
 }
