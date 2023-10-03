@@ -9,7 +9,7 @@ export function useInfo() {
       "complete the game to continue",
       "you can also see it on my github page",
     ],
-    // reference to the portfolio website
+    // reference to the portfolio website github repo
     github: "https://github.com/example/url",
   });
 
