@@ -11,6 +11,13 @@ export default {
         "accent-url": "#E99287",
         "accent-variable": "#43D9AD",
         "accent-underline": "#FEA55F",
+
+        // border
+        "border-white": "#1E2D3D",
+      },
+
+      borderRadius: {
+        sm: "8px",
       },
     },
   },
