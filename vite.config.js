@@ -8,4 +8,11 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
   },
+
+  resolve: {
+    alias: {
+      "@": "/src",
+      "~": "/public",
+    },
+  },
 });
