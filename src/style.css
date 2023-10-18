@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: #011627;
+  border: 1px solid #1e2d3d;
+}
+
 #name-loading {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
