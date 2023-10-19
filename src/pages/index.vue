@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-full">
+  <div class="flex items-center justify-center h-full gap-92">
     <div>
       <div id="section-1" class="text-white-gradient-01 font-normal">
         <h6 class="text-lg">Hi all, I am</h6>
@@ -22,7 +22,19 @@
       </div>
     </div>
 
-    <div id="snake-game"></div>
+    <div id="snake-game" class=""></div>
   </div>
 </template>
 <script setup></script>
+
+<style scoped>
+#snake-game {
+  width: 510px;
+  height: 475px;
+  border: 1px solid;
+
+  border-radius: 8px;
+  background: rgba(1, 22, 39, 0.84);
+  box-shadow: 1px 5px 11px 0px rgba(2, 18, 27, 0.71) inset;
+}
+</style>
