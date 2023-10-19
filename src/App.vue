@@ -6,7 +6,7 @@
     />
     <div v-else class="flex flex-col w-full h-screen text-accent-color">
       <Navbar />
-      <div class="px-6 h-full overflow-y-auto">
+      <div id="content" class="px-6 h-full overflow-y-auto">
         <router-view></router-view>
       </div>
       <Footer />
@@ -23,3 +23,9 @@ import Navbar from "@/components/Navbar.vue";
 
 const showLoading = ref(true);
 </script>
+
+<style scoped>
+#content {
+  height: calc(100vh - 108px);
+}
+</style>

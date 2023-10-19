@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center h-full">
     <div>
       <div id="section-1">
         <h6>Hi all, I am</h6>
