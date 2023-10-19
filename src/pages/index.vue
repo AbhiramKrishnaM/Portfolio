@@ -1,10 +1,10 @@
 <template>
   <div class="flex items-center justify-center h-full">
     <div>
-      <div id="section-1">
-        <h6>Hi all, I am</h6>
-        <h1>Abhiram Krishan M</h1>
-        <span> > Full Stack Developer </span>
+      <div id="section-1" class="text-white-text-01">
+        <h6 class="text-lg">Hi all, I am</h6>
+        <h1 class="text-6xl">Abhiram Krishna M</h1>
+        <span class="text-3xl text-accent-sub"> > Full Stack Developer </span>
       </div>
 
       <div id="section-2">

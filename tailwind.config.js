@@ -14,10 +14,18 @@ export default {
 
         // border
         "border-white": "#1E2D3D",
+
+        // text color
+        "white-text-01": "#E5E9F0",
       },
 
       borderRadius: {
         sm: "8px",
+      },
+
+      fontSize: {
+        "3xl": "2rem",
+        "6xl": "3.875rem",
       },
     },
   },
