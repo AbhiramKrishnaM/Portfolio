@@ -32,8 +32,11 @@ export default {
       },
 
       margin: {
-        5: "5px",
-        82: "82px",
+        82: "5.125rem",
+      },
+
+      gap: {
+        92: "5.75rem",
       },
     },
   },

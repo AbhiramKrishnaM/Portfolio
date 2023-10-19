@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-full">
+  <div class="flex items-center justify-center h-full gap-92">
     <div>
       <div id="section-1" class="text-white-gradient-01 font-normal">
         <h6 class="text-lg">Hi all, I am</h6>
@@ -22,7 +22,10 @@
       </div>
     </div>
 
-    <div id="snake-game"></div>
+    <SnakeGame />
   </div>
 </template>
-<script setup></script>
+<script setup>
+// component
+import SnakeGame from "@/components/SnakeGame.vue";
+</script>
