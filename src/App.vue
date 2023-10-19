@@ -1,14 +1,12 @@
 <template>
-  <div
-    class="min-w-full min-h-screen bg-theme-main text-accent-color flex items-center justify-center border border-border-white"
-  >
+  <div class="min-w-full min-h-screen flex items-center justify-center">
     <Loading
       v-if="showLoading"
       @animation-complete="() => (showLoading = false)"
     />
-    <div v-else class="flex flex-col w-full h-screen">
+    <div v-else class="flex flex-col w-full h-screen text-accent-color">
       <Navbar />
-      <div class="px-6">
+      <div id="content" class="px-6 h-full overflow-y-auto">
         <router-view></router-view>
       </div>
       <Footer />
@@ -25,3 +23,9 @@ import Navbar from "@/components/Navbar.vue";
 
 const showLoading = ref(true);
 </script>
+
+<style scoped>
+#content {
+  height: calc(100vh - 108px);
+}
+</style>
