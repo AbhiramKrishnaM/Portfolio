@@ -12,11 +12,14 @@ export default {
         "accent-variable": "#43D9AD",
         "accent-underline": "#FEA55F",
 
+        // #E99287
+
         // border
         "border-white": "#1E2D3D",
 
         // text color
-        "white-text-01": "#E5E9F0",
+        "white-gradient-01": "#E5E9F0",
+        "gray-gradient-01": "#607B96",
       },
 
       borderRadius: {
@@ -26,6 +29,11 @@ export default {
       fontSize: {
         "3xl": "2rem",
         "6xl": "3.875rem",
+      },
+
+      margin: {
+        5: "5px",
+        82: "82px",
       },
     },
   },
