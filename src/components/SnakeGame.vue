@@ -1,19 +1,19 @@
 <template>
   <div id="snake-game" class="relative p-3">
-    <div class="top-left-fill"></div>
-    <div class="bottom-left-fill"></div>
+    <div class="top-left-fill -z-10"></div>
+    <div class="bottom-left-fill -z-10"></div>
 
     <img
       id="green-vector"
       :src="Green"
       alt="Background halo"
-      class="absolute left-7 -top-9"
+      class="absolute left-7 -top-9 -z-10"
     />
 
     <img
       :src="Blue"
       alt="Background halo"
-      class="absolute -right-13 -bottom-11"
+      class="absolute -right-13 -bottom-11 -z-10"
     />
 
     <img
@@ -39,12 +39,23 @@
     />
 
     <div class="m-6">
-      <canvas id="gameBoard" width="239" height="405" class=""></canvas>
+      <canvas
+        ref="gameBoard"
+        width="240"
+        height="406"
+        class="rounded-lg bg-theme-main-gradient"
+      >
+      </canvas>
     </div>
+
+    <!-- width="239"
+        height="405" -->
   </div>
 </template>
 
 <script setup>
+// vue
+import { ref, onMounted } from "vue";
 // assets
 import Green from "~/vectors/Green.svg";
 import Blue from "~/vectors/Blue.svg";
@@ -52,6 +63,108 @@ import BoltDownLeft from "~/icons/bolt-down-left.svg";
 import BoltDownRight from "~/icons/bolt-down-right.svg";
 import BoltTopLeft from "~/icons/bolt-up-left.svg";
 import BoltTopRight from "~/icons/bolt-up-right.svg";
+import SnakeFood from "~/icons/snake-food.svg";
+
+// state
+const gameBoard = ref(null);
+
+// actions
+function loadGame() {
+  const ctx = gameBoard.value.getContext("2d");
+
+  const size = {
+    width: gameBoard.value.width,
+    height: gameBoard.value.height,
+  };
+
+  const snakeColor = "#43D9AD";
+  const snakeBorder = "black";
+
+  const unitSize = 20; // or 10
+
+  let running = false;
+
+  let xVelocity = unitSize;
+  let yVelocity = 0;
+
+  let foodX;
+  let foodY;
+
+  let score = 0;
+
+  let snake = [
+    {
+      x: unitSize * 4,
+      y: 0,
+    },
+    {
+      x: unitSize * 3,
+      y: 0,
+    },
+    {
+      x: unitSize * 2,
+      y: 0,
+    },
+    {
+      x: unitSize,
+      y: 0,
+    },
+    {
+      x: 0,
+      y: 0,
+    },
+  ];
+
+  window.addEventListener("keydown", changeDirection);
+
+  gameStart();
+  createFood();
+  drawFood();
+
+  function gameStart() {}
+
+  function nextTick() {}
+
+  function clearBoard() {}
+
+  function createFood() {
+    function randomFood(min, max) {
+      const randNum =
+        Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize;
+      return randNum;
+    }
+
+    foodX = randomFood(0, size.width - unitSize);
+    foodY = randomFood(0, size.width - unitSize);
+  }
+
+  function drawFood() {
+    var img = new Image();
+
+    img.src = SnakeFood;
+
+    img.onload = function () {
+      ctx.drawImage(img, foodX, foodY, unitSize, unitSize);
+    };
+  }
+
+  function moveSnake() {}
+
+  function drawSnake() {}
+
+  function changeDirection() {}
+
+  function checkGameOver() {}
+
+  function displayGameOver() {}
+
+  function resetGame() {}
+}
+
+// hook
+onMounted(() => {
+  loadGame();
+});
 </script>
 
 <style scoped>
