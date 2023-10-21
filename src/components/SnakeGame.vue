@@ -175,7 +175,7 @@ function loadGame() {
     snake.unshift(head);
 
     if (snake[0].x === foodX && snake[0].y === foodY) {
-      console.log("Hy");
+      createFood();
     } else {
       snake.pop();
     }
@@ -193,8 +193,6 @@ function loadGame() {
 
   function changeDirection(event) {
     const keyPressed = event.keyCode;
-
-    console.log(keyPressed);
 
     const LEFT = 37;
     const RIGHT = 39;
@@ -230,11 +228,42 @@ function loadGame() {
     }
   }
 
-  function checkGameOver() {}
+  function checkGameOver() {
+    switch (true) {
+      case snake[0].x < 0:
+        running = false;
+        break;
 
-  function displayGameOver() {}
+      case snake[0].x >= size.width:
+        running = false;
+        break;
 
-  function resetGame() {}
+      case snake[0].y < 0:
+        running = false;
+        break;
+
+      case snake[0].y >= size.height:
+        running = false;
+        break;
+    }
+
+    for (let i = 1; i < snake.length; i++) {
+      if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+        running = false;
+      }
+    }
+  }
+
+  function displayGameOver() {
+    ctx.font = "50px";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over", size.width / 2, size.height / 2);
+  }
+
+  function resetGame() {
+    gameStart();
+  }
 }
 
 // hook
