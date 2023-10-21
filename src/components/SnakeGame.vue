@@ -1,16 +1,19 @@
 <template>
   <div id="snake-game" class="relative p-3">
+    <div class="top-left-fill"></div>
+    <div class="bottom-left-fill"></div>
+
     <img
       id="green-vector"
       :src="Green"
       alt="Background halo"
-      class="absolute -left-32 -top-32"
+      class="absolute left-7 -top-9"
     />
 
     <img
       :src="Blue"
       alt="Background halo"
-      class="absolute -right-36 -bottom-36"
+      class="absolute -right-13 -bottom-11"
     />
 
     <img
@@ -66,5 +69,33 @@ import BoltTopRight from "~/icons/bolt-up-right.svg";
   );
   box-shadow: 0px 2px 0px 0px rgba(255, 255, 255, 0.3) inset;
   backdrop-filter: blur(32px);
+}
+
+.top-left-fill,
+.bottom-left-fill,
+.bottom-right-fill {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  opacity: 1;
+  filter: blur(70px);
+}
+
+.top-left-fill {
+  top: 27;
+  left: 0;
+  background: #43d9ad;
+}
+
+.bottom-left-fill {
+  bottom: 9px;
+  left: 23px;
+  background: #43d9ad;
+}
+
+.bottom-right-fill {
+  bottom: 0;
+  right: 0;
+  background: #4d5bce;
 }
 </style>

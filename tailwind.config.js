@@ -38,6 +38,13 @@ export default {
       gap: {
         92: "5.75rem",
       },
+
+      inset: {
+        7: "7rem",
+        9: "9rem",
+        11: "11rem",
+        13: "13rem",
+      },
     },
   },
   plugins: [],
