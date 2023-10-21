@@ -118,14 +118,35 @@ function loadGame() {
   window.addEventListener("keydown", changeDirection);
 
   gameStart();
-  createFood();
-  drawFood();
 
-  function gameStart() {}
+  function gameStart() {
+    running = true;
 
-  function nextTick() {}
+    createFood();
+    drawFood();
 
-  function clearBoard() {}
+    nextTick();
+  }
+
+  function nextTick() {
+    if (running) {
+      setTimeout(() => {
+        clearBoard();
+        drawFood();
+        moveSnake();
+        drawSnake();
+        checkGameOver();
+        nextTick();
+      }, 75);
+    } else {
+      displayGameOver();
+    }
+  }
+
+  function clearBoard() {
+    ctx.fillStyle = "#011627D6";
+    ctx.fillRect(0, 0, size.width, size.height);
+  }
 
   function createFood() {
     function randomFood(min, max) {
@@ -148,11 +169,66 @@ function loadGame() {
     };
   }
 
-  function moveSnake() {}
+  function moveSnake() {
+    const head = { x: snake[0].x + xVelocity, y: snake[0].y + yVelocity };
 
-  function drawSnake() {}
+    snake.unshift(head);
 
-  function changeDirection() {}
+    if (snake[0].x === foodX && snake[0].y === foodY) {
+      console.log("Hy");
+    } else {
+      snake.pop();
+    }
+  }
+
+  function drawSnake() {
+    ctx.fillStyle = snakeColor;
+    ctx.strokeStyle = snakeBorder;
+
+    snake.forEach((snakePart) => {
+      ctx.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
+      ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
+    });
+  }
+
+  function changeDirection(event) {
+    const keyPressed = event.keyCode;
+
+    console.log(keyPressed);
+
+    const LEFT = 37;
+    const RIGHT = 39;
+    const UP = 38;
+    const DOWN = 40;
+
+    const goingUp = yVelocity === -unitSize;
+    const goingDown = yVelocity === unitSize;
+    const goingRight = xVelocity === unitSize;
+    const goingLeft = xVelocity === -unitSize;
+
+    switch (true) {
+      case keyPressed === LEFT && !goingRight:
+        xVelocity = -unitSize;
+        yVelocity = 0;
+        break;
+
+      case keyPressed === UP && !goingDown:
+        xVelocity = 0;
+        yVelocity = -unitSize;
+        break;
+      case keyPressed === RIGHT && !goingLeft:
+        xVelocity = unitSize;
+        yVelocity = 0;
+        break;
+      case keyPressed === DOWN && !goingUp:
+        xVelocity = 0;
+        yVelocity = unitSize;
+        break;
+
+      default:
+        break;
+    }
+  }
 
   function checkGameOver() {}
 

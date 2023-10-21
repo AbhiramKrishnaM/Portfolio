@@ -10,7 +10,7 @@
   },
   "plugins": ["vue"],
   "rules": {
-    "indent": ["error", 2],
+ 
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "eqeqeq": "warn",
