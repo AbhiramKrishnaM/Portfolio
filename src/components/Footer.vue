@@ -18,8 +18,12 @@
         id="github"
         class="flex items-center justify-center gap-2 p-3.5 border-l border-border-white"
       >
-        <a href="#">@AbhiramKrishnaM</a>
-        <a href="#"><img :src="Github" alt="Github icon" /></a>
+        <a href="https://github.com/AbhiramKrishnaM" target="_blank">
+          @AbhiramKrishnaM
+        </a>
+        <a href="https://github.com/AbhiramKrishnaM" target="_blank">
+          <img :src="Github" alt="Github icon" />
+        </a>
       </div>
     </div>
   </div>
