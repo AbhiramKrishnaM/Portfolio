@@ -13,12 +13,18 @@
           <li>// you can also see it on my github page.</li>
         </ul>
 
-        <div class="mt-2.5 text-accent-sub flex font-medium">
+        <a
+          href="https://github.com/AbhiramKrishnaM/Snake-game-starter"
+          target="_blank"
+          class="mt-2.5 text-accent-sub flex font-medium"
+        >
           const
           <div class="text-accent-variable ml-2">githubLink</div>
           <div class="text-white mx-2">=</div>
-          <div class="text-accent-url">"https://github.com/example/url"</div>
-        </div>
+          <div class="text-accent-url">
+            "https://github.com/AbhiramKrishnaM/Snake-game-starter"
+          </div>
+        </a>
       </div>
     </div>
 
