@@ -1,39 +1,30 @@
 <template>
-  <div
-    class="px-6 border-b border-border-white flex items-center justify-between"
-  >
-    <ul class="flex items-center">
-      <li class="py-3.5 border-r border-border-white">
-        <RouterLink class="nav-link" to="/me" active-class="active">
+  <ul class="border-b border-border-white flex justify-between p-0 m-0">
+    <div class="flex">
+      <RouterLink to="/me" class="nav-link" active-class="active">
+        <li class="pl-6 py-3.5 pr-3.5 border-r border-border-white">
           abhiram-krishna
-        </RouterLink>
-      </li>
+        </li>
+      </RouterLink>
+      <RouterLink to="/" class="nav-link" active-class="active">
+        <li class="p-3.5 border-r border-border-white">_hello</li>
+      </RouterLink>
 
-      <li class="py-3.5 border-r border-border-white">
-        <RouterLink class="nav-link" to="/" active-class="active">
-          _hello
-        </RouterLink>
-      </li>
-      <li class="py-3.5 border-r border-border-white">
-        <RouterLink class="nav-link" to="/about" active-class="active">
-          _about-me
-        </RouterLink>
-      </li>
-      <li class="py-3.5 border-r border-border-white">
-        <RouterLink class="nav-link" to="/projects" active-class="active">
-          _projects
-        </RouterLink>
-      </li>
-    </ul>
+      <RouterLink to="/about" class="nav-link" active-class="active">
+        <li class="p-3.5 border-r border-border-white">_about-me</li>
+      </RouterLink>
 
-    <div class="flex w-[186px]">
-      <a href="#" class="p-3.5 border-l border-border-white">
-        <RouterLink class="nav-link" to="/contact" active-class="active">
-          _contact-me
-        </RouterLink>
-      </a>
+      <RouterLink to="/projects" class="nav-link" active-class="active">
+        <li class="p-3.5 border-r border-border-white">_projects</li>
+      </RouterLink>
     </div>
-  </div>
+
+    <RouterLink to="/contact" class="nav-link" active-class="active">
+      <li class="py-3.5 pl-3.5 pr-6 border-l border-border-white">
+        _contact-me
+      </li>
+    </RouterLink>
+  </ul>
 </template>
 
 <script setup></script>
@@ -42,8 +33,6 @@
 /* General link styling */
 .nav-link {
   position: relative;
-  padding: 0 1em; /* Adjust as needed */
-  text-decoration: none;
   cursor: pointer;
   overflow: hidden; /* Ensures the underline doesn't overflow outside the link */
 }
@@ -52,8 +41,8 @@
 .nav-link::before {
   content: "";
   position: absolute;
-  bottom: -15px; /* Position underline at the bottom */
-  left: 0;
+  left: 0px;
+  bottom: 0px; /* Position underline at the bottom */
   width: 0; /* Initially no width */
   height: 2px; /* Thickness of underline */
   background-color: #fea55f; /* Color of underline */
