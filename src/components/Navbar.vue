@@ -41,26 +41,23 @@ const { links } = useNavlinks();
 </script>
 
 <style scoped>
-/* General link styling */
 .nav-link {
   position: relative;
   cursor: pointer;
   overflow: hidden;
 }
 
-/* Underline styling */
 .nav-link::before {
   content: "";
   position: absolute;
   left: 0px;
-  bottom: 0px; /* Position underline at the bottom */
-  width: 0; /* Initially no width */
-  height: 2px; /* Thickness of underline */
-  background-color: #fea55f; /* Color of underline */
-  transition: width 0.3s; /* Animation transition */
+  bottom: 0px;
+  width: 0;
+  height: 2px;
+  background-color: #fea55f;
+  transition: width 0.3s;
 }
 
-/* Active state, full underline */
 .nav-link.active::before {
   width: 100%;
 }
