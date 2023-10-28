@@ -14,7 +14,7 @@
         </ul>
 
         <a
-          href="https://github.com/AbhiramKrishnaM/Snake-game-starter"
+          href="https://github.com/AbhiramKrishnaM/snake-game-starter"
           target="_blank"
           class="mt-2.5 text-accent-sub flex font-medium"
         >
@@ -22,7 +22,7 @@
           <div class="text-accent-variable ml-2">githubLink</div>
           <div class="text-white mx-2">=</div>
           <div class="text-accent-url">
-            "https://github.com/AbhiramKrishnaM/Snake-game-starter"
+            "https://github.com/AbhiramKrishnaM/snake-game-starter"
           </div>
         </a>
       </div>
