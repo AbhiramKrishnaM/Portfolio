@@ -2,9 +2,9 @@
   <div class="fixed bottom-0 left-0 w-full border border-border-white px-6">
     <div class="flex items-center justify-between">
       <div id="redirects" class="flex items-center justify-center">
-        <span class="py-3.5 pr-3.5 border-r border-border-white"
-          >find me in:</span
-        >
+        <span class="py-3.5 pr-3.5 border-r border-border-white">
+          find me in:
+        </span>
 
         <a href="#" class="p-3.5 border-r border-border-white">
           <img :src="Twitter" alt="Twitter icon" />
