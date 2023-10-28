@@ -20,7 +20,7 @@
 
     <RouterLink
       to="/contact"
-      class="nav-link"
+      class="nav-link w-[250px]"
       active-class="active"
       v-slot="{ isActive }"
     >
