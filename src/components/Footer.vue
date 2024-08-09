@@ -1,5 +1,7 @@
 <template>
-  <div class="fixed bottom-0 left-0 w-full border border-border-white px-6">
+  <div
+    class="fixed bottom-0 left-0 w-full border border-border-white px-6 selection-none"
+  >
     <div class="flex items-center justify-between">
       <div id="redirects" class="flex items-center justify-center">
         <span class="py-3.5 pr-3.5 border-r border-border-white">

@@ -29,11 +29,9 @@ function animationComplete() {
 </script>
 
 <template>
-  <header>
+  <header class="h-screen flex items-center justify-center">
     <h1 id="name-loading" class="text-5xl text-white-gradient-01">
       Abhiram_Krishna<span id="dot" class="cursor-pointer">.</span>M
     </h1>
   </header>
 </template>
-
-<style scoped></style>
