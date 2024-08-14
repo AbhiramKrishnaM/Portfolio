@@ -9,10 +9,10 @@
         </span>
 
         <a href="#" class="p-3.5 border-r border-border-white">
-          <img :src="Twitter" alt="Twitter icon" />
+          <img :src="Linkedin" alt="Linkedin icon" />
         </a>
         <a href="#" class="p-3.5 border-r border-border-white">
-          <img :src="Facebook" alt="Facebook icon" />
+          <img :src="Spotify" alt="Spotify icon" />
         </a>
       </div>
 
@@ -33,7 +33,7 @@
 
 <script setup>
 // assets/icons
-import Twitter from "~/icons/twitter.svg";
-import Facebook from "~/icons/facebook.svg";
+import Linkedin from "~/icons/linkedin.svg";
+import Spotify from "~/icons/spotify.svg";
 import Github from "~/icons/github.svg";
 </script>
