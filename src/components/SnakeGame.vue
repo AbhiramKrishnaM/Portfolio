@@ -82,9 +82,8 @@ const size = {
   width: 240,
   height: 406,
 };
-const unitSize = 20;
+const unitSize = 14; // Updated unit size to 14px
 const snakeColor = "#43D9AD";
-const snakeBorder = "black";
 
 // game variables
 let running = false;
@@ -108,14 +107,13 @@ function startGame() {
 function initializeSnake() {
   console.log(
     "width",
-    Math.floor(size.width + 1000 / 2 / unitSize) * unitSize,
-
+    Math.floor(size.width / 2 / unitSize) * unitSize,
     "Height",
     Math.floor(size.height / 2 / unitSize) * unitSize
   );
 
-  const initialX = Math.floor(size.width / 2 / unitSize) * unitSize - 10;
-  const initialY = Math.floor(size.height / 2 / unitSize) * unitSize - 20;
+  const initialX = Math.floor(size.width / 2 / unitSize) * unitSize;
+  const initialY = Math.floor(size.height / 2 / unitSize) * unitSize;
 
   snake = [
     { x: initialX, y: initialY },
@@ -168,7 +166,7 @@ function createFood() {
   }
 
   foodX = randomFood(0, size.width - unitSize);
-  foodY = randomFood(0, size.width - unitSize);
+  foodY = randomFood(0, size.height - unitSize);
 }
 
 function drawFood(ctx) {
@@ -192,11 +190,64 @@ function moveSnake() {
 
 function drawSnake(ctx) {
   ctx.fillStyle = snakeColor;
-  ctx.strokeStyle = snakeBorder;
+  ctx.lineWidth = 2; // Set line width for the border
 
-  snake.forEach((snakePart) => {
-    ctx.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
-    ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
+  snake.forEach((snakePart, index) => {
+    const x = snakePart.x;
+    const y = snakePart.y;
+
+    if (index === 0) {
+      // Draw the head with a semicircle based on the direction
+      ctx.beginPath();
+
+      if (xVelocity > 0) {
+        // Moving right
+        ctx.arc(
+          x + unitSize / 2,
+          y + unitSize / 2,
+          unitSize / 2,
+          0.5 * Math.PI,
+          1.5 * Math.PI,
+          true
+        );
+        ctx.lineTo(x, y);
+        ctx.lineTo(x, y + unitSize);
+      } else if (xVelocity < 0) {
+        // Moving left
+        ctx.arc(
+          x + unitSize / 2,
+          y + unitSize / 2,
+          unitSize / 2,
+          1.5 * Math.PI,
+          0.5 * Math.PI,
+          true
+        );
+        ctx.lineTo(x + unitSize, y + unitSize);
+        ctx.lineTo(x + unitSize, y);
+      } else if (yVelocity < 0) {
+        // Moving up
+        ctx.moveTo(x, y + unitSize);
+        ctx.lineTo(x + unitSize, y + unitSize);
+        ctx.arc(
+          x + unitSize / 2,
+          y + unitSize,
+          unitSize / 2,
+          Math.PI,
+          2 * Math.PI
+        );
+      } else if (yVelocity > 0) {
+        // Moving down
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + unitSize, y);
+        ctx.arc(x + unitSize / 2, y, unitSize / 2, 0, Math.PI);
+      }
+
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      // Draw the body segments as squares
+      ctx.fillRect(x, y, unitSize, unitSize);
+    }
   });
 }
 
