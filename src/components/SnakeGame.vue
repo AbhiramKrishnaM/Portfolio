@@ -52,7 +52,7 @@
           @click="startGame"
           class="rounded-md p-2 bg-[#FEA55F] text-black"
         >
-          start-game
+          {{ buttonText }}
         </button>
       </div>
     </div>
@@ -61,7 +61,7 @@
 
 <script setup>
 // vue
-import { ref, onMounted, nextTick as vueNextTick } from "vue";
+import { ref, onMounted } from "vue";
 // assets
 import Green from "~/vectors/Green.svg";
 import Blue from "~/vectors/Blue.svg";
@@ -69,13 +69,13 @@ import BoltDownLeft from "~/icons/bolt-down-left.svg";
 import BoltDownRight from "~/icons/bolt-down-right.svg";
 import BoltTopLeft from "~/icons/bolt-up-left.svg";
 import BoltTopRight from "~/icons/bolt-up-right.svg";
-import SnakeFood from "~/icons/snake-food.svg";
+import SnakeFoodImageSrc from "~/icons/snake-food.svg";
 
 // state
 const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
-const showButton = ref(true); // Initially show the button
+const buttonText = ref("start-game"); // Initially set to "start-game"
 
 // game configuration
 const size = {
@@ -93,15 +93,17 @@ let foodX;
 let foodY;
 let score = 0;
 let snake = [];
+let snakeFoodImage = new Image();
+let foodLoaded = false;
 
-// speed control
-const snakeSpeed = ref(105); // Speed in milliseconds
+// Speed control variables
+let frameCounter = 0;
+const speedFactor = 10; // Adjust this to control the snake's speed
 
 // functions
 function startGame() {
   resetGame(); // Ensure game is reset before starting
   loadGame();
-  showButton.value = false; // Hide the button after starting the game
 }
 
 function initializeSnake() {
@@ -127,22 +129,27 @@ function loadGame() {
   running = true;
 
   createFood();
-  drawFood(ctx);
-
   nextAnimationFrame(ctx);
 }
 
 function nextAnimationFrame(ctx) {
   if (running) {
-    setTimeout(() => {
-      clearBoard(ctx);
-      drawFood(ctx);
-      moveSnake();
-      drawSnake(ctx);
-      checkGameOver();
+    requestAnimationFrame(() => {
+      frameCounter++;
+      if (frameCounter >= speedFactor) {
+        frameCounter = 0;
+        clearBoard(ctx);
+        drawFood(ctx);
+        moveSnake();
+        drawSnake(ctx);
+        checkGameOver();
+      }
       if (running) nextAnimationFrame(ctx);
-      else displayGameOver(ctx);
-    }, snakeSpeed.value);
+      else {
+        gameRunning.value = false;
+        buttonText.value = "retry"; // Change the button text to "retry"
+      }
+    });
   }
 }
 
@@ -163,11 +170,15 @@ function createFood() {
 }
 
 function drawFood(ctx) {
-  const img = new Image();
-  img.src = SnakeFood;
-  img.onload = () => {
-    ctx.drawImage(img, foodX, foodY, unitSize, unitSize);
-  };
+  if (!foodLoaded) {
+    snakeFoodImage.src = SnakeFoodImageSrc;
+    snakeFoodImage.onload = () => {
+      ctx.drawImage(snakeFoodImage, foodX, foodY, unitSize, unitSize);
+      foodLoaded = true; // Mark the food as loaded
+    };
+  } else {
+    ctx.drawImage(snakeFoodImage, foodX, foodY, unitSize, unitSize);
+  }
 }
 
 function moveSnake() {
@@ -285,6 +296,8 @@ function changeDirection(event) {
 }
 
 function checkGameOver() {
+  if (!snake[0]) return;
+
   switch (true) {
     case snake[0].x < 0:
     case snake[0].x >= size.width:
@@ -301,15 +314,6 @@ function checkGameOver() {
       }
       break;
   }
-}
-
-function displayGameOver(ctx) {
-  ctx.font = "50px";
-  ctx.fillStyle = "black";
-  ctx.textAlign = "center";
-  ctx.fillText("Game Over", size.width / 2, size.height / 2);
-  gameRunning.value = false;
-  gameOver.value = true;
 }
 
 function resetGame() {
