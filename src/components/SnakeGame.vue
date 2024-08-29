@@ -1,5 +1,5 @@
 <template>
-  <div id="snake-game" class="relative p-3">
+  <div id="snake-game" class="relative p-3 min-w-[510px]">
     <div class="top-left-fill -z-10"></div>
     <div class="bottom-left-fill -z-10"></div>
 
@@ -21,6 +21,7 @@
       alt="Screw top left"
       class="absolute top-0 left-0 ml-3 mt-3"
     />
+
     <img
       :src="BoltTopRight"
       alt="Screw top right"
@@ -32,6 +33,7 @@
       alt="Screw bottom left"
       class="absolute bottom-0 left-0 ml-3 mb-3"
     />
+
     <img
       :src="BoltDownRight"
       alt="Screw bottom right"
@@ -56,6 +58,38 @@
         </button>
       </div>
     </div>
+
+    <div
+      class="absolute right-0 top-0 m-9 rounded-lg bg-[#01142330] w-44 text-white p-3"
+    >
+      <p class="text-xs">// use keyboard</p>
+      <p class="text-xs">// arrows to play</p>
+
+      <div id="keyboard-controls" class="grid grid-cols-3 gap-1 mt-4">
+        <div></div>
+        <div
+          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
+        >
+          <img :src="Up" alt="Up arrow" />
+        </div>
+        <div></div>
+        <div
+          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
+        >
+          <img :src="Left" alt="Left arrow" />
+        </div>
+        <div
+          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
+        >
+          <img :src="Down" alt="Down arrow" />
+        </div>
+        <div
+          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
+        >
+          <img :src="Right" alt="Right arrow" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,6 +104,10 @@ import BoltDownRight from "~/icons/bolt-down-right.svg";
 import BoltTopLeft from "~/icons/bolt-up-left.svg";
 import BoltTopRight from "~/icons/bolt-up-right.svg";
 import SnakeFoodImageSrc from "~/icons/snake-food.svg";
+import Up from "~/icons/up.svg";
+import Down from "~/icons/down.svg";
+import Left from "~/icons/left.svg";
+import Right from "~/icons/right.svg";
 
 // state
 const gameBoard = ref(null);
