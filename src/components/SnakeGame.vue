@@ -38,18 +38,24 @@
       class="absolute bottom-0 right-0 mr-3 mb-3"
     />
 
-    <div class="m-6">
+    <div class="m-6 relative max-w-[240px]">
       <canvas
         ref="gameBoard"
         width="240"
         height="406"
         class="rounded-lg bg-theme-main-gradient"
-      >
-      </canvas>
-    </div>
+      ></canvas>
 
-    <!-- width="239"
-        height="405" -->
+      <div class="absolute top-3/4 left-0 w-full flex justify-center">
+        <button
+          v-if="!gameRunning"
+          @click="startGame"
+          class="rounded-md p-2 bg-[#FEA55F] text-black"
+        >
+          start-game
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,8 +73,13 @@ import SnakeFood from "~/icons/snake-food.svg";
 
 // state
 const gameBoard = ref(null);
+const gameRunning = ref(false);
+const gameOver = ref(false);
 
-// actions
+function startGame() {
+  loadGame();
+}
+
 function loadGame() {
   const ctx = gameBoard.value.getContext("2d");
 
@@ -120,6 +131,8 @@ function loadGame() {
   gameStart();
 
   function gameStart() {
+    gameRunning.value = true;
+    gameOver.value = false;
     running = true;
 
     createFood();
@@ -259,16 +272,28 @@ function loadGame() {
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.fillText("Game Over", size.width / 2, size.height / 2);
+    gameRunning.value = false;
+    gameOver.value = true;
   }
 
   function resetGame() {
+    score = 0;
+    xVelocity = unitSize;
+    yVelocity = 0;
+    snake = [
+      { x: unitSize * 4, y: 0 },
+      { x: unitSize * 3, y: 0 },
+      { x: unitSize * 2, y: 0 },
+      { x: unitSize, y: 0 },
+      { x: 0, y: 0 },
+    ];
     gameStart();
   }
 }
 
 // hook
 onMounted(() => {
-  loadGame();
+  // Do not start the game automatically, wait for the start button to be clicked
 });
 </script>
 
@@ -277,7 +302,6 @@ onMounted(() => {
   width: 510px;
   height: 475px;
   border: 1px solid;
-
   border-radius: 8px;
   border: 1px solid #0c1616;
   background: linear-gradient(
@@ -287,6 +311,24 @@ onMounted(() => {
   );
   box-shadow: 0px 2px 0px 0px rgba(255, 255, 255, 0.3) inset;
   backdrop-filter: blur(32px);
+}
+
+.start-button {
+  position: absolute;
+  bottom: 20px;
+  right: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #43d9ad;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.start-button:hover {
+  background-color: #3ab08c;
 }
 
 .top-left-fill,
