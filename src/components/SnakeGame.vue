@@ -59,34 +59,63 @@
       </div>
     </div>
 
-    <div
-      class="absolute right-0 top-0 m-9 rounded-lg bg-[#01142330] w-44 text-white p-3"
-    >
-      <p class="text-xs">// use keyboard</p>
-      <p class="text-xs">// arrows to play</p>
+    <div class="absolute right-0 top-0 m-9 w-44 text-white">
+      <div class="bg-[#01142330] p-3 rounded-lg">
+        <p class="text-xs">// use keyboard</p>
+        <p class="text-xs">// arrows to play</p>
 
-      <div id="keyboard-controls" class="grid grid-cols-3 gap-1 mt-4">
-        <div></div>
-        <div
-          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
-        >
-          <img :src="Up" alt="Up arrow" />
+        <div id="keyboard-controls" class="grid grid-cols-3 gap-1 mt-4">
+          <div></div>
+          <div
+            :class="{
+              'bg-[#FEA55F]': highlightedKey === 'UP',
+              'bg-[#010C15]': highlightedKey !== 'UP',
+            }"
+            class="rounded-lg min-h-7 flex items-center justify-center"
+          >
+            <img :src="Up" alt="Up arrow" />
+          </div>
+          <div></div>
+          <div
+            :class="{
+              'bg-[#FEA55F]': highlightedKey === 'LEFT',
+              'bg-[#010C15]': highlightedKey !== 'LEFT',
+            }"
+            class="rounded-lg min-h-7 flex items-center justify-center"
+          >
+            <img :src="Left" alt="Left arrow" />
+          </div>
+          <div
+            :class="{
+              'bg-[#FEA55F]': highlightedKey === 'DOWN',
+              'bg-[#010C15]': highlightedKey !== 'DOWN',
+            }"
+            class="rounded-lg min-h-7 flex items-center justify-center"
+          >
+            <img :src="Down" alt="Down arrow" />
+          </div>
+          <div
+            :class="{
+              'bg-[#FEA55F]': highlightedKey === 'RIGHT',
+              'bg-[#010C15]': highlightedKey !== 'RIGHT',
+            }"
+            class="rounded-lg min-h-7 flex items-center justify-center"
+          >
+            <img :src="Right" alt="Right arrow" />
+          </div>
         </div>
-        <div></div>
-        <div
-          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
-        >
-          <img :src="Left" alt="Left arrow" />
-        </div>
-        <div
-          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
-        >
-          <img :src="Down" alt="Down arrow" />
-        </div>
-        <div
-          class="rounded-lg bg-[#010C15] min-h-7 flex items-center justify-center"
-        >
-          <img :src="Right" alt="Right arrow" />
+      </div>
+
+      <div class="mt-5 text-xs px-3">
+        <p>// foot left</p>
+
+        <div class="grid grid-cols-5 gap-1 mt-3">
+          <img
+            v-for="(food, index) in foodImages"
+            :key="index"
+            :src="food"
+            alt="Snake food"
+          />
         </div>
       </div>
     </div>
@@ -95,7 +124,7 @@
 
 <script setup>
 // vue
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 // assets
 import Green from "~/vectors/Green.svg";
 import Blue from "~/vectors/Blue.svg";
@@ -108,12 +137,16 @@ import Up from "~/icons/up.svg";
 import Down from "~/icons/down.svg";
 import Left from "~/icons/left.svg";
 import Right from "~/icons/right.svg";
+import ActiveSnakeFood from "~/icons/active-snake-food.svg";
+import InActiveSnakeFood from "~/icons/inactive-snake-food.svg";
 
 // state
 const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
 const buttonText = ref("start-game"); // Initially set to "start-game"
+const foodEatenCount = ref(0); // Track the number of foods eaten
+const highlightedKey = ref(""); // Track the highlighted arrow key
 
 // game configuration
 const size = {
@@ -137,6 +170,19 @@ let foodLoaded = false;
 // Speed control variables
 let frameCounter = 0;
 const speedFactor = 10; // Adjust this to control the snake's speed
+
+// Computed property to manage food images in the UI
+const foodImages = computed(() => {
+  const images = [];
+  for (let i = 0; i < 15; i++) {
+    if (i < foodEatenCount.value) {
+      images.push(InActiveSnakeFood);
+    } else {
+      images.push(ActiveSnakeFood);
+    }
+  }
+  return images.reverse(); // Reverse the array to start from the bottom right
+});
 
 // functions
 function startGame() {
@@ -224,6 +270,10 @@ function moveSnake() {
   snake.unshift(head);
 
   if (snake[0].x === foodX && snake[0].y === foodY) {
+    foodEatenCount.value++; // Increment food eaten count
+    if (foodEatenCount.value >= 15) {
+      foodEatenCount.value = 0; // Reset the count after 15 foods
+    }
     createFood();
   } else {
     snake.pop();
@@ -313,24 +363,35 @@ function changeDirection(event) {
     case keyPressed === LEFT && !goingRight:
       xVelocity = -unitSize;
       yVelocity = 0;
+      highlightedKey.value = "LEFT";
       break;
 
     case keyPressed === UP && !goingDown:
       xVelocity = 0;
       yVelocity = -unitSize;
+      highlightedKey.value = "UP";
       break;
+
     case keyPressed === RIGHT && !goingLeft:
       xVelocity = unitSize;
       yVelocity = 0;
+      highlightedKey.value = "RIGHT";
       break;
+
     case keyPressed === DOWN && !goingUp:
       xVelocity = 0;
       yVelocity = unitSize;
+      highlightedKey.value = "DOWN";
       break;
 
     default:
       break;
   }
+
+  // Remove the highlight after a short delay
+  setTimeout(() => {
+    highlightedKey.value = "";
+  }, 200); // Highlight duration
 }
 
 function checkGameOver() {
@@ -356,6 +417,7 @@ function checkGameOver() {
 
 function resetGame() {
   score = 0;
+  foodEatenCount.value = 0; // Reset food count to restart the food images
   xVelocity = 0;
   yVelocity = -unitSize; // Start moving upwards
   initializeSnake();
