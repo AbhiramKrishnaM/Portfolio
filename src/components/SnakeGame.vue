@@ -105,13 +105,6 @@ function startGame() {
 }
 
 function initializeSnake() {
-  console.log(
-    "width",
-    Math.floor(size.width / 2 / unitSize) * unitSize,
-    "Height",
-    Math.floor(size.height / 2 / unitSize) * unitSize
-  );
-
   const initialX = Math.floor(size.width / 2 / unitSize) * unitSize;
   const initialY = Math.floor(size.height / 2 / unitSize) * unitSize;
 
@@ -189,12 +182,17 @@ function moveSnake() {
 }
 
 function drawSnake(ctx) {
-  ctx.fillStyle = snakeColor;
-  ctx.lineWidth = 2; // Set line width for the border
+  const totalSegments = snake.length;
 
   snake.forEach((snakePart, index) => {
     const x = snakePart.x;
     const y = snakePart.y;
+
+    // Calculate the opacity for the current segment
+    const opacity = 1 - index / totalSegments;
+
+    // Set the color with the calculated opacity
+    ctx.fillStyle = `rgba(67, 217, 173, ${opacity})`;
 
     if (index === 0) {
       // Draw the head with a semicircle based on the direction
@@ -245,7 +243,7 @@ function drawSnake(ctx) {
       ctx.closePath();
       ctx.fill();
     } else {
-      // Draw the body segments as squares
+      // Draw the body segments as squares with fading opacity
       ctx.fillRect(x, y, unitSize, unitSize);
     }
   });
