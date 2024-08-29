@@ -76,219 +76,190 @@ const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
 
+// game configuration
+const size = {
+  width: 240,
+  height: 406,
+};
+const unitSize = 20;
+const snakeColor = "#43D9AD";
+const snakeBorder = "black";
+
+// game variables
+let running = false;
+let xVelocity = 0;
+let yVelocity = -unitSize; // Start moving upwards
+let foodX;
+let foodY;
+let score = 0;
+let snake = [];
+
+// speed control
+const snakeSpeed = ref(105); // Speed in milliseconds
+
+// functions
 function startGame() {
+  resetGame(); // Ensure game is reset before starting
   loadGame();
+}
+
+function initializeSnake() {
+  const initialX = Math.floor(size.width / 2 / unitSize) * unitSize;
+  const initialY = Math.floor(size.height / 2 / unitSize) * unitSize;
+
+  snake = [
+    { x: initialX, y: initialY },
+    { x: initialX, y: initialY + unitSize },
+    { x: initialX, y: initialY + 2 * unitSize },
+    { x: initialX, y: initialY + 3 * unitSize },
+    { x: initialX, y: initialY + 4 * unitSize },
+  ];
 }
 
 function loadGame() {
   const ctx = gameBoard.value.getContext("2d");
 
-  const size = {
-    width: gameBoard.value.width,
-    height: gameBoard.value.height,
-  };
-
-  const snakeColor = "#43D9AD";
-  const snakeBorder = "black";
-
-  const unitSize = 20; // or 10
-
-  let running = false;
-
-  let xVelocity = unitSize;
-  let yVelocity = 0;
-
-  let foodX;
-  let foodY;
-
-  let score = 0;
-
-  let snake = [
-    {
-      x: unitSize * 4,
-      y: 0,
-    },
-    {
-      x: unitSize * 3,
-      y: 0,
-    },
-    {
-      x: unitSize * 2,
-      y: 0,
-    },
-    {
-      x: unitSize,
-      y: 0,
-    },
-    {
-      x: 0,
-      y: 0,
-    },
-  ];
-
   window.addEventListener("keydown", changeDirection);
 
-  gameStart();
+  gameRunning.value = true;
+  gameOver.value = false;
+  running = true;
 
-  function gameStart() {
-    gameRunning.value = true;
-    gameOver.value = false;
-    running = true;
+  createFood();
+  drawFood(ctx);
 
+  nextTick(ctx);
+}
+
+function nextTick(ctx) {
+  if (running) {
+    setTimeout(() => {
+      clearBoard(ctx);
+      drawFood(ctx);
+      moveSnake();
+      drawSnake(ctx);
+      checkGameOver();
+      if (running) nextTick(ctx);
+      else displayGameOver(ctx);
+    }, snakeSpeed.value);
+  }
+}
+
+function clearBoard(ctx) {
+  ctx.fillStyle = "#011627D6";
+  ctx.fillRect(0, 0, size.width, size.height);
+}
+
+function createFood() {
+  function randomFood(min, max) {
+    return (
+      Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize
+    );
+  }
+
+  foodX = randomFood(0, size.width - unitSize);
+  foodY = randomFood(0, size.width - unitSize);
+}
+
+function drawFood(ctx) {
+  const img = new Image();
+  img.src = SnakeFood;
+  img.onload = () => {
+    ctx.drawImage(img, foodX, foodY, unitSize, unitSize);
+  };
+}
+
+function moveSnake() {
+  const head = { x: snake[0].x + xVelocity, y: snake[0].y + yVelocity };
+  snake.unshift(head);
+
+  if (snake[0].x === foodX && snake[0].y === foodY) {
     createFood();
-    drawFood();
-
-    nextTick();
+  } else {
+    snake.pop();
   }
+}
 
-  function nextTick() {
-    if (running) {
-      setTimeout(() => {
-        clearBoard();
-        drawFood();
-        moveSnake();
-        drawSnake();
-        checkGameOver();
-        nextTick();
-      }, 75);
-    } else {
-      displayGameOver();
-    }
+function drawSnake(ctx) {
+  ctx.fillStyle = snakeColor;
+  ctx.strokeStyle = snakeBorder;
+
+  snake.forEach((snakePart) => {
+    ctx.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
+    ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
+  });
+}
+
+function changeDirection(event) {
+  const keyPressed = event.keyCode;
+  const LEFT = 37,
+    RIGHT = 39,
+    UP = 38,
+    DOWN = 40;
+  const goingUp = yVelocity === -unitSize;
+  const goingDown = yVelocity === unitSize;
+  const goingRight = xVelocity === unitSize;
+  const goingLeft = xVelocity === -unitSize;
+
+  switch (true) {
+    case keyPressed === LEFT && !goingRight:
+      xVelocity = -unitSize;
+      yVelocity = 0;
+      break;
+
+    case keyPressed === UP && !goingDown:
+      xVelocity = 0;
+      yVelocity = -unitSize;
+      break;
+    case keyPressed === RIGHT && !goingLeft:
+      xVelocity = unitSize;
+      yVelocity = 0;
+      break;
+    case keyPressed === DOWN && !goingUp:
+      xVelocity = 0;
+      yVelocity = unitSize;
+      break;
+
+    default:
+      break;
   }
+}
 
-  function clearBoard() {
-    ctx.fillStyle = "#011627D6";
-    ctx.fillRect(0, 0, size.width, size.height);
-  }
+function checkGameOver() {
+  switch (true) {
+    case snake[0].x < 0:
+    case snake[0].x >= size.width:
+    case snake[0].y < 0:
+    case snake[0].y >= size.height:
+      running = false;
+      break;
 
-  function createFood() {
-    function randomFood(min, max) {
-      const randNum =
-        Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize;
-      return randNum;
-    }
-
-    foodX = randomFood(0, size.width - unitSize);
-    foodY = randomFood(0, size.width - unitSize);
-  }
-
-  function drawFood() {
-    var img = new Image();
-
-    img.src = SnakeFood;
-
-    img.onload = function () {
-      ctx.drawImage(img, foodX, foodY, unitSize, unitSize);
-    };
-  }
-
-  function moveSnake() {
-    const head = { x: snake[0].x + xVelocity, y: snake[0].y + yVelocity };
-
-    snake.unshift(head);
-
-    if (snake[0].x === foodX && snake[0].y === foodY) {
-      createFood();
-    } else {
-      snake.pop();
-    }
-  }
-
-  function drawSnake() {
-    ctx.fillStyle = snakeColor;
-    ctx.strokeStyle = snakeBorder;
-
-    snake.forEach((snakePart) => {
-      ctx.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
-      ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
-    });
-  }
-
-  function changeDirection(event) {
-    const keyPressed = event.keyCode;
-
-    const LEFT = 37;
-    const RIGHT = 39;
-    const UP = 38;
-    const DOWN = 40;
-
-    const goingUp = yVelocity === -unitSize;
-    const goingDown = yVelocity === unitSize;
-    const goingRight = xVelocity === unitSize;
-    const goingLeft = xVelocity === -unitSize;
-
-    switch (true) {
-      case keyPressed === LEFT && !goingRight:
-        xVelocity = -unitSize;
-        yVelocity = 0;
-        break;
-
-      case keyPressed === UP && !goingDown:
-        xVelocity = 0;
-        yVelocity = -unitSize;
-        break;
-      case keyPressed === RIGHT && !goingLeft:
-        xVelocity = unitSize;
-        yVelocity = 0;
-        break;
-      case keyPressed === DOWN && !goingUp:
-        xVelocity = 0;
-        yVelocity = unitSize;
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  function checkGameOver() {
-    switch (true) {
-      case snake[0].x < 0:
-        running = false;
-        break;
-
-      case snake[0].x >= size.width:
-        running = false;
-        break;
-
-      case snake[0].y < 0:
-        running = false;
-        break;
-
-      case snake[0].y >= size.height:
-        running = false;
-        break;
-    }
-
-    for (let i = 1; i < snake.length; i++) {
-      if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
-        running = false;
+    default:
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+          running = false;
+        }
       }
-    }
+      break;
   }
+}
 
-  function displayGameOver() {
-    ctx.font = "50px";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.fillText("Game Over", size.width / 2, size.height / 2);
-    gameRunning.value = false;
-    gameOver.value = true;
-  }
+function displayGameOver(ctx) {
+  ctx.font = "50px";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over", size.width / 2, size.height / 2);
+  gameRunning.value = false;
+  gameOver.value = true;
+}
 
-  function resetGame() {
-    score = 0;
-    xVelocity = unitSize;
-    yVelocity = 0;
-    snake = [
-      { x: unitSize * 4, y: 0 },
-      { x: unitSize * 3, y: 0 },
-      { x: unitSize * 2, y: 0 },
-      { x: unitSize, y: 0 },
-      { x: 0, y: 0 },
-    ];
-    gameStart();
-  }
+function resetGame() {
+  score = 0;
+  xVelocity = 0;
+  yVelocity = -unitSize; // Start moving upwards
+  initializeSnake();
+  gameRunning.value = false;
+  gameOver.value = false;
 }
 
 // hook
