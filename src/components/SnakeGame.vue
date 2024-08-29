@@ -61,7 +61,7 @@
 
 <script setup>
 // vue
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick as vueNextTick } from "vue";
 // assets
 import Green from "~/vectors/Green.svg";
 import Blue from "~/vectors/Blue.svg";
@@ -75,6 +75,7 @@ import SnakeFood from "~/icons/snake-food.svg";
 const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
+const showButton = ref(true); // Initially show the button
 
 // game configuration
 const size = {
@@ -101,11 +102,20 @@ const snakeSpeed = ref(105); // Speed in milliseconds
 function startGame() {
   resetGame(); // Ensure game is reset before starting
   loadGame();
+  showButton.value = false; // Hide the button after starting the game
 }
 
 function initializeSnake() {
-  const initialX = Math.floor(size.width / 2 / unitSize) * unitSize;
-  const initialY = Math.floor(size.height / 2 / unitSize) * unitSize;
+  console.log(
+    "width",
+    Math.floor(size.width + 1000 / 2 / unitSize) * unitSize,
+
+    "Height",
+    Math.floor(size.height / 2 / unitSize) * unitSize
+  );
+
+  const initialX = Math.floor(size.width / 2 / unitSize) * unitSize - 10;
+  const initialY = Math.floor(size.height / 2 / unitSize) * unitSize - 20;
 
   snake = [
     { x: initialX, y: initialY },
@@ -128,10 +138,10 @@ function loadGame() {
   createFood();
   drawFood(ctx);
 
-  nextTick(ctx);
+  nextAnimationFrame(ctx);
 }
 
-function nextTick(ctx) {
+function nextAnimationFrame(ctx) {
   if (running) {
     setTimeout(() => {
       clearBoard(ctx);
@@ -139,7 +149,7 @@ function nextTick(ctx) {
       moveSnake();
       drawSnake(ctx);
       checkGameOver();
-      if (running) nextTick(ctx);
+      if (running) nextAnimationFrame(ctx);
       else displayGameOver(ctx);
     }, snakeSpeed.value);
   }
@@ -258,13 +268,18 @@ function resetGame() {
   xVelocity = 0;
   yVelocity = -unitSize; // Start moving upwards
   initializeSnake();
+  createFood(); // Ensure food is created initially
   gameRunning.value = false;
   gameOver.value = false;
 }
 
 // hook
 onMounted(() => {
-  // Do not start the game automatically, wait for the start button to be clicked
+  const ctx = gameBoard.value.getContext("2d");
+  initializeSnake();
+  createFood();
+  drawSnake(ctx);
+  drawFood(ctx);
 });
 </script>
 
