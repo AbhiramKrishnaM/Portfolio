@@ -54,7 +54,7 @@ const texts = [
   "Software Engineer",
   "Coding Enthusiast",
   "Guitarist",
-  "Football Lover",
+  // "Football Lover",
 ];
 const maxLength = Math.max(...texts.map((t) => t.length));
 const INTERVAL_DELAY = 150;
