@@ -1,5 +1,89 @@
 <template>
-  <div>View section</div>
+  <div>
+    <div class="flex">
+      <span class="mr-10">1</span>
+      <span class="text-code-rest">
+        <p class="inline text-code-keyword">const</p>
+        button
+        <p class="inline">=</p>
+        document.querySelector
+      </span>
+      <span class="inline text-gray-gradient-01">(</span>
+      <span class="text-code-id">'#sendBtn'</span>
+      <span class="inline text-gray-gradient-01">);</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">2</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">3</span>
+
+      <span class="text-code-rest">
+        <p class="inline text-code-keyword">const</p>
+        message
+        <p class="inline">=</p>
+      </span>
+      <span class="inline text-gray-gradient-01 ml-2">{</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">4</span>
+
+      <span class="text-code-rest ml-4"> name </span>
+      <span class="inline text-gray-gradient-01">:</span>
+      <span class="text-code-id ml-2">"Abhiram Krishna M"</span>
+      <span class="inline text-gray-gradient-01">,</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">5</span>
+
+      <span class="text-code-rest ml-4"> email </span>
+      <span class="inline text-gray-gradient-01">:</span>
+      <span class="text-code-id ml-2">""</span>
+      <span class="inline text-gray-gradient-01">,</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">6</span>
+
+      <span class="text-code-rest ml-4"> message </span>
+      <span class="inline text-gray-gradient-01">:</span>
+      <span class="text-code-id ml-2">""</span>
+      <span class="inline text-gray-gradient-01">,</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">7</span>
+
+      <span class="text-code-rest ml-4"> date </span>
+      <span class="inline text-gray-gradient-01">:</span>
+      <span class="text-code-id ml-2">"Thu 21 Apr"</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">8</span>
+      <span class="inline text-gray-gradient-01">}</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">9</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">10</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">11</span>
+    </div>
+
+    <div class="flex">
+      <span class="mr-10">12</span>
+    </div>
+  </div>
 </template>
 
 <script setup>

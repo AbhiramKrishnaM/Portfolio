@@ -19,6 +19,9 @@ export default {
         // text color
         "white-gradient-01": "#E5E9F0",
         "gray-gradient-01": "#607B96",
+        "code-keyword": "#C98BDF",
+        "code-rest": "#5565E8",
+        "code-id": "#FEA55F",
 
         // form fields
         "bg-field-default": "#011221",
