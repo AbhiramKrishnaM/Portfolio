@@ -1,7 +1,12 @@
 <template>
   <div>
-    <h1>Contact Me Section</h1>
+    <Form />
+
+    <ViewForm />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Form from "../components/contact/Form.vue";
+import ViewForm from "../components/contact/View.vue";
+</script>

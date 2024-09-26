@@ -19,6 +19,9 @@ export default {
         // text color
         "white-gradient-01": "#E5E9F0",
         "gray-gradient-01": "#607B96",
+
+        // form fields
+        "bg-field-default": "#011221",
       },
 
       borderRadius: {
