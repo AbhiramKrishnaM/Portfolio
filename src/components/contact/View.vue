@@ -33,7 +33,7 @@
 
       <span class="text-code-rest ml-4"> name </span>
       <span class="inline text-gray-gradient-01">:</span>
-      <span class="text-code-id ml-2">"Abhiram Krishna M"</span>
+      <span class="text-code-id ml-2">{{ `"${formObject.name}"` }}</span>
       <span class="inline text-gray-gradient-01">,</span>
     </div>
 
@@ -42,7 +42,7 @@
 
       <span class="text-code-rest ml-4"> email </span>
       <span class="inline text-gray-gradient-01">:</span>
-      <span class="text-code-id ml-2">""</span>
+      <span class="text-code-id ml-2">{{ `"${formObject.email}"` }}</span>
       <span class="inline text-gray-gradient-01">,</span>
     </div>
 
@@ -51,7 +51,7 @@
 
       <span class="text-code-rest ml-4"> message </span>
       <span class="inline text-gray-gradient-01">:</span>
-      <span class="text-code-id ml-2">""</span>
+      <span class="text-code-id ml-2">{{ `"${formObject.message}"` }}</span>
       <span class="inline text-gray-gradient-01">,</span>
     </div>
 
@@ -60,7 +60,7 @@
 
       <span class="text-code-rest ml-4"> date </span>
       <span class="inline text-gray-gradient-01">:</span>
-      <span class="text-code-id ml-2">"Thu 21 Apr"</span>
+      <span class="text-code-id ml-2">{{ `"${formObject.date}"` }}</span>
     </div>
 
     <div class="flex">
