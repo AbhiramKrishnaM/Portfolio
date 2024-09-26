@@ -1,12 +1,12 @@
 <template>
   <div class="flex items-center h-full">
     <div
-      class="h-full w-1/2 flex justify-end items-center border-r border-border-white pr-32"
+      class="h-full w-1/2 flex justify-center items-center border-r border-border-white"
     >
       <Form />
     </div>
 
-    <div class="h-full w-1/2 flex justify-start items-center pl-32">
+    <div class="h-full w-1/2 flex justify-center items-center">
       <ViewForm />
     </div>
   </div>

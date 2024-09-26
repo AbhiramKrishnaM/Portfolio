@@ -65,7 +65,7 @@
 
     <div class="flex">
       <span class="mr-10">8</span>
-      <span class="inline text-gray-gradient-01">}</span>
+      <span class="inline text-gray-gradient-01">};</span>
     </div>
 
     <div class="flex">
@@ -74,14 +74,28 @@
 
     <div class="flex">
       <span class="mr-10">10</span>
+
+      <span class="text-code-rest"> button.addEventListener </span>
+      <span class="inline text-gray-gradient-01">(</span>
+      <span class="text-code-id">'click'</span>
+      <span class="inline text-gray-gradient-01">,</span>
+      <span class="inline text-gray-gradient-01 ml-2">()</span>
+      <span class="text-code-id ml-2">=></span>
+      <span class="inline text-gray-gradient-01 ml-2">{</span>
     </div>
 
     <div class="flex">
       <span class="mr-10">11</span>
+
+      <span class="text-code-rest ml-4"> form.send </span>
+      <span class="inline text-gray-gradient-01">(</span>
+      <span class="text-code-rest"> message </span>
+      <span class="inline text-gray-gradient-01">);</span>
     </div>
 
     <div class="flex">
       <span class="mr-10">12</span>
+      <span class="inline text-gray-gradient-01">});</span>
     </div>
   </div>
 </template>
