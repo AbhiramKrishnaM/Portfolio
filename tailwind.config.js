@@ -22,6 +22,9 @@ export default {
 
         // form fields
         "bg-field-default": "#011221",
+
+        // button color
+        "bg-button-default": "#1C2B3A",
       },
 
       borderRadius: {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed bottom-0 left-0 w-full border border-border-white px-6 selection-none"
+    class="fixed bottom-0 left-0 w-full border-t border-border-white px-6 selection-none"
   >
     <div class="flex items-center justify-between">
       <div id="redirects" class="flex items-center justify-center">

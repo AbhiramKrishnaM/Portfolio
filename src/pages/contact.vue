@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <Form />
+  <div class="flex items-center h-full">
+    <div
+      class="h-full w-1/2 flex justify-center items-center border-r border-border-white"
+    >
+      <Form />
+    </div>
 
-    <ViewForm />
+    <div class="h-full w-1/2 flex justify-center items-center">
+      <ViewForm />
+    </div>
   </div>
 </template>
 
