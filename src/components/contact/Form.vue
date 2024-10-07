@@ -1,5 +1,5 @@
 <template>
-  <form class="flex flex-col gap-6 items-start">
+  <form class="flex flex-col gap-6 items-start" @submit.prevent="submit">
     <div class="w-80">
       <label
         for="first_name"
@@ -49,7 +49,7 @@
 
     <button
       id="sendBtn"
-      type="button"
+      type="submit"
       class="px-5 py-2.5 text-white bg-bg-button-default focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm"
     >
       submit-message
@@ -58,11 +58,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineEmits } from "vue";
+import { ref, watch, defineEmits } from "vue";
 import { getFormattedDate } from "../../utils/dateHelper";
 
 // intialize
-const emits = defineEmits(["send-form"]);
+const emits = defineEmits(["submit-form"]);
 
 // state
 const contactData = ref({
@@ -70,23 +70,29 @@ const contactData = ref({
   email: "",
   message: "",
   date: "",
+  preview: true,
 });
+
+// actions
+function submit() {
+  contactData.value.preview = false;
+
+  emits("submit-form", contactData.value);
+}
 
 // hook
 watch(
   () => contactData.value,
   () => {
-    // set current date
-    contactData.value.date = getFormattedDate();
+    if (contactData.value.preview) {
+      // set current date
+      contactData.value.date = getFormattedDate();
 
-    emits("send-form", contactData.value);
+      emits("submit-form", contactData.value);
+    }
   },
   { deep: true }
 );
-
-onMounted(() => {
-  // console.log(contactData.value, "form field");
-});
 </script>
 
 <style scoped></style>
