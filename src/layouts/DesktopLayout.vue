@@ -62,7 +62,7 @@
           <!-- Main folder - personal-info -->
           <div class="folder">
             <div
-              class="folder-header p-2 flex items-center cursor-pointer"
+              class="folder-header py-1 px-2 flex items-center cursor-pointer"
               @click="toggleFolder('personal-info')"
             >
               <img
@@ -78,11 +78,11 @@
             </div>
 
             <!-- Nested folders -->
-            <div v-if="personalInfoOpen" class="folder-content pl-4">
+            <div v-if="personalInfoOpen" class="folder-content pl-3">
               <!-- Bio folder -->
               <div class="folder">
                 <div
-                  class="folder-header p-2 flex items-center cursor-pointer"
+                  class="folder-header py-1 px-2 flex items-center cursor-pointer"
                   @click="toggleFolder('bio')"
                 >
                   <img
@@ -110,9 +110,9 @@
                 </div>
 
                 <!-- Bio files -->
-                <div v-if="folderStates.bio.open" class="folder-content pl-4">
+                <div v-if="folderStates.bio.open" class="folder-content pl-3">
                   <div
-                    class="file-item p-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
+                    class="file-item py-1 px-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('bio-index') }"
                     @click="openFile('bio', 'bio-index')"
                   >
@@ -131,7 +131,7 @@
               <!-- Interests folder -->
               <div class="folder">
                 <div
-                  class="folder-header p-2 flex items-center cursor-pointer"
+                  class="folder-header py-1 px-2 flex items-center cursor-pointer"
                   @click="toggleFolder('interests')"
                 >
                   <img
@@ -161,12 +161,12 @@
                 <!-- Interests files -->
                 <div
                   v-if="folderStates.interests.open"
-                  class="folder-content pl-4"
+                  class="folder-content pl-3"
                 >
                   <div
                     v-for="file in technologyFiles"
                     :key="file.id"
-                    class="file-item p-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
+                    class="file-item py-1 px-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive(file.id) }"
                     @click="openFile('interests', file.id)"
                   >
@@ -184,7 +184,7 @@
               <!-- Education folder -->
               <div class="folder">
                 <div
-                  class="folder-header p-2 flex items-center cursor-pointer"
+                  class="folder-header py-1 px-2 flex items-center cursor-pointer"
                   @click="toggleFolder('education')"
                 >
                   <img
@@ -214,10 +214,10 @@
                 <!-- Education files -->
                 <div
                   v-if="folderStates.education.open"
-                  class="folder-content pl-4"
+                  class="folder-content pl-3"
                 >
                   <div
-                    class="file-item p-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
+                    class="file-item py-1 px-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('high-school') }"
                     @click="openFile('education', 'high-school')"
                   >
@@ -231,7 +231,7 @@
                     <div>high-school.md</div>
                   </div>
                   <div
-                    class="file-item p-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
+                    class="file-item py-1 px-2 flex items-center text-sm cursor-pointer hover:bg-[#1E2D3D]/40"
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('university') }"
                     @click="openFile('education', 'university')"
                   >
@@ -250,9 +250,9 @@
           </div>
 
           <!-- Contacts section -->
-          <div class="contacts-section mt-2">
+          <div class="contacts-section">
             <div
-              class="section-header p-2 flex items-center cursor-pointer"
+              class="section-header py-1 px-2 flex items-center cursor-pointer"
               @click="toggleContacts"
             >
               <img
@@ -267,11 +267,11 @@
               <span class="ml-1">contacts</span>
             </div>
 
-            <div v-if="contactsOpen" class="section-content pl-6">
+            <div v-if="contactsOpen" class="section-content pl-5">
               <div
                 v-for="(contact, i) in contacts"
                 :key="i"
-                class="contact-item p-2 flex items-center text-sm"
+                class="contact-item py-1 px-2 flex items-center text-sm"
               >
                 <div class="icon w-5 mr-2" :class="contact.color">
                   {{ contact.icon }}
