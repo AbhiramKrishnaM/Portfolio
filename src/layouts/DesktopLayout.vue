@@ -1,12 +1,12 @@
 <template>
   <div
-    class="desktop-layout bg-[#011627] text-white min-h-screen flex flex-col"
+    class="desktop-layout bg-[#011627] text-white min-h-screen flex flex-col box-border"
   >
     <!-- Main Content Area -->
     <div class="main-content flex-1 flex">
       <!-- Left side icons column -->
       <div
-        class="icons-column w-12 bg-[#011627] border-r border-[#1E2D3D]/40 flex flex-col items-center py-4"
+        class="icons-column w-12 bg-[#011627] border-r border-[#1E2D3D] flex flex-col items-center py-4"
       >
         <div class="icon-btn p-2 mb-4 cursor-pointer">
           <svg
@@ -58,7 +58,7 @@
       <!-- Content container with sidebar and editor -->
       <div class="vs-code-container flex flex-1">
         <!-- Sidebar/Explorer -->
-        <div class="sidebar w-60 border-r border-[#1E2D3D]/40 flex flex-col">
+        <div class="sidebar w-60 border-r border-[#1E2D3D] flex flex-col">
           <!-- Main folder - personal-info -->
           <div class="folder">
             <div
