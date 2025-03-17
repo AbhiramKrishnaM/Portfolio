@@ -314,14 +314,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  defineAsyncComponent,
-  markRaw,
-  shallowRef,
-  onMounted,
-} from "vue";
+import { ref, defineAsyncComponent, markRaw, shallowRef, onMounted } from "vue";
 
 // Import file content components
 const BioIndexComponent = defineAsyncComponent(() =>
@@ -363,6 +356,12 @@ const PostgresComponent = defineAsyncComponent(() =>
 const DockerComponent = defineAsyncComponent(() =>
   import("@/components/file-contents/Docker.vue")
 );
+const AWSComponent = defineAsyncComponent(() =>
+  import("@/components/file-contents/AWS.vue")
+);
+const GitComponent = defineAsyncComponent(() =>
+  import("@/components/file-contents/Git.vue")
+);
 
 // Folder states
 const personalInfoOpen = ref(true);
@@ -383,16 +382,18 @@ const toggleFolder = (folderId) => {
 
 // Technology files with icons
 const technologyFiles = ref([
-  { id: "threejs", name: "threejs.js", icon: "threejs-icon.svg" },
-  { id: "javascript", name: "javascript.js", icon: "javascript-icon.svg" },
   { id: "html", name: "html.html", icon: "html-icon.svg" },
   { id: "css", name: "css.css", icon: "css-icon.svg" },
+  { id: "javascript", name: "javascript.js", icon: "javascript-icon.svg" },
+  { id: "threejs", name: "threejs.js", icon: "threejs-icon.svg" },
   { id: "nodejs", name: "nodejs.js", icon: "nodejs-icon.svg" },
   { id: "express", name: "express.js", icon: "express-icon.svg" },
   { id: "python", name: "python.py", icon: "python-icon.svg" },
   { id: "django", name: "django.py", icon: "django-icon.svg" },
   { id: "postgres", name: "postgres.sql", icon: "postgres-icon.svg" },
   { id: "docker", name: "docker.md", icon: "docker-icon.svg" },
+  { id: "aws", name: "aws.md", icon: "aws-icon.svg" },
+  { id: "git", name: "git.md", icon: "git-icon.svg" },
 ]);
 
 // Contacts
@@ -432,6 +433,8 @@ const fileComponentMap = {
   django: DjangoComponent,
   postgres: PostgresComponent,
   docker: DockerComponent,
+  aws: AWSComponent,
+  git: GitComponent,
 };
 
 // Handle opening a file
