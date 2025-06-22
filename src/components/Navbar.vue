@@ -2,7 +2,7 @@
   <ul class="border-b border-border-white flex justify-between p-0 m-0">
     <div class="flex">
       <RouterLink
-        v-for="link in links"
+        v-for="link in visibleLinks"
         :key="link.id"
         :to="link.to"
         class="nav-link"
@@ -36,8 +36,13 @@
 
 <script setup>
 import { useNavlinks } from "@/composables/navLinks.js";
+import { computed } from "vue";
 
 const { links } = useNavlinks();
+
+const visibleLinks = computed(() => {
+  return links.value.filter((link) => !link.hidden);
+});
 </script>
 
 <style scoped>
