@@ -107,7 +107,7 @@
       </div>
 
       <div class="mt-5 text-xs px-3">
-        <p>// foot left</p>
+        <p>// food left</p>
 
         <div class="grid grid-cols-5 gap-1 mt-3">
           <img
