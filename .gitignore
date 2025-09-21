@@ -25,3 +25,6 @@ dist-ssr
 
 # Env 
 .env
+
+# About Me text
+AboutMe.text
