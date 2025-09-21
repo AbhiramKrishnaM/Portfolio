@@ -1,37 +1,50 @@
 <script setup>
-import { onMounted } from "vue";
-import { gsap } from "gsap";
-import SplitType from "split-type";
+import { onUnmounted, ref } from "vue";
+import GooeyText from "./ui/GooeyText.vue";
 
 const emits = defineEmits(["animation-complete"]);
-// hooks
-onMounted(() => {
-  initialize();
-});
 
-// methods
-function initialize() {
-  const heading = new SplitType("#name-loading");
+const texts = [
+  " ",
+  "Frontend",
+  "Development",
+  "Is",
+  "Awesome",
+  ".",
+  "..",
+  "...",
+];
+const delayTimer = ref(null);
 
-  const tl = gsap.timeline({ onComplete: animationComplete });
-
-  tl.to(".char", {
-    y: 0,
-    stagger: 0.05,
-    delay: 0.2,
-    duration: 0.1,
-  }).addPause(4);
+// Handle when GooeyText reaches the last text
+function handleLastTextReached() {
+  console.log("Last text reached, starting delay before redirect...");
+  delayTimer.value = setTimeout(() => {
+    console.log("Redirecting to landing page...");
+    animationComplete();
+  }, 1000);
 }
 
 function animationComplete() {
   emits("animation-complete");
 }
+
+// Cleanup timer on unmount
+onUnmounted(() => {
+  if (delayTimer.value) {
+    clearTimeout(delayTimer.value);
+  }
+});
 </script>
 
 <template>
   <header class="h-screen flex items-center justify-center">
-    <h1 id="name-loading" class="text-5xl text-white-gradient-01">
-      Abhiram_Krishna<span id="dot" class="cursor-pointer">.</span>M
-    </h1>
+    <GooeyText
+      :texts="texts"
+      :morph-time="1.5"
+      :cooldown-time="0.5"
+      class-name="text-5xl text-white-gradient-01"
+      @last-text-reached="handleLastTextReached"
+    />
   </header>
 </template>
