@@ -1,5 +1,7 @@
 <template>
-  <div class="flex items-center justify-center h-full gap-92">
+  <div class="relative flex items-center justify-center h-full gap-92">
+    <!-- Testing out few bakcground shaders -->
+    <!-- <CyberneticGridShader /> -->
     <div>
       <div id="section-1" class="text-white-gradient-01 font-normal">
         <h6 class="text-lg">Hi all, I am</h6>
@@ -48,6 +50,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import SnakeGame from "@/components/SnakeGame.vue";
+import CyberneticGridShader from "@/components/ui/CyberneticGridShader.vue";
 
 // Constants
 const texts = [
