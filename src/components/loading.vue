@@ -4,16 +4,7 @@ import GooeyText from "./ui/GooeyText.vue";
 
 const emits = defineEmits(["animation-complete"]);
 
-const texts = [
-  " ",
-  "Frontend",
-  "Development",
-  "Is",
-  "Awesome",
-  ".",
-  "..",
-  "...",
-];
+const texts = [" ", "Frontend", "Development", "Is", "Awesome", ".", ".", "."];
 const delayTimer = ref(null);
 
 // Handle when GooeyText reaches the last text
