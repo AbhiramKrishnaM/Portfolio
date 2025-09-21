@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full text-accent-color">
+  <div class="w-full h-screen text-accent-color">
     <Loading
       v-if="showLoading"
       @animation-complete="() => (showLoading = false)"
     />
 
-    <div v-else class="border-1px-1e2d3d">
+    <div v-else>
       <Navbar />
       <div id="content" class="px-6 overflow-hidden select-none">
         <router-view></router-view>
