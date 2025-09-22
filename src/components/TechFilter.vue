@@ -36,7 +36,19 @@
             />
             <label :for="`tech-${tech.id}`" class="checkbox-label"></label>
           </div>
-          <span class="tech-name">{{ tech.name }}</span>
+          <img
+            v-if="tech.icon"
+            :src="tech.icon"
+            :alt="`${tech.name} icon`"
+            class="tech-icon"
+          />
+          <span v-else class="tech-icon-placeholder"></span>
+          <span
+            class="tech-name"
+            :class="{ 'text-white': selectedTechs.includes(tech.id) }"
+          >
+            {{ tech.name }}
+          </span>
         </div>
       </div>
     </div>
@@ -44,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
   selectedTechs: {
@@ -58,20 +70,20 @@ const emit = defineEmits(["update:selectedTechs"]);
 const isDropdownOpen = ref(true);
 
 const availableTechs = ref([
-  { id: "react", name: "React", icon: "/icons/react-icon.svg" },
-  { id: "nextjs", name: "Next.js", icon: "/icons/react-icon.svg" },
-  { id: "vuejs", name: "Vue.js", icon: "/icons/vue-icon.svg" },
-  { id: "nuxtjs", name: "Nuxt.js", icon: "/icons/vue-icon.svg" },
+  { id: "react", name: "React", icon: "/icons/reactjs.svg" },
+  { id: "nextjs", name: "Next.js", icon: "/icons/nextjs.svg" },
+  { id: "vuejs", name: "Vue.js", icon: "/icons/vuejs.svg" },
+  { id: "nuxtjs", name: "Nuxt.js", icon: "/icons/nuxtjs.svg" },
   { id: "nodejs", name: "Node.js", icon: "/icons/nodejs-icon.svg" },
   { id: "express", name: "Express.js", icon: "/icons/express-icon.svg" },
-  { id: "typescript", name: "TypeScript", icon: "/icons/typescript-icon.svg" },
+  { id: "typescript", name: "TypeScript", icon: "/icons/typescript.svg" },
   { id: "javascript", name: "JavaScript", icon: "/icons/javascript-icon.svg" },
-  { id: "go", name: "Go", icon: "/icons/go-icon.svg" },
+  { id: "go", name: "Go", icon: "/icons/go.svg" },
   { id: "django", name: "Django", icon: "/icons/django-icon.svg" },
   { id: "python", name: "Python", icon: "/icons/python-icon.svg" },
-  { id: "fastapi", name: "FastAPI", icon: "/icons/python-icon.svg" },
-  { id: "vercel", name: "Vercel", icon: "/icons/vercel-icon.svg" },
-  { id: "reactnative", name: "React Native", icon: "/icons/react-icon.svg" },
+  { id: "fastapi", name: "FastAPI", icon: "/icons/fastapi.svg" },
+  { id: "vercel", name: "Vercel", icon: "/icons/vercel.svg" },
+  { id: "reactnative", name: "React Native", icon: "/icons/react-native.svg" },
   { id: "threejs", name: "Three.js", icon: "/icons/threejs-icon.svg" },
   { id: "tailwind", name: "Tailwind CSS", icon: "/icons/tailwind-icon.svg" },
 ]);
@@ -93,13 +105,7 @@ const toggleTech = (techId) => {
   emit("update:selectedTechs", currentSelected);
 };
 
-const selectedTechNames = computed(() => {
-  return props.selectedTechs
-    .map(
-      (techId) => availableTechs.value.find((tech) => tech.id === techId)?.name
-    )
-    .filter(Boolean);
-});
+// no-op: selectedTechNames removed as not used in UI
 </script>
 
 <style scoped>
@@ -146,6 +152,10 @@ const selectedTechNames = computed(() => {
 
 .tech-icon {
   @apply w-5 h-5 flex-shrink-0;
+}
+
+.tech-icon-placeholder {
+  @apply w-5 h-5 flex-shrink-0 rounded-sm border border-border-white/40;
 }
 
 .tech-name {
