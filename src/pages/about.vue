@@ -5,7 +5,7 @@
       <div class="about-me-text text-white">
         <div class="code-editor font-mono">
           <div class="line-numbers">
-            <div v-for="n in 17" :key="n" class="line-number text-gray-500">
+            <div v-for="n in 19" :key="n" class="line-number text-gray-500">
               {{ n }}
             </div>
           </div>
@@ -16,62 +16,77 @@
             </div>
             <div class="line-3">
               <span class="text-blue-300">
-                * I have 5 years of experience in web</span
+                * I am Abhiram Krishna M, a software engineer from</span
               >
             </div>
             <div class="line-4">
               <span class="text-blue-300">
-                * development lorem ipsum dolor sit amet,</span
+                * Kozhikode, Kerala, India. I hold a Bachelor's degree</span
               >
             </div>
             <div class="line-5">
               <span class="text-blue-300">
-                * consectetur adipiscing elit, sed do eiusmod</span
+                * in Computer Science from MES College of Engineering,</span
               >
             </div>
             <div class="line-6">
               <span class="text-blue-300">
-                * tempor incididunt ut labore et dolore</span
+                * Kuttippuram, where I discovered my passion for</span
               >
             </div>
             <div class="line-7">
               <span class="text-blue-300">
-                * magna aliqua. Ut enim ad minim veniam.</span
+                * building user interfaces during my final year.</span
               >
             </div>
             <div class="line-8"><span class="text-blue-300"> * </span></div>
             <div class="line-9">
               <span class="text-blue-300">
-                * quis nostrud exercitation ullamco laboris</span
+                * My professional journey began with an internship</span
               >
             </div>
             <div class="line-10">
               <span class="text-blue-300">
-                * nisi ut aliquip ex ea commodo consequat.</span
+                * at Neolen, a startup in Ghaziabad, where I gained</span
               >
             </div>
-            <div class="line-11"><span class="text-blue-300"> * </span></div>
+            <div class="line-11">
+              <span class="text-blue-300">
+                * hands-on experience with React and React Native.</span
+              >
+            </div>
             <div class="line-12">
               <span class="text-blue-300">
-                * Duis aute irure dolor in reprehenderit in</span
+                * This early exposure to modern JavaScript frameworks</span
               >
             </div>
             <div class="line-13">
               <span class="text-blue-300">
-                * voluptate velit esse cillum dolore eu fugiat</span
+                * sparked my deep interest in frontend development</span
               >
             </div>
             <div class="line-14">
-              <span class="text-blue-300">
-                * nulla pariatur. Excepteur sint occaecat</span
-              >
+              <span class="text-blue-300"> * and mobile applications.</span>
             </div>
             <div class="line-15">
               <span class="text-blue-300">
-                * officia deserunt mollit anim id est laborum.</span
+                * Currently, I serve as a Software Engineer at</span
               >
             </div>
-            <div class="line-16"><span class="text-blue-300"> */</span></div>
+            <div class="line-16">
+              <span class="text-blue-300">
+                * Discern Security, where I continue to work with</span
+              >
+            </div>
+            <div class="line-17">
+              <span class="text-blue-300">
+                * React.js and Nuxt.js while expanding my expertise</span
+              >
+            </div>
+            <div class="line-18">
+              <span class="text-blue-300"> * into Django REST Framework.</span>
+            </div>
+            <div class="line-19"><span class="text-blue-300"> */</span></div>
           </div>
         </div>
       </div>

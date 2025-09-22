@@ -305,7 +305,9 @@
 
           <!-- Content Area -->
           <div class="content-area flex-1 overflow-auto">
-            <component :is="currentComponent" v-if="currentComponent" />
+            <div class="code-editor-container h-full overflow-auto">
+              <component :is="currentComponent" v-if="currentComponent" />
+            </div>
           </div>
         </div>
       </div>
