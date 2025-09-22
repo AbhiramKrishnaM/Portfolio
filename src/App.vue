@@ -7,7 +7,7 @@
 
     <div v-else>
       <Navbar />
-      <div id="content" class="px-6 overflow-hidden select-none">
+      <div id="content" class="overflow-hidden select-none">
         <router-view></router-view>
       </div>
       <Footer />

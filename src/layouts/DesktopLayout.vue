@@ -6,7 +6,7 @@
     <div class="main-content flex-1 flex">
       <!-- Left side icons column -->
       <div
-        class="icons-column w-12 bg-[#011627] border-r border-[#1E2D3D] flex flex-col items-center py-4"
+        class="icons-column w-12 border-r border-[#1E2D3D] flex flex-col items-center py-4"
       >
         <div class="icon-btn p-2 mb-4 cursor-pointer">
           <svg
