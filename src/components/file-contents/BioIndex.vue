@@ -28,14 +28,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from "vue";
-
-// Template refs
-const containerRef = ref(null);
-const contentRef = ref(null);
-
-// Reactive state for container width
-const containerWidth = ref(0);
+import { useTextWrapper } from "@/composables/useTextWrapper";
 
 // Bio text as plain text - just provide your content, asterisks will be added automatically
 const bioText = `About me
@@ -50,114 +43,14 @@ My next career move took me to IOCOD Infotech, another local startup, where I pl
 
 Currently, I serve as a Software Engineer at Discern Security, where I continue to work with React.js and Nuxt.js while expanding my expertise into Django REST Framework. Throughout my career, I have been entirely self-taught in JavaScript-related technologies, driven by an unwavering passion for technology that continues to motivate me to explore new frontiers and solve complex problems in innovative ways.`;
 
-// Function to calculate character width based on font
-const getCharacterWidth = () => {
-  // Create a temporary canvas to measure text width
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  context.font = "14px 'Fira Code', monospace";
-  return context.measureText("M").width; // Use 'M' as it's typically the widest character
-};
-
-// Function to wrap text based on available width and add * prefix
-const wrapText = (text, maxWidth, charWidth) => {
-  // Account for "* " prefix (2 characters)
-  const maxCharsPerLine = Math.floor(maxWidth / charWidth) - 2;
-  const words = text.split(" ");
-  const lines = [];
-  let currentLine = "";
-
-  for (const word of words) {
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-
-    if (testLine.length <= maxCharsPerLine) {
-      currentLine = testLine;
-    } else {
-      if (currentLine) {
-        lines.push(`* ${currentLine}`);
-        currentLine = word;
-      } else {
-        // Handle very long words that exceed line width
-        lines.push(`* ${word}`);
-      }
-    }
-  }
-
-  if (currentLine) {
-    lines.push(`* ${currentLine}`);
-  }
-
-  return lines;
-};
-
-// Computed property to create display lines with dynamic wrapping
-const displayLines = computed(() => {
-  if (!containerWidth.value) {
-    // Fallback: add * to each line
-    const lines = bioText.split("\n");
-    const result = ["/**"];
-    for (const line of lines) {
-      if (line.trim() === "") {
-        result.push("*");
-      } else {
-        result.push(`* ${line}`);
-      }
-    }
-    result.push("*/");
-    return result;
-  }
-
-  const charWidth = getCharacterWidth();
-  const contentWidth = containerWidth.value - 100; // Account for line numbers and padding
-  const allLines = ["/**"]; // Start with comment opening
-
-  const originalLines = bioText.split("\n");
-
-  for (const line of originalLines) {
-    if (line.trim() === "") {
-      // Keep empty lines as just *
-      allLines.push("*");
-    } else {
-      // Wrap lines that have content and add * prefix
-      const wrappedLines = wrapText(line.trim(), contentWidth, charWidth);
-      allLines.push(...wrappedLines);
-    }
-  }
-
-  allLines.push("*/"); // End with comment closing
-  return allLines;
-});
-
-// Function to update container width
-const updateWidth = () => {
-  if (contentRef.value) {
-    containerWidth.value = contentRef.value.clientWidth;
-  }
-};
-
-// Resize observer to handle window resize
-let resizeObserver = null;
-
-onMounted(() => {
-  updateWidth();
-
-  // Set up resize observer for responsive behavior
-  if (window.ResizeObserver) {
-    resizeObserver = new ResizeObserver(updateWidth);
-    if (containerRef.value) {
-      resizeObserver.observe(containerRef.value);
-    }
-  }
-
-  // Fallback: listen to window resize
-  window.addEventListener("resize", updateWidth);
-});
-
-onUnmounted(() => {
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-  }
-  window.removeEventListener("resize", updateWidth);
+// Use the text wrapper composable
+const { containerRef, contentRef, displayLines } = useTextWrapper({
+  text: bioText,
+  fontFamily: "Fira Code",
+  fontSize: 14,
+  commentStyle: "js",
+  lineNumberWidth: 50,
+  padding: 50,
 });
 </script>
 

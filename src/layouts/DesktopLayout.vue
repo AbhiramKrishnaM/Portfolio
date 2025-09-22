@@ -116,12 +116,12 @@
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('bio-index') }"
                     @click="openFile('bio', 'bio-index')"
                   >
-                    <div class="file-icon w-4 h-4 mr-2 text-[#607B96]">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                          d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"
-                        />
-                      </svg>
+                    <div class="file-icon w-4 h-4 mr-2">
+                      <img
+                        :src="`/icons/${getFileIcon('bio-index')}`"
+                        class="w-full h-full"
+                        alt="index.me"
+                      />
                     </div>
                     <div>index.me</div>
                   </div>
@@ -221,12 +221,12 @@
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('high-school') }"
                     @click="openFile('education', 'high-school')"
                   >
-                    <div class="file-icon w-4 h-4 mr-2 text-[#607B96]">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                          d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M3.44 6.94c-.26 0-.48.21-.48.47v9.19c0 .25.22.46.48.46h17.12c.26 0 .48-.21.48-.46V7.41c0-.26-.22-.47-.48-.47H3.44m1.45 8.25V8.81h1.92l1.92 2.35 1.92-2.35h1.93v6.38h-1.93v-3.66l-1.92 2.35-1.92-2.35v3.66H4.89m10.08-3.85h1.93v1.28h-1.93m0-2.56h1.93v1.28h-1.93V8.78"
-                        />
-                      </svg>
+                    <div class="file-icon w-4 h-4 mr-2">
+                      <img
+                        :src="`/icons/${getFileIcon('high-school')}`"
+                        class="w-full h-full"
+                        alt="high-school.md"
+                      />
                     </div>
                     <div>high-school.md</div>
                   </div>
@@ -235,12 +235,12 @@
                     :class="{ 'bg-[#1E2D3D]/40': isFileActive('university') }"
                     @click="openFile('education', 'university')"
                   >
-                    <div class="file-icon w-4 h-4 mr-2 text-[#607B96]">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                          d="M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41M3.44 6.94c-.26 0-.48.21-.48.47v9.19c0 .25.22.46.48.46h17.12c.26 0 .48-.21.48-.46V7.41c0-.26-.22-.47-.48-.47H3.44m1.45 8.25V8.81h1.92l1.92 2.35 1.92-2.35h1.93v6.38h-1.93v-3.66l-1.92 2.35-1.92-2.35v3.66H4.89m10.08-3.85h1.93v1.28h-1.93m0-2.56h1.93v1.28h-1.93V8.78"
-                        />
-                      </svg>
+                    <div class="file-icon w-4 h-4 mr-2">
+                      <img
+                        :src="`/icons/${getFileIcon('university')}`"
+                        class="w-full h-full"
+                        alt="university.md"
+                      />
                     </div>
                     <div>university.md</div>
                   </div>
@@ -293,9 +293,19 @@
               :class="{ 'bg-[#1E2D3D]': file.active }"
               @click="activateFile(file.id)"
             >
+              <!-- File icon -->
+              <div class="file-icon w-4 h-4 mr-2 flex-shrink-0">
+                <img
+                  :src="`/icons/${getFileIcon(file.id)}`"
+                  class="w-full h-full"
+                  :alt="file.name"
+                />
+              </div>
+              <!-- File name -->
               <span class="text-sm">{{ file.name }}</span>
+              <!-- Close button -->
               <button
-                class="ml-2 text-gray-500 hover:text-white"
+                class="ml-2 text-gray-500 hover:text-white flex-shrink-0"
                 @click.stop="closeFile(file.id)"
               >
                 <span class="text-xs">×</span>
@@ -384,8 +394,8 @@ const toggleFolder = (folderId) => {
 
 // Technology files with icons
 const technologyFiles = ref([
-  { id: "html", name: "html.html", icon: "html-icon.svg" },
-  { id: "css", name: "css.css", icon: "css-icon.svg" },
+  { id: "html", name: ".html", icon: "html-icon.svg" },
+  { id: "css", name: ".css", icon: "css-icon.svg" },
   { id: "javascript", name: "javascript.js", icon: "javascript-icon.svg" },
   { id: "threejs", name: "threejs.js", icon: "threejs-icon.svg" },
   { id: "nodejs", name: "nodejs.js", icon: "nodejs-icon.svg" },
@@ -437,6 +447,29 @@ const fileComponentMap = {
   docker: DockerComponent,
   aws: AWSComponent,
   git: GitComponent,
+};
+
+// File to icon mapping
+const getFileIcon = (fileId) => {
+  const iconMap = {
+    "bio-index": "markdown.svg",
+    "high-school": "markdown.svg",
+    university: "markdown.svg",
+    html: "html-icon.svg",
+    css: "css-icon.svg",
+    javascript: "javascript-icon.svg",
+    threejs: "threejs-icon.svg",
+    nodejs: "nodejs-icon.svg",
+    express: "express-icon.svg",
+    python: "python-icon.svg",
+    django: "django-icon.svg",
+    postgres: "postgres-icon.svg",
+    docker: "docker-icon.svg",
+    aws: "aws-icon.svg",
+    git: "git-icon.svg",
+  };
+
+  return iconMap[fileId] || "markdown.svg";
 };
 
 // Handle opening a file
