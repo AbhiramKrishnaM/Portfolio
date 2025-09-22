@@ -138,16 +138,20 @@ const toggleTech = (techId) => {
 }
 
 .checkbox-label {
-  @apply absolute inset-0 cursor-pointer bg-transparent border border-accent-color rounded-sm transition-all duration-200;
+  @apply absolute inset-0 cursor-pointer bg-transparent border transition-all duration-200;
+  border-color: #607b96;
+  border-radius: 2px;
 }
 
 .tech-checkbox:checked + .checkbox-label {
-  @apply bg-accent-sub border-accent-sub;
+  background-color: #607b96;
+  border-color: #607b96;
 }
 
 .tech-checkbox:checked + .checkbox-label::after {
   content: "";
-  @apply absolute left-1 top-0 w-1.5 h-2.5 border-white border-r-2 border-b-2 rotate-45;
+  @apply absolute left-1/2 top-1/2 w-1 h-2 border-white border-r border-b;
+  transform: translate(-50%, -65%) rotate(45deg);
 }
 
 .tech-icon {
