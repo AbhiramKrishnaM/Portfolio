@@ -36,7 +36,6 @@
             />
             <label :for="`tech-${tech.id}`" class="checkbox-label"></label>
           </div>
-          <img :src="tech.icon" :alt="tech.name" class="tech-icon" />
           <span class="tech-name">{{ tech.name }}</span>
         </div>
       </div>
@@ -60,12 +59,21 @@ const isDropdownOpen = ref(true);
 
 const availableTechs = ref([
   { id: "react", name: "React", icon: "/icons/react-icon.svg" },
-  { id: "html", name: "HTML", icon: "/icons/html-icon.svg" },
-  { id: "css", name: "CSS", icon: "/icons/css-icon.svg" },
-  { id: "vuejs", name: "Vue", icon: "/icons/vue-icon.svg" },
-  { id: "angular", name: "Angular", icon: "/icons/angular-icon.svg" },
-  { id: "gatsby", name: "Gatsby", icon: "/icons/gatsby-icon.svg" },
-  { id: "flutter", name: "Flutter", icon: "/icons/flutter-icon.svg" },
+  { id: "nextjs", name: "Next.js", icon: "/icons/react-icon.svg" },
+  { id: "vuejs", name: "Vue.js", icon: "/icons/vue-icon.svg" },
+  { id: "nuxtjs", name: "Nuxt.js", icon: "/icons/vue-icon.svg" },
+  { id: "nodejs", name: "Node.js", icon: "/icons/nodejs-icon.svg" },
+  { id: "express", name: "Express.js", icon: "/icons/express-icon.svg" },
+  { id: "typescript", name: "TypeScript", icon: "/icons/typescript-icon.svg" },
+  { id: "javascript", name: "JavaScript", icon: "/icons/javascript-icon.svg" },
+  { id: "go", name: "Go", icon: "/icons/go-icon.svg" },
+  { id: "django", name: "Django", icon: "/icons/django-icon.svg" },
+  { id: "python", name: "Python", icon: "/icons/python-icon.svg" },
+  { id: "fastapi", name: "FastAPI", icon: "/icons/python-icon.svg" },
+  { id: "vercel", name: "Vercel", icon: "/icons/vercel-icon.svg" },
+  { id: "reactnative", name: "React Native", icon: "/icons/react-icon.svg" },
+  { id: "threejs", name: "Three.js", icon: "/icons/threejs-icon.svg" },
+  { id: "tailwind", name: "Tailwind CSS", icon: "/icons/tailwind-icon.svg" },
 ]);
 
 const toggleDropdown = () => {
@@ -112,7 +120,7 @@ const selectedTechNames = computed(() => {
 }
 
 .filter-option {
-  @apply flex items-center space-x-3 cursor-pointer py-4 px-2 rounded hover:bg-border-white transition-colors duration-200;
+  @apply flex items-center space-x-3 cursor-pointer py-3 px-2 rounded hover:bg-border-white transition-colors duration-200;
 }
 
 .checkbox-container {
