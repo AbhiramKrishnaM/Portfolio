@@ -8,12 +8,17 @@
           find me in:
         </span>
 
-        <a href="#" class="p-3.5 border-r border-border-white">
+        <a
+          href="https://www.linkedin.com/in/abhiram-krishna/"
+          target="_blank"
+          class="p-3.5 border-r border-border-white"
+        >
           <img :src="Linkedin" alt="Linkedin icon" />
         </a>
-        <a href="#" class="p-3.5 border-r border-border-white">
+        <!-- will add this later -->
+        <!-- <a href="#" class="p-3.5 border-r border-border-white">
           <img :src="Spotify" alt="Spotify icon" />
-        </a>
+        </a> -->
       </div>
 
       <div
