@@ -1,0 +1,160 @@
+<template>
+  <div class="project-card">
+    <div class="project-header">
+      <h3 class="project-title">
+        <span class="project-number">{{ projectNumber }}</span>
+        <span class="project-separator"> // </span>
+        <span class="project-name">{{ title }}</span>
+      </h3>
+    </div>
+
+    <div class="project-image-container">
+      <img :src="imageUrl" :alt="title" class="project-image" />
+      <div class="tech-badge">
+        <img
+          :src="getTechIcon(projectMeta.tech_used[0])"
+          :alt="projectMeta.tech_used[0]"
+          class="tech-icon"
+        />
+      </div>
+    </div>
+
+    <div class="project-description">
+      <p>{{ description }}</p>
+    </div>
+
+    <div class="project-actions">
+      <a
+        :href="githubUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="view-project-btn"
+      >
+        view-project
+      </a>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  githubUrl: {
+    type: String,
+    required: true,
+  },
+  projectMeta: {
+    type: Object,
+    required: true,
+    validator: (value) => {
+      return value && Array.isArray(value.tech_used);
+    },
+  },
+});
+
+const projectNumber = computed(() => {
+  return `Project ${props.id}`;
+});
+
+const getTechIcon = (tech) => {
+  const techIcons = {
+    vuejs: "/icons/vue-icon.svg",
+    react: "/icons/react-icon.svg",
+    angular: "/icons/angular-icon.svg",
+    html: "/icons/html-icon.svg",
+    css: "/icons/css-icon.svg",
+    javascript: "/icons/javascript-icon.svg",
+    nodejs: "/icons/nodejs-icon.svg",
+    python: "/icons/python-icon.svg",
+    django: "/icons/django-icon.svg",
+    express: "/icons/express-icon.svg",
+    postgres: "/icons/postgres-icon.svg",
+    docker: "/icons/docker-icon.svg",
+    aws: "/icons/aws-icon.svg",
+    tailwind: "/icons/tailwind-icon.svg",
+    threejs: "/icons/threejs-icon.svg",
+    git: "/icons/git-icon.svg",
+  };
+
+  return techIcons[tech.toLowerCase()] || "/icons/git-icon.svg";
+};
+</script>
+
+<style scoped>
+.project-card {
+  @apply bg-border-white rounded-lg p-6 border border-border-white hover:border-accent-color transition-all duration-300 flex flex-col min-h-96;
+}
+
+.project-header {
+  @apply mb-4;
+}
+
+.project-title {
+  @apply text-xl font-mono font-medium text-accent-color m-0;
+}
+
+.project-number {
+  @apply text-accent-sub;
+}
+
+.project-separator {
+  @apply text-accent-color;
+}
+
+.project-name {
+  @apply text-accent-color;
+}
+
+.project-image-container {
+  @apply relative mb-4 rounded-lg overflow-hidden h-48;
+}
+
+.project-image {
+  @apply w-full h-full object-cover rounded-lg;
+}
+
+.tech-badge {
+  @apply absolute top-3 right-3 w-8 h-8 bg-accent-sub rounded-md flex items-center justify-center;
+}
+
+.tech-icon {
+  @apply w-5 h-5 brightness-0 invert;
+}
+
+.project-description {
+  @apply flex-grow mb-6;
+}
+
+.project-description p {
+  @apply text-sm font-mono text-accent-color leading-relaxed m-0;
+}
+
+.project-actions {
+  @apply mt-auto;
+}
+
+.view-project-btn {
+  @apply inline-block px-4 py-2 rounded font-mono text-sm transition-colors duration-200 bg-border-white text-accent-color border border-border-white no-underline;
+}
+
+.view-project-btn:hover {
+  @apply bg-accent-color text-theme-main border-accent-color;
+}
+</style>

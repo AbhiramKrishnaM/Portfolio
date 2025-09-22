@@ -2,7 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    fontFamily: { sans: ["Fira Code", "monospace"] },
+    fontFamily: { 
+      sans: ["Fira Code", "monospace"],
+      mono: ["Fira Code", "monospace"],
+      serif: ["Fira Code", "monospace"]
+    },
     extend: {
       colors: {
         "theme-main": "#011627",
