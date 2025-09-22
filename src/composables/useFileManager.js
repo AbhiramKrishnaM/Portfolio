@@ -125,11 +125,11 @@ export function useFileManager() {
   const personalInfoOpen = ref(true);
   const folderStates = ref({
     bio: { open: true },
-    interests: { open: false },
-    education: { open: false },
+    interests: { open: true },
+    education: { open: true },
   });
 
-  const contactsOpen = ref(false);
+  const contactsOpen = ref(true);
 
   // Open files/tabs management
   const openFiles = ref([]);
