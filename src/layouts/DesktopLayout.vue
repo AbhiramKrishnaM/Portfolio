@@ -8,50 +8,47 @@
       <div
         class="icons-column w-12 border-r border-[#1E2D3D] flex flex-col items-center py-4"
       >
-        <div class="icon-btn p-2 mb-4 cursor-pointer">
-          <svg
+        <div
+          class="icon-btn p-2 mb-4 cursor-pointer"
+          @click="setActiveIcon('hobbies')"
+        >
+          <img
+            src="/icons/hobbies-icon.svg"
             class="w-5 h-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 12h18M3 6h18M3 18h18"
-            />
-          </svg>
+            :class="{
+              'opacity-100': activeIcon === 'hobbies',
+              'opacity-40': activeIcon !== 'hobbies',
+            }"
+            alt="Hobbies"
+          />
         </div>
-        <div class="icon-btn p-2 mb-4 cursor-pointer text-blue-400">
-          <svg
+        <div
+          class="icon-btn p-2 mb-4 cursor-pointer"
+          @click="setActiveIcon('professional')"
+        >
+          <img
+            src="/icons/professional-info-icon.svg"
             class="w-5 h-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-            />
-          </svg>
+            :class="{
+              'opacity-100': activeIcon === 'professional',
+              'opacity-40': activeIcon !== 'professional',
+            }"
+            alt="Professional Info"
+          />
         </div>
-        <div class="icon-btn p-2 mb-4 cursor-pointer">
-          <svg
+        <div
+          class="icon-btn p-2 mb-4 cursor-pointer"
+          @click="setActiveIcon('personal')"
+        >
+          <img
+            src="/icons/personal-info-icon.svg"
             class="w-5 h-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
+            :class="{
+              'opacity-100': activeIcon === 'personal',
+              'opacity-40': activeIcon !== 'personal',
+            }"
+            alt="Personal Info"
+          />
         </div>
       </div>
 
@@ -326,8 +323,16 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useFileManager } from "@/composables/useFileManager";
+
+// Active icon state
+const activeIcon = ref("professional"); // Default to professional icon
+
+// Function to set active icon
+const setActiveIcon = (iconName) => {
+  activeIcon.value = iconName;
+};
 
 // Use the file manager composable
 const {
