@@ -23,7 +23,7 @@
       class="border-l border-r border-b rounded-b-lg px-6 pb-8 border-border-white bg-[#011221]"
     >
       <div class="project-description">
-        <p>{{ description }}</p>
+        <p class="line-clamp-2">{{ description }}</p>
       </div>
 
       <div class="project-actions">
@@ -153,7 +153,7 @@ const getTechIcon = (tech) => {
 }
 
 .project-description p {
-  @apply text-sm font-mono text-accent-color leading-relaxed m-0;
+  @apply text-sm font-mono text-accent-color leading-relaxed m-0 line-clamp-2;
 }
 
 .project-actions {
