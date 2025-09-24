@@ -2,10 +2,10 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    fontFamily: { 
+    fontFamily: {
       sans: ["Fira Code", "monospace"],
       mono: ["Fira Code", "monospace"],
-      serif: ["Fira Code", "monospace"]
+      serif: ["Fira Code", "monospace"],
     },
     extend: {
       colors: {
@@ -55,9 +55,64 @@ export default {
         7: "7rem",
         9: "9rem",
         11: "11rem",
-        13: "13rem",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Custom scrollbar plugin
+    function ({ addUtilities, theme }) {
+      // Add scrollbar utilities to utilities layer
+      addUtilities({
+        ".scrollbar-custom": {
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: theme("colors.theme-main"),
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: theme("colors.accent-color"),
+            borderRadius: "4px",
+            border: "1px solid " + theme("colors.theme-main"),
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: theme("colors.accent-sub"),
+          },
+          "&::-webkit-scrollbar-corner": {
+            background: theme("colors.theme-main"),
+          },
+          // Firefox support
+          scrollbarWidth: "thin",
+          scrollbarColor:
+            theme("colors.accent-color") + " " + theme("colors.theme-main"),
+        },
+        ".scrollbar-thin": {
+          "&::-webkit-scrollbar": {
+            width: "4px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: theme("colors.accent-color"),
+            borderRadius: "2px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: theme("colors.accent-sub"),
+          },
+          // Firefox support
+          scrollbarWidth: "thin",
+          scrollbarColor: theme("colors.accent-color") + " transparent",
+        },
+        ".scrollbar-none": {
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+        },
+      });
+    },
+  ],
 };

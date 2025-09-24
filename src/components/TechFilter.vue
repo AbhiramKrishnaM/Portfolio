@@ -20,7 +20,7 @@
       </div>
 
       <div
-        class="pl-2 py-4 overflow-y-auto"
+        class="pl-2 py-4 overflow-y-auto scrollbar-custom"
         :style="{ maxHeight: `${availableHeight}px` }"
         v-show="isDropdownOpen"
       >
@@ -118,59 +118,139 @@ const toggleTech = (techId) => {
 
 <style scoped>
 .tech-filter {
-  @apply w-64  bg-theme-main border-r border-border-white h-screen overflow-y-auto;
+  width: 16rem;
+  background-color: #011627;
+  border-right: 1px solid #1E2D3D;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for the main container */
+.tech-filter::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tech-filter::-webkit-scrollbar-track {
+  background: #011627;
+  border-radius: 4px;
+}
+
+.tech-filter::-webkit-scrollbar-thumb {
+  background: #607B96;
+  border-radius: 4px;
+  border: 1px solid #011627;
+}
+
+/* Custom scrollbar for dropdown content */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #011627;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #607B96;
+  border-radius: 4px;
+  border: 1px solid #011627;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #4D5BCE;
 }
 
 .filter-title {
-  @apply text-sm font-mono font-medium text-accent-color;
+  font-size: 0.875rem;
+  font-family: Fira Code, monospace;
+  font-weight: 500;
+  color: #607B96;
 }
 
 .dropdown-arrow {
-  @apply transition-transform duration-200 text-accent-color;
+  transition: transform 0.2s;
+  color: #607B96;
 }
 
 .dropdown-arrow.rotated {
-  @apply rotate-180;
+  transform: rotate(180deg);
 }
 
 .filter-option {
-  @apply flex items-center space-x-3 cursor-pointer py-3 px-2 rounded hover:bg-border-white transition-colors duration-200;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.filter-option:hover {
+  background-color: #1E2D3D;
 }
 
 .checkbox-container {
-  @apply relative w-4 h-4;
+  position: relative;
+  width: 1rem;
+  height: 1rem;
 }
 
 .tech-checkbox {
-  @apply absolute opacity-0 cursor-pointer w-4 h-4;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
 }
 
 .checkbox-label {
-  @apply absolute inset-0 cursor-pointer bg-transparent border transition-all duration-200;
-  border-color: #607b96;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #607B96;
   border-radius: 2px;
+  transition: all 0.2s;
 }
 
 .tech-checkbox:checked + .checkbox-label {
-  background-color: #607b96;
-  border-color: #607b96;
+  background-color: #607B96;
+  border-color: #607B96;
 }
 
 .tech-checkbox:checked + .checkbox-label::after {
   content: "";
-  @apply absolute left-1/2 top-1/2 w-1 h-2 border-white border-r border-b;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.25rem;
+  height: 0.5rem;
+  border: 1px solid white;
+  border-top: none;
+  border-left: none;
   transform: translate(-50%, -65%) rotate(45deg);
 }
 
 .tech-icon {
-  @apply w-5 h-5 flex-shrink-0;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
 }
 
 .tech-icon-placeholder {
-  @apply w-5 h-5 flex-shrink-0 rounded-sm border border-border-white/40;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  border-radius: 0.125rem;
+  border: 1px solid rgba(30, 45, 61, 0.4);
 }
 
 .tech-name {
-  @apply text-sm font-mono text-accent-color flex-grow;
+  font-size: 0.875rem;
+  font-family: Fira Code, monospace;
+  color: #607B96;
+  flex-grow: 1;
 }
 </style>
