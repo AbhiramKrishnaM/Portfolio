@@ -10,10 +10,10 @@
       </div>
 
       <!-- Main Projects Area -->
-      <div class="flex-1 overflow-y-auto bg-theme-main">
-        <!-- Sub-navbar: selected filters only -->
+      <div class="flex-1 flex flex-col bg-theme-main">
+        <!-- Sub-navbar: selected filters only - FIXED POSITION -->
         <div
-          class="flex items-center justify-end border-b border-border-white px-6 h-12"
+          class="flex items-center justify-end border-b border-border-white px-6 h-12 flex-shrink-0"
         >
           <div v-if="selectedTechNames.length > 0" class="flex items-center">
             <div
@@ -39,7 +39,11 @@
           </div>
         </div>
 
-        <div class="p-6">
+        <!-- Scrollable Projects Grid -->
+        <div
+          class="overflow-y-auto scrollbar-custom p-6 pb-8"
+          :style="{ height: `${availableHeight}px` }"
+        >
           <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
           >
@@ -68,11 +72,11 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import ProjectCard from "../components/ProjectCard.vue";
 import TechFilter from "../components/TechFilter.vue";
 import { useProjects } from "../composables/useProjects.js";
+import { useDynamicHeight } from "../composables/useDynamicHeight.js";
 
 const {
   selectedTechs,
@@ -80,6 +84,8 @@ const {
   selectedTechNames,
   updateSelectedTechs,
 } = useProjects();
+
+const { availableHeight } = useDynamicHeight(120);
 
 const clearFilters = () => {
   updateSelectedTechs([]);

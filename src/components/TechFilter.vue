@@ -106,7 +106,7 @@ const emit = defineEmits(["update:selectedTechs"]);
 const isDropdownOpen = ref(true);
 
 // Use dynamic height composable
-const { availableHeight } = useDynamicHeight();
+const { availableHeight } = useDynamicHeight(154);
 
 const availableTechs = ref([
   { id: "react", name: "React", icon: "/icons/reactjs.svg" },
