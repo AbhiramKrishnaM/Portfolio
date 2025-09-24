@@ -1,11 +1,16 @@
 <template>
-  <div class="w-64 bg-theme-main border-r border-r-border-white h-screen overflow-y-auto scrollbar-custom">
+  <div
+    class="w-64 bg-theme-main border-r border-r-border-white h-screen overflow-y-auto scrollbar-custom"
+  >
     <div>
       <div
         class="pl-4 flex items-center gap-2 h-12 mb-0 border-b border-border-white cursor-pointer"
         @click="toggleDropdown"
       >
-        <span class="dropdown-arrow text-accent-color transition-transform duration-200" :class="{ 'rotate-180': isDropdownOpen }">
+        <span
+          class="dropdown-arrow text-accent-color transition-transform duration-200"
+          :class="{ 'rotate-180': isDropdownOpen }"
+        >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path
               d="M3 4.5L6 7.5L9 4.5"
@@ -16,7 +21,9 @@
             />
           </svg>
         </span>
-        <span class="text-sm font-mono font-medium text-accent-color">projects</span>
+        <span class="text-sm font-mono font-medium text-accent-color"
+          >projects</span
+        >
       </div>
 
       <div
@@ -38,7 +45,28 @@
               class="absolute opacity-0 cursor-pointer w-4 h-4"
               @change="toggleTech(tech.id)"
             />
-            <label :for="`tech-${tech.id}`" class="absolute inset-0 cursor-pointer bg-transparent border border-accent-color rounded-sm transition-all duration-200" :class="{ 'bg-accent-color border-accent-color': selectedTechs.includes(tech.id) }"></label>
+            <label
+              :for="`tech-${tech.id}`"
+              class="absolute inset-0 cursor-pointer bg-transparent border border-accent-color transition-all duration-200 flex items-center justify-center"
+              :class="{
+                'bg-accent-color border-accent-color': selectedTechs.includes(
+                  tech.id
+                ),
+              }"
+            >
+              <svg
+                v-if="selectedTechs.includes(tech.id)"
+                class="w-2.5 h-2.5 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </label>
           </div>
           <img
             v-if="tech.icon"
@@ -46,7 +74,10 @@
             :alt="`${tech.name} icon`"
             class="w-5 h-5 flex-shrink-0"
           />
-          <span v-else class="w-5 h-5 flex-shrink-0 rounded-sm border border-border-white/40"></span>
+          <span
+            v-else
+            class="w-5 h-5 flex-shrink-0 rounded-sm border border-border-white/40"
+          ></span>
           <span
             class="text-sm font-mono text-accent-color flex-1"
             :class="{ 'text-white': selectedTechs.includes(tech.id) }"
@@ -112,7 +143,4 @@ const toggleTech = (techId) => {
 
   emit("update:selectedTechs", currentSelected);
 };
-
-// no-op: selectedTechNames removed as not used in UI
 </script>
-
