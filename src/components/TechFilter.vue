@@ -19,7 +19,11 @@
         <span class="filter-title">projects</span>
       </div>
 
-      <div class="pl-2 pt-4" v-show="isDropdownOpen">
+      <div
+        class="pl-2 py-4 overflow-y-auto"
+        :style="{ maxHeight: `${availableHeight}px` }"
+        v-show="isDropdownOpen"
+      >
         <div
           v-for="tech in availableTechs"
           :key="tech.id"
@@ -57,6 +61,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useDynamicHeight } from "../composables/useDynamicHeight.js";
 
 const props = defineProps({
   selectedTechs: {
@@ -68,6 +73,9 @@ const props = defineProps({
 const emit = defineEmits(["update:selectedTechs"]);
 
 const isDropdownOpen = ref(true);
+
+// Use dynamic height composable
+const { availableHeight } = useDynamicHeight();
 
 const availableTechs = ref([
   { id: "react", name: "React", icon: "/icons/reactjs.svg" },
