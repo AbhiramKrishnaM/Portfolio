@@ -19,19 +19,23 @@
       </div>
     </div>
 
-    <div class="project-description">
-      <p>{{ description }}</p>
-    </div>
+    <div
+      class="border-l border-r border-b rounded-b-lg px-6 pb-8 border-border-white bg-[#011221]"
+    >
+      <div class="project-description">
+        <p>{{ description }}</p>
+      </div>
 
-    <div class="project-actions">
-      <a
-        :href="githubUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="view-project-btn"
-      >
-        view-project
-      </a>
+      <div class="project-actions">
+        <a
+          :href="githubUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="view-project-btn"
+        >
+          view-project
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +109,7 @@ const getTechIcon = (tech) => {
 
 <style scoped>
 .project-card {
-  @apply bg-border-white rounded-lg p-6 border border-border-white hover:border-accent-color transition-all duration-300 flex flex-col min-h-96;
+  @apply rounded-lg p-6  hover:border-accent-color transition-all duration-300 flex flex-col min-h-96;
 }
 
 .project-header {
@@ -113,7 +117,7 @@ const getTechIcon = (tech) => {
 }
 
 .project-title {
-  @apply text-xl font-mono font-medium text-accent-color m-0;
+  @apply text-sm font-mono font-medium text-accent-color m-0;
 }
 
 .project-number {
@@ -129,11 +133,11 @@ const getTechIcon = (tech) => {
 }
 
 .project-image-container {
-  @apply relative mb-4 rounded-lg overflow-hidden h-48;
+  @apply relative rounded-t-lg overflow-hidden h-48 border border-border-white;
 }
 
 .project-image {
-  @apply w-full h-full object-cover rounded-lg;
+  @apply w-full h-full object-cover;
 }
 
 .tech-badge {
@@ -145,7 +149,7 @@ const getTechIcon = (tech) => {
 }
 
 .project-description {
-  @apply flex-grow mb-6;
+  @apply flex-grow mb-6 pt-4;
 }
 
 .project-description p {
