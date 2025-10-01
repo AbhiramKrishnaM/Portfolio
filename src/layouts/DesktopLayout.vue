@@ -282,16 +282,18 @@
         <!-- Editor Area -->
         <div class="editor-area flex-1 flex flex-col">
           <!-- Open File Tabs -->
-          <div class="file-tabs flex border-b border-[#1E2D3D]/70">
+          <div
+            class="file-tabs flex items-center justify-start border-b border-border-white h-12 flex-shrink-0"
+          >
             <div
               v-for="(file, index) in openFiles"
               :key="index"
-              class="file-tab px-3 py-2 flex items-center text-sm border-r border-[#1E2D3D]/70 cursor-pointer"
+              class="file-tab px-4 flex items-center gap-2 text-sm border-r border-border-white h-full cursor-pointer"
               :class="{ 'bg-[#1E2D3D]': file.active }"
               @click="activateFile(file.id)"
             >
               <!-- File icon -->
-              <div class="file-icon w-4 h-4 mr-2 flex-shrink-0">
+              <div class="file-icon w-4 h-4 flex-shrink-0">
                 <img
                   :src="`/icons/${getFileIcon(file.id)}`"
                   class="w-full h-full"
@@ -299,13 +301,23 @@
                 />
               </div>
               <!-- File name -->
-              <span class="text-sm">{{ file.name }}</span>
+              <span class="text-xs md:text-sm text-accent-color font-mono">{{
+                file.name
+              }}</span>
               <!-- Close button -->
               <button
-                class="ml-2 text-gray-500 hover:text-white flex-shrink-0"
+                class="p-0.5 hover:opacity-70 transition-opacity duration-200 flex-shrink-0"
                 @click.stop="closeFile(file.id)"
+                aria-label="Close file"
               >
-                <span class="text-xs">×</span>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M9 3L3 9M3 3L9 9"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
               </button>
             </div>
           </div>
