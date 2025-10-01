@@ -55,7 +55,7 @@
       <!-- Content container with sidebar and editor -->
       <div class="vs-code-container flex flex-1">
         <!-- Sidebar/Explorer -->
-        <div class="sidebar w-60 border-r border-[#1E2D3D] flex flex-col">
+        <div class="sidebar w-[263px] border-r border-[#1E2D3D] flex flex-col">
           <!-- Main folder - personal-info -->
           <div class="folder">
             <div
