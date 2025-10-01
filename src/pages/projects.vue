@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-theme-main text-accent-color font-mono">
     <div class="flex h-screen">
       <!-- Sidebar with Tech Filters -->
-      <div class="flex-shrink-0 w-64">
+      <div class="flex-shrink-0 w-[311px]">
         <TechFilter
           v-model:selectedTechs="selectedTechs"
           @update:selectedTechs="updateSelectedTechs"

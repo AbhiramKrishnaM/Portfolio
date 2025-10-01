@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-64 bg-theme-main border-r border-r-border-white h-screen overflow-y-auto scrollbar-custom"
+    class="w-[311px] bg-theme-main border-r border-r-border-white h-screen overflow-y-auto scrollbar-custom"
   >
     <div>
       <div
