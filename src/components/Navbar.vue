@@ -2,10 +2,11 @@
   <ul class="border-b border-border-white flex justify-between p-0 m-0">
     <div class="flex">
       <RouterLink
-        v-for="link in visibleLinks"
+        v-for="(link, index) in visibleLinks"
         :key="link.id"
         :to="link.to"
         class="nav-link"
+        :class="{ 'w-[311px]': index === 0 }"
         active-class="active"
         v-slot="{ isActive }"
       >
