@@ -13,29 +13,29 @@
       <div class="flex-1 flex flex-col bg-theme-main">
         <!-- Sub-navbar: selected filters only - FIXED POSITION -->
         <div
-          class="flex items-center justify-end border-b border-border-white px-6 h-12 flex-shrink-0"
+          class="flex items-center justify-start border-b border-border-white px-4 h-12 flex-shrink-0"
         >
-          <div v-if="selectedTechNames.length > 0" class="flex items-center">
-            <div
-              class="flex items-center space-x-2 px-3 py-1 rounded bg-border-white border border-border-white"
+          <div
+            v-if="selectedTechNames.length > 0"
+            class="flex items-center gap-2 pr-4 border-r border-border-white h-full"
+          >
+            <span class="text-xs md:text-sm text-accent-color font-mono">{{
+              selectedTechNames.join("; ")
+            }}</span>
+            <button
+              @click="clearFilters"
+              class="p-0.5 hover:opacity-70 transition-opacity duration-200"
+              aria-label="Clear filters"
             >
-              <span class="text-xs md:text-sm">{{
-                selectedTechNames.join("; ")
-              }}</span>
-              <button
-                @click="clearFilters"
-                class="p-1 hover:bg-gray-700 rounded transition-colors duration-200"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M9 3L3 9M3 3L9 9"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M9 3L3 9M3 3L9 9"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
           </div>
         </div>
 
