@@ -6,17 +6,13 @@
         <h2 class="text-xl text-accent-variable mb-2">Bachelor's Degree</h2>
         <div class="pl-4 border-l-2 border-accent-sub">
           <p class="mb-1">
-            <span class="text-accent-url">University:</span> University Name
+            <span class="text-accent-url">Degree:</span> B.Tech in Computer
+            Science
           </p>
           <p class="mb-1">
-            <span class="text-accent-url">Degree:</span> Computer Science
+            <span class="text-accent-url">Years:</span> 2017 - 2021
           </p>
-          <p class="mb-1">
-            <span class="text-accent-url">Years:</span> 20XX - 20XX
-          </p>
-          <p class="mb-1">
-            <span class="text-accent-url">GPA:</span> X.XX/X.XX
-          </p>
+          <p class="mb-1"><span class="text-accent-url">GPA:</span> 8.8</p>
         </div>
       </div>
 
@@ -38,16 +34,24 @@
         </h2>
         <ul class="list-disc pl-6 space-y-2">
           <li>
-            <span class="text-white">Senior Project:</span>
-            Developed a web application using modern frameworks
+            <span class="text-white">IEDC Startup:</span>
+            Developed a startup on drone tech for DRDO convention under IEDC
           </li>
           <li>
-            <span class="text-white">Hackathon:</span>
-            Participated in multiple coding competitions
+            <span class="text-white">Hackathons:</span>
+            Conducted coding hackathons
           </li>
           <li>
-            <span class="text-white">Student Club:</span>
-            Member of the Computer Science Society
+            <span class="text-white">Web Development:</span>
+            Conducted learning sessions on web development
+          </li>
+          <li>
+            <span class="text-white">IEEE:</span>
+            Member of IEEE
+          </li>
+          <li>
+            <span class="text-white">College Band:</span>
+            Lead guitarist for the college band
           </li>
         </ul>
       </div>
