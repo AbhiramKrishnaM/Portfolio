@@ -273,7 +273,9 @@
                 <div class="icon w-5 mr-2" :class="contact.color">
                   {{ contact.icon }}
                 </div>
-                <div>{{ contact.label }}</div>
+                <div class="min-w-0 flex-1 truncate" :title="contact.label">
+                  {{ contact.label }}
+                </div>
               </div>
             </div>
           </div>

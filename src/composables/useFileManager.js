@@ -82,15 +82,29 @@ export function useFileManager() {
     if (techFile) {
       return techFile;
     }
-    
+
     // Handle special cases for non-technology files
     const specialFiles = {
       "bio-index": { id: "bio-index", name: "index.me", icon: "markdown.svg" },
-      "high-school": { id: "high-school", name: "high-school.md", icon: "markdown.svg" },
-      university: { id: "university", name: "university.md", icon: "markdown.svg" },
+      "high-school": {
+        id: "high-school",
+        name: "high-school.md",
+        icon: "markdown.svg",
+      },
+      university: {
+        id: "university",
+        name: "university.md",
+        icon: "markdown.svg",
+      },
     };
-    
-    return specialFiles[fileId] || { id: fileId, name: "unknown", icon: "markdown.svg" };
+
+    return (
+      specialFiles[fileId] || {
+        id: fileId,
+        name: "unknown",
+        icon: "markdown.svg",
+      }
+    );
   };
 
   // File to icon mapping - leverages getFileInfo for consistency
@@ -117,8 +131,12 @@ export function useFileManager() {
 
   // Contacts data
   const contacts = ref([
-    { icon: "✉️", label: "gokulspeed@gmail.com", color: "text-blue-400" },
-    { icon: "📱", label: "+919924269359", color: "text-green-400" },
+    {
+      icon: "✉️",
+      label: "abhiramKrishna.8921@gmail.com",
+      color: "text-blue-400",
+    },
+    { icon: "📱", label: "+91 8921443422", color: "text-green-400" },
   ]);
 
   // Folder states
@@ -232,7 +250,7 @@ export function useFileManager() {
     contactsOpen,
     openFiles,
     currentComponent,
-    
+
     // Methods
     getFileInfo,
     getFileIcon,
