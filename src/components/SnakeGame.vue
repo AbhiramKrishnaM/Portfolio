@@ -132,19 +132,19 @@
 // vue
 import { ref, onMounted, computed } from "vue";
 // assets
-import Green from "~/vectors/Green.svg";
-import Blue from "~/vectors/Blue.svg";
-import BoltDownLeft from "~/icons/bolt-down-left.svg";
-import BoltDownRight from "~/icons/bolt-down-right.svg";
-import BoltTopLeft from "~/icons/bolt-up-left.svg";
-import BoltTopRight from "~/icons/bolt-up-right.svg";
-import SnakeFoodImageSrc from "~/icons/snake-food.svg";
-import Up from "~/icons/up.svg";
-import Down from "~/icons/down.svg";
-import Left from "~/icons/left.svg";
-import Right from "~/icons/right.svg";
-import ActiveSnakeFood from "~/icons/active-snake-food.svg";
-import InActiveSnakeFood from "~/icons/inactive-snake-food.svg";
+import Green from "@/assets/vectors/Green.svg";
+import Blue from "@/assets/vectors/Blue.svg";
+import BoltDownLeft from "@/assets/icons/bolt-down-left.svg";
+import BoltDownRight from "@/assets/icons/bolt-down-right.svg";
+import BoltTopLeft from "@/assets/icons/bolt-up-left.svg";
+import BoltTopRight from "@/assets/icons/bolt-up-right.svg";
+import SnakeFoodImageSrc from "@/assets/icons/snake-food.svg";
+import Up from "@/assets/icons/up.svg";
+import Down from "@/assets/icons/down.svg";
+import Left from "@/assets/icons/left.svg";
+import Right from "@/assets/icons/right.svg";
+import ActiveSnakeFood from "@/assets/icons/active-snake-food.svg";
+import InActiveSnakeFood from "@/assets/icons/inactive-snake-food.svg";
 
 // state
 const gameBoard = ref(null);

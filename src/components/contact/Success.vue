@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { defineEmits } from "vue";
 
 const emits = defineEmits(["send-new"]);
 // actions

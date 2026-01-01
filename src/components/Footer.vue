@@ -38,7 +38,7 @@
 
 <script setup>
 // assets/icons
-import Linkedin from "~/icons/linkedin.svg";
-import Spotify from "~/icons/spotify.svg";
-import Github from "~/icons/github.svg";
+import Linkedin from "@/assets/icons/linkedin.svg";
+import Spotify from "@/assets/icons/spotify.svg";
+import Github from "@/assets/icons/github.svg";
 </script>

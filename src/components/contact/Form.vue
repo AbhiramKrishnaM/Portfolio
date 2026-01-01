@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineEmits } from "vue";
+import { ref, watch } from "vue";
 import { getFormattedDate } from "../../utils/dateHelper";
 
 // intialize

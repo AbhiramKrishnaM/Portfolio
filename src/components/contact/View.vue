@@ -101,7 +101,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 /**
  * Instead of adding validations on the form we will add validation here
  * This should closely watch what is happening on the form component
