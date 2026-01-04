@@ -27,3 +27,16 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 - **GSAP** - Animation library for JavaScript
 - **PostCSS** - CSS processing tool
 - **ESLint** - Code linting and quality tool
+
+------
+
+## Tickets / TODO
+
+- [ ] Mobile friendly optimization - Improve responsive design for mobile devices
+- [ ] Component optimizations - Optimize component performance and reduce bundle size
+- [ ] Accessibility improvements - Add ARIA labels and improve keyboard navigation
+- [ ] SEO optimization - Add meta tags, structured data, and improve SEO
+- [ ] Performance optimization - Implement code splitting and lazy loading
+- [ ] Error handling - Add comprehensive error boundaries and error handling
+- [ ] Testing - Add unit tests and integration tests
+- [ ] Documentation - Add JSDoc comments and component documentation
