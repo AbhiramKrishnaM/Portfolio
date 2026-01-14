@@ -4,7 +4,7 @@ This is my personal portfolio website showcasing my projects, skills, and experi
 
 ## About Me
 
-I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm passionate about building user interfaces and have experience working with various JavaScript frameworks including React, Vue.js, and Nuxt.js. Throughout my career, I've worked with startups like Neolen, Caprimul Technologies, IOCOD Infotech, and currently at Discern Security, where I continue to expand my expertise in frontend development, backend integration, and modern web technologies.
+I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm passionate about building user friendly interfaces and have experience working with various JavaScript frameworks including React, Vue.js, and Nuxt.js. Throughout my career, I've worked with startups like Neolen, Caprimul Technologies, IOCOD Infotech, and currently at Discern Security, where I continue to expand my expertise in frontend development, backend integration, and modern web technologies.
 
 ## Features
 
