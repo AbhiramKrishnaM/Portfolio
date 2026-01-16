@@ -26,7 +26,6 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 - **Three.js** - 3D graphics library
 - **GSAP** - Animation library for JavaScript
 - **PostCSS** - CSS processing tool
-- **ESLint** - Code linting and quality tool
 
 ------
 
