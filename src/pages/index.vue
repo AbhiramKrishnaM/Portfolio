@@ -8,11 +8,7 @@
         <div class="text-3xl text-accent-sub hacking-text mt-3">
           <span>&gt;</span>
           <div class="hacking-container">
-            <div
-              v-for="(char, index) in currentText"
-              :key="index"
-              class="letter-container"
-            >
+            <div v-for="(char, index) in currentText" :key="index" class="letter-container">
               <div class="random-top">{{ randomCharsTop[index] }}</div>
               <div class="main-letter">{{ char }}</div>
               <div class="random-bottom">{{ randomCharsBottom[index] }}</div>
@@ -33,12 +29,7 @@
     <div class="right-panel">
       <Transition name="panel-fade" mode="out-in">
         <!-- Terminal -->
-        <TerminalWindow
-          v-if="view === 'cli'"
-          key="cli"
-          ref="terminalRef"
-          @game-selected="launchGame"
-        />
+        <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" @game-selected="launchGame" />
 
         <!-- Active game slot -->
         <div v-else key="game">
@@ -143,7 +134,7 @@ onUnmounted(() => {
 <style scoped>
 .right-panel {
   /* Keeps the right column stable during transitions so left text doesn't shift */
-  width: 480px;
+  width: 660px;
   flex-shrink: 0;
 }
 

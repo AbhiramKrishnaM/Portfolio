@@ -59,7 +59,6 @@ export function useCLI() {
   // Add a new command by adding a key here. Value must be () => void.
   const commands = {
     whoami() {
-      addLine("pair", { label: "NAME ", value: "Abhiram Krishna M" });
       addLine("pair", { label: "ROLE ", value: "Full-Stack Developer" });
       addLine("pair", {
         label: "LOC  ",
@@ -106,6 +105,7 @@ export function useCLI() {
     clear() {
       lines.value = [];
       menuState.value = null;
+      runBoot(); // reset to initial state, not empty screen
     },
   };
 
@@ -202,14 +202,20 @@ export function useCLI() {
 
   // ─── boot sequence ────────────────────────────────────────────────────────────
   /**
-   * Called once on terminal mount.
-   * Renders a welcome output without requiring user input.
+   * Shared boot content — used by both initial mount and `clear`.
+   * Renders whoami + ls socials exactly as bradeac.dev does.
    */
-  function boot() {
-    addLine("comment", '// type "help" to see available commands');
-    blank();
+  function runBoot() {
     addLine("input", "whoami");
     commands.whoami();
+    addLine("input", "ls socials");
+    commands["ls socials"]();
+    addLine("comment", '// type "help" to see available commands');
+    blank();
+  }
+
+  function boot() {
+    runBoot();
   }
 
   /**

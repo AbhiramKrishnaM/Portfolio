@@ -10,6 +10,12 @@
         <span class="text-white-gradient-01 text-sm">{{ line.content }}</span>
       </div>
 
+      <!-- pixel name block -->
+      <PixelName
+        v-else-if="line.type === 'pixel-name'"
+        :text="line.content"
+      />
+
       <!-- comment  // ... -->
       <div
         v-else-if="line.type === 'comment'"
@@ -67,6 +73,7 @@
 
 <script setup>
 import GameSelectMenu from "./GameSelectMenu.vue";
+import PixelName from "./PixelName.vue";
 
 defineProps({
   lines: {
