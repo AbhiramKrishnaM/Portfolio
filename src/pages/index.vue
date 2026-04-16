@@ -17,7 +17,19 @@
         </div>
       </div>
 
-      <div id="section-2" class="mt-82">
+      <div id="section-2" class="mt-6">
+        <a
+          v-if="activeGameGithubUrl"
+          :href="activeGameGithubUrl"
+          target="_blank"
+          class="mb-2.5 text-accent-sub flex font-medium"
+        >
+          const
+          <div class="text-accent-variable ml-2">githubLink</div>
+          <div class="text-white mx-2">=</div>
+          <div class="text-accent-url">"{{ activeGameGithubUrl }}"</div>
+        </a>
+
         <ul class="text-gray-gradient-01 font-normal">
           <li>// open the terminal and explore.</li>
           <li>// type /game to play a mini-game.</li>
@@ -42,15 +54,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
+import { GAME_REGISTRY } from "@/composables/useCLI.js";
 
 // ─── view state ──────────────────────────────────────────────────────────────
 /** 'cli' | 'game' */
 const view = ref("cli");
 const activeGame = ref(null);
 const terminalRef = ref(null);
+
+const activeGameGithubUrl = computed(() => {
+  if (!activeGame.value) return null;
+  return GAME_REGISTRY.find((g) => g.id === activeGame.value)?.githubUrl ?? null;
+});
 
 function launchGame(gameId) {
   activeGame.value = gameId;

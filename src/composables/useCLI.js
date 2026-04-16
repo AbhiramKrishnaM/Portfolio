@@ -16,18 +16,21 @@ export const GAME_REGISTRY = [
     label: "_snake-game",
     description: "classic snake",
     comingSoon: false,
+    githubUrl: "https://github.com/AbhiramKrishnaM/snake-game-starter",
   },
   {
     id: "sudoku",
     label: "_sudoku",
     description: "number puzzle",
     comingSoon: true,
+    githubUrl: null,
   },
   {
     id: "tetris",
     label: "_tetris",
     description: "block stacking",
     comingSoon: true,
+    githubUrl: null,
   },
 ];
 
