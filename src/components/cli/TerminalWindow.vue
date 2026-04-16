@@ -11,25 +11,15 @@
     </div>
 
     <!-- ── scrollable output + inline input ───────────────────────────── -->
-    <div
-      ref="outputEl"
-      class="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin min-h-0"
-    >
+    <div ref="outputEl" class="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin min-h-0">
       <TerminalOutput :lines="lines" :menu-state="menuState" />
 
       <!-- Inline active $ prompt — hidden while boot animation runs -->
       <div v-if="!booting" class="flex items-center gap-2 mt-1">
         <span class="text-accent-variable text-sm select-none">$</span>
-        <input
-          ref="inputRef"
-          v-model="inputValue"
-          type="text"
-          autocomplete="off"
-          autocorrect="off"
-          spellcheck="false"
+        <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
           class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
-          @keydown="handleKeydown"
-        />
+          @keydown="handleKeydown" />
       </div>
     </div>
   </div>
@@ -138,16 +128,11 @@ onMounted(() => {
 .terminal-window {
   width: 660px;
   height: 500px;
-  background: linear-gradient(
-    150deg,
-    rgba(1, 22, 39, 0.95) 0%,
-    rgba(1, 18, 33, 0.98) 100%
-  );
+  background: linear-gradient(150deg,
+      rgba(1, 22, 39, 0.95) 0%,
+      rgba(1, 18, 33, 0.98) 100%);
   border: 1px solid #1e2d3d;
   border-radius: 8px;
-  box-shadow:
-    0px 2px 0px 0px rgba(255, 255, 255, 0.08) inset,
-    0 20px 60px rgba(0, 0, 0, 0.5);
   cursor: text;
   overflow: hidden;
 }
