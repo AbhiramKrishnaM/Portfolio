@@ -1,7 +1,9 @@
 <template>
   <div class="relative flex items-center justify-center h-full gap-92">
+    <!-- ── Three.js background ───────────────────────────────────────────── -->
+    <IcosahedronBackground />
     <!-- ── Left: intro ───────────────────────────────────────────────── -->
-    <div>
+    <div class="relative z-10">
       <div id="section-1" class="text-white-gradient-01 font-normal">
         <h6 class="text-lg">Hi all, I am</h6>
         <h1 class="text-6xl">Abhiram Krishna M</h1>
@@ -40,7 +42,7 @@
     </div>
 
     <!-- ── Right: CLI terminal ↔ game ───────────────────────────────── -->
-    <div class="right-panel">
+    <div class="right-panel relative z-10">
       <Transition name="panel-fade" mode="out-in">
         <!-- Terminal -->
         <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" @game-selected="launchGame" />
@@ -59,6 +61,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
+import IcosahedronBackground from "@/components/IcosahedronBackground.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 
 // ─── view state ──────────────────────────────────────────────────────────────
