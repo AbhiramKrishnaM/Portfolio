@@ -85,12 +85,65 @@ export function useCLI() {
       blank();
     },
 
+    "ls projects"() {
+      addLine("comment", "// projects — coming soon");
+      blank();
+    },
+
+    "ls blog"() {
+      addLine("comment", "// blog — coming soon");
+      blank();
+    },
+
+    "cd projects"() {
+      addLine("comment", "// navigating to projects — coming soon");
+      blank();
+    },
+
+    "cd blog"() {
+      addLine("comment", "// blog — coming soon");
+      blank();
+    },
+
+    "cd home"() {
+      addLine("comment", "// you are already home");
+      blank();
+    },
+
+    "cat cv"() {
+      addLine("comment", "// cv — coming soon");
+      blank();
+    },
+
+    "cd cv"() {
+      addLine("comment", "// cv — coming soon");
+      blank();
+    },
+
+    contact() {
+      addLine("comment", "// get in touch");
+      addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
+      addLine("link", { text: "linkedin", url: "#" });
+      blank();
+    },
+
     help() {
-      addLine("comment", "// available commands");
-      addLine("help-row", { cmd: "whoami", desc: "display info about me" });
+      addLine("comment", "Available commands:");
+      addLine("help-row", { cmd: "ls projects", desc: "list projects" });
+      addLine("help-row", { cmd: "ls blog", desc: "list blog posts" });
       addLine("help-row", { cmd: "ls socials", desc: "list social links" });
+      addLine("help-row", { cmd: "cd projects", desc: "go to projects" });
+      addLine("help-row", { cmd: "cd blog", desc: "go to blog" });
+      addLine("help-row", { cmd: "cd home", desc: "go home" });
+      addLine("help-row", { cmd: "cat cv", desc: "quick CV overview" });
+      addLine("help-row", { cmd: "cd cv", desc: "view full CV" });
+      addLine("help-row", { cmd: "whoami", desc: "who am I?" });
+      addLine("help-row", { cmd: "contact", desc: "get in touch" });
       addLine("help-row", { cmd: "/game", desc: "launch a mini-game" });
-      addLine("help-row", { cmd: "clear", desc: "clear the terminal" });
+      addLine("help-row", { cmd: "clear", desc: "clear terminal" });
+      addLine("help-row", { cmd: "help", desc: "show this message" });
+      blank();
+      addLine("comment", "Some commands aren't listed. Try things.");
       blank();
     },
 
