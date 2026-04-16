@@ -1,14 +1,14 @@
 <template>
-  <div class="w-full h-screen text-accent-color">
-    <Navbar />
+  <div class="w-full h-screen text-accent-color flex items-center justify-center">
+    <!-- <Navbar /> -->
     <div id="content" class="overflow-hidden select-none">
       <router-view></router-view>
     </div>
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
 <script setup>
-import Footer from "@/components/Footer.vue";
-import Navbar from "@/components/Navbar.vue";
+// import Footer from "@/components/Footer.vue";
+// import Navbar from "@/components/Navbar.vue";
 </script>
