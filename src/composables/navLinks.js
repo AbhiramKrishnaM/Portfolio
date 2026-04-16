@@ -18,13 +18,6 @@ export function useNavlinks() {
     },
     {
       id: uuidv4(),
-      to: "/about",
-      name: "_about_me",
-      hidden: isProd,
-    },
-
-    {
-      id: uuidv4(),
       to: "/projects",
       name: " _projects",
       hidden: isProd,
