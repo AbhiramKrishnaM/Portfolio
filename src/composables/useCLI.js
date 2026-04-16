@@ -10,6 +10,9 @@ import { ref } from "vue";
 // ─── Boot animation helpers ────────────────────────────────────────────────────
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Persists across navigation but resets on page refresh
+let _hasBooted = false;
+
 // ─── Game Registry ─────────────────────────────────────────────────────────────
 // Each entry needs: id (unique), label (display name), description.
 // Set comingSoon: true to show the item as disabled in the picker.
@@ -285,6 +288,11 @@ export function useCLI() {
    * then staggers the output lines. Used on initial page load.
    */
   async function bootAnimated() {
+    if (_hasBooted) {
+      runBoot();
+      return;
+    }
+    _hasBooted = true;
     booting.value = true;
 
     // ── helper: type a command into a new input line ──────────────────
