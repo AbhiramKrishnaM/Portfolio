@@ -18,17 +18,19 @@
       </div>
 
       <div id="section-2" class="mt-6">
-        <a
-          v-if="activeGameGithubUrl"
-          :href="activeGameGithubUrl"
-          target="_blank"
-          class="mb-2.5 text-accent-sub flex font-medium"
-        >
-          const
-          <div class="text-accent-variable ml-2">githubLink</div>
-          <div class="text-white mx-2">=</div>
-          <div class="text-accent-url">"{{ activeGameGithubUrl }}"</div>
-        </a>
+        <Transition name="github-link">
+          <a
+            v-if="activeGameGithubUrl"
+            :href="activeGameGithubUrl"
+            target="_blank"
+            class="mb-2.5 text-accent-sub flex font-medium"
+          >
+            const
+            <div class="text-accent-variable ml-2">githubLink</div>
+            <div class="text-white mx-2">=</div>
+            <div class="text-accent-url">"{{ activeGameGithubUrl }}"</div>
+          </a>
+        </Transition>
 
         <ul class="text-gray-gradient-01 font-normal">
           <li>// open the terminal and explore.</li>
@@ -202,5 +204,24 @@ onUnmounted(() => {
 
 .main-letter {
   font-size: 1em;
+}
+
+/* ── github link transition ─────────────────────────────────────────────── */
+.github-link-enter-active {
+  animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.github-link-leave-active {
+  animation: slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
