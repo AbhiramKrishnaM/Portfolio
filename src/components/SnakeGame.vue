@@ -121,6 +121,7 @@
 
       <button
         class="absolute -bottom-36 right-0 rounded-md p-2 border border-white text-white mt-auto"
+        @click="$emit('skip')"
       >
         Skip
       </button>
@@ -145,6 +146,9 @@ import Left from "@/assets/icons/left.svg";
 import Right from "@/assets/icons/right.svg";
 import ActiveSnakeFood from "@/assets/icons/active-snake-food.svg";
 import InActiveSnakeFood from "@/assets/icons/inactive-snake-food.svg";
+
+// emits
+const emit = defineEmits(["skip"]);
 
 // state
 const gameBoard = ref(null);

@@ -1,13 +1,12 @@
 <template>
   <div class="relative flex items-center justify-center h-full gap-92">
-    <!-- Testing out few bakcground shaders -->
-    <!-- <CyberneticGridShader /> -->
+    <!-- ── Left: intro ───────────────────────────────────────────────── -->
     <div>
       <div id="section-1" class="text-white-gradient-01 font-normal">
         <h6 class="text-lg">Hi all, I am</h6>
         <h1 class="text-6xl">Abhiram Krishna M</h1>
         <div class="text-3xl text-accent-sub hacking-text mt-3">
-          <span>></span>
+          <span>&gt;</span>
           <div class="hacking-container">
             <div
               v-for="(char, index) in currentText"
@@ -24,54 +23,71 @@
 
       <div id="section-2" class="mt-82">
         <ul class="text-gray-gradient-01 font-normal">
-          <li>// complete the game to continue.</li>
-          <li>// you can also see it on my github page.</li>
+          <li>// open the terminal and explore.</li>
+          <li>// type /game to play a mini-game.</li>
         </ul>
-
-        <a
-          href="https://github.com/AbhiramKrishnaM/snake-game-starter"
-          target="_blank"
-          class="mt-2.5 text-accent-sub flex font-medium"
-        >
-          const
-          <div class="text-accent-variable ml-2">githubLink</div>
-          <div class="text-white mx-2">=</div>
-          <div class="text-accent-url">
-            "https://github.com/AbhiramKrishnaM/snake-game-starter"
-          </div>
-        </a>
       </div>
     </div>
 
-    <SnakeGame />
+    <!-- ── Right: CLI terminal ↔ game ───────────────────────────────── -->
+    <div class="right-panel">
+      <Transition name="panel-fade" mode="out-in">
+        <!-- Terminal -->
+        <TerminalWindow
+          v-if="view === 'cli'"
+          key="cli"
+          ref="terminalRef"
+          @game-selected="launchGame"
+        />
+
+        <!-- Active game slot -->
+        <div v-else key="game">
+          <SnakeGame v-if="activeGame === 'snake'" @skip="exitGame" />
+          <!-- Register additional game components here as they are added -->
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
-import CyberneticGridShader from "@/components/ui/CyberneticGridShader.vue";
 
-// Constants
-const texts = [
-  "Software Engineer",
-  "Coding Enthusiast",
-  "Guitarist",
-  // "Football Lover",
-];
+// ─── view state ──────────────────────────────────────────────────────────────
+/** 'cli' | 'game' */
+const view = ref("cli");
+const activeGame = ref(null);
+const terminalRef = ref(null);
+
+function launchGame(gameId) {
+  activeGame.value = gameId;
+  view.value = "game";
+}
+
+function exitGame() {
+  const prev = activeGame.value;
+  view.value = "cli";
+  // Let the terminal know which game was exited so it can add a context line
+  nextTick(() => {
+    terminalRef.value?.onGameExit(prev);
+  });
+}
+
+// ─── hacking text animation ──────────────────────────────────────────────────
+const texts = ["Software Engineer", "Coding Enthusiast", "Guitarist"];
 const maxLength = Math.max(...texts.map((t) => t.length));
 const INTERVAL_DELAY = 150;
 const CYCLE_DURATION = 10;
 const INITIAL_DISPLAY_DURATION = 2000;
 
-// State
 let currentTextIndex = 0;
 const currentText = ref(padText(texts[currentTextIndex]));
 const randomCharsTop = ref([]);
 const randomCharsBottom = ref([]);
 let cyclingInterval = null;
 
-// Utility Functions
 const randomChar = () => {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|:;<>,.?/";
@@ -94,7 +110,6 @@ function generateRandomArray() {
   return currentText.value.map(() => randomChar());
 }
 
-// Main Functionality
 function startCycling() {
   let cycles = 0;
   const nextText = padText(texts[(currentTextIndex + 1) % texts.length]);
@@ -115,7 +130,6 @@ function startCycling() {
   }, INTERVAL_DELAY);
 }
 
-// Lifecycle Hooks
 onMounted(() => {
   generateRandomChars();
   setTimeout(startCycling, INITIAL_DISPLAY_DURATION);
@@ -127,6 +141,29 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.right-panel {
+  /* Keeps the right column stable during transitions so left text doesn't shift */
+  width: 480px;
+  flex-shrink: 0;
+}
+
+/* ── panel fade transition ──────────────────────────────────────────────── */
+.panel-fade-enter-active,
+.panel-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.panel-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.panel-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ── hacking text ───────────────────────────────────────────────────────── */
 .hacking-text {
   display: flex;
   align-items: center;
