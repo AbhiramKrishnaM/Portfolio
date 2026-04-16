@@ -1,26 +1,14 @@
 <template>
   <div class="w-full h-screen text-accent-color">
-    <Loading
-      v-if="showLoading"
-      @animation-complete="() => (showLoading = false)"
-    />
-
-    <div v-else>
-      <Navbar />
-      <div id="content" class="overflow-hidden select-none">
-        <router-view></router-view>
-      </div>
-      <Footer />
+    <Navbar />
+    <div id="content" class="overflow-hidden select-none">
+      <router-view></router-view>
     </div>
+    <Footer />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-// components
-import Loading from "./components/loading.vue";
 import Footer from "@/components/Footer.vue";
 import Navbar from "@/components/Navbar.vue";
-
-const showLoading = ref(true);
 </script>
