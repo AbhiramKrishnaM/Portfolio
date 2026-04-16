@@ -20,13 +20,13 @@
       <!-- comment  // ... -->
       <div
         v-else-if="line.type === 'comment'"
-        class="text-gray-gradient-01 text-xs italic"
+        class="pl-5 text-gray-gradient-01 text-xs italic"
       >
         {{ line.content }}
       </div>
 
       <!-- key / value pair  LABEL   value -->
-      <div v-else-if="line.type === 'pair'" class="flex gap-3 text-sm">
+      <div v-else-if="line.type === 'pair'" class="pl-5 flex gap-3 text-sm">
         <span class="text-accent-underline font-medium w-14 shrink-0">
           {{ line.content.label }}
         </span>
@@ -34,7 +34,7 @@
       </div>
 
       <!-- clickable link -->
-      <div v-else-if="line.type === 'link'" class="pl-1 text-sm">
+      <div v-else-if="line.type === 'link'" class="pl-5 text-sm">
         <a
           :href="line.content.url"
           target="_blank"
@@ -46,7 +46,7 @@
       </div>
 
       <!-- help row  cmd    desc -->
-      <div v-else-if="line.type === 'help-row'" class="flex gap-3 text-sm">
+      <div v-else-if="line.type === 'help-row'" class="pl-5 flex gap-3 text-sm">
         <span class="text-accent-variable w-28 shrink-0 font-medium">
           {{ line.content.cmd }}
         </span>
@@ -56,7 +56,7 @@
       <!-- error -->
       <div
         v-else-if="line.type === 'error'"
-        class="text-red-400 text-sm"
+        class="pl-5 text-red-400 text-sm"
       >
         {{ line.content }}
       </div>
