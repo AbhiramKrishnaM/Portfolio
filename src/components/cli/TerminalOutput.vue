@@ -8,6 +8,7 @@
       <div v-else-if="line.type === 'input'" class="flex items-center gap-2">
         <span class="text-accent-variable text-sm">$</span>
         <span class="text-white-gradient-01 text-sm">{{ line.content }}</span>
+        <span v-if="line.cursor" class="typing-cursor" />
       </div>
 
       <!-- pixel name block -->
@@ -90,3 +91,19 @@ defineProps({
   },
 });
 </script>
+
+<style scoped>
+.typing-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background-color: currentColor;
+  animation: blink 0.75s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+</style>

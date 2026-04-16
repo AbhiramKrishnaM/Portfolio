@@ -7,6 +7,9 @@
 
 import { ref } from "vue";
 
+// ─── Boot animation helpers ────────────────────────────────────────────────────
+const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
 // ─── Game Registry ─────────────────────────────────────────────────────────────
 // Each entry needs: id (unique), label (display name), description.
 // Set comingSoon: true to show the item as disabled in the picker.
@@ -48,6 +51,9 @@ export function useCLI() {
    * { selectedIndex: number }
    */
   const menuState = ref(null);
+
+  /** True while the boot animation is running — hides the input prompt. */
+  const booting = ref(false);
 
   /** Command input history (most recent first). */
   const cmdHistory = ref([]);
@@ -275,6 +281,57 @@ export function useCLI() {
   }
 
   /**
+   * Animated boot — types each command character-by-character,
+   * then staggers the output lines. Used on initial page load.
+   */
+  async function bootAnimated() {
+    booting.value = true;
+
+    // ── helper: type a command into a new input line ──────────────────
+    async function typeCommand(cmd) {
+      const lineId = uid();
+      lines.value.push({ id: lineId, type: "input", content: "", cursor: true });
+      for (let i = 0; i <= cmd.length; i++) {
+        await _delay(55);
+        const idx = lines.value.findIndex((l) => l.id === lineId);
+        if (idx !== -1) {
+          lines.value[idx] = { id: lineId, type: "input", content: cmd.slice(0, i), cursor: i < cmd.length };
+        }
+      }
+      await _delay(220);
+    }
+
+    // ── whoami ────────────────────────────────────────────────────────
+    await typeCommand("whoami");
+    addLine("pair", { label: "ROLE ", value: "Full-Stack Developer" });
+    await _delay(70);
+    addLine("pair", { label: "LOC  ", value: "Kozhikode, Kerala, India" });
+    await _delay(70);
+    addLine("pair", { label: "STACK", value: "Vue · React · Node · Python · Docker · AWS" });
+    await _delay(70);
+    blank();
+    await _delay(180);
+
+    // ── ls socials ────────────────────────────────────────────────────
+    await typeCommand("ls socials");
+    addLine("comment", "// socials");
+    await _delay(70);
+    addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
+    await _delay(70);
+    addLine("link", { text: "linkedin", url: "#" });
+    await _delay(70);
+    addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
+    await _delay(70);
+    blank();
+    await _delay(150);
+
+    addLine("comment", "// type \"help\" to see available commands");
+    blank();
+
+    booting.value = false;
+  }
+
+  /**
    * Called when the user returns from a game.
    * Adds a contextual line so the terminal feels continuous.
    */
@@ -287,6 +344,7 @@ export function useCLI() {
   return {
     lines,
     menuState,
+    booting,
     execute,
     historyUp,
     historyDown,
@@ -295,6 +353,7 @@ export function useCLI() {
     menuConfirm,
     menuCancel,
     boot,
+    bootAnimated,
     resumeFromGame,
   };
 }

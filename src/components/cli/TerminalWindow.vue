@@ -17,8 +17,8 @@
     >
       <TerminalOutput :lines="lines" :menu-state="menuState" />
 
-      <!-- Inline active $ prompt — the real terminal experience -->
-      <div class="flex items-center gap-2 mt-1">
+      <!-- Inline active $ prompt — hidden while boot animation runs -->
+      <div v-if="!booting" class="flex items-center gap-2 mt-1">
         <span class="text-accent-variable text-sm select-none">$</span>
         <input
           ref="inputRef"
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted } from "vue";
+import { ref, watch, nextTick, onMounted } from "vue";
 import { useCLI } from "@/composables/useCLI.js";
 import TerminalOutput from "./TerminalOutput.vue";
 
@@ -45,6 +45,7 @@ const emit = defineEmits(["game-selected"]);
 const {
   lines,
   menuState,
+  booting,
   execute,
   historyUp,
   historyDown,
@@ -52,7 +53,7 @@ const {
   menuDown,
   menuConfirm,
   menuCancel,
-  boot,
+  bootAnimated,
   resumeFromGame,
 } = useCLI();
 
@@ -123,11 +124,12 @@ function scrollToBottom() {
   }
 }
 
+// Auto-scroll as lines are added during the boot animation
+watch(lines, () => nextTick(scrollToBottom), { deep: true });
+
 onMounted(() => {
-  boot();
-  nextTick(() => {
-    scrollToBottom();
-    focusInput();
+  bootAnimated().then(() => {
+    nextTick(() => focusInput());
   });
 });
 </script>
