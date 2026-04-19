@@ -152,28 +152,125 @@ function buildFacePlanes(radius) {
   return planes;
 }
 
-// ── Module-level ship state ────────────────────────────────────────────────
+// ── Ship state ─────────────────────────────────────────────────────────────
 let shipMesh = null;
 let engineRef = null;
 let facePlanes = null;
 let shipVel = new THREE.Vector3();
 const _targetQ = new THREE.Quaternion();
 const _forward = new THREE.Vector3(0, 0, 1);
-const SHIP_SPEED = 0.90;   // world units / second inside the group
-const SHIP_MARGIN = 0.20;   // how close to a face before bouncing
+const SHIP_SPEED = 0.90;
+const SHIP_MARGIN = 0.20;
 
-// ── Responsive group position/scale ───────────────────────────────────────
-function applyResponsiveLayout(w) {
-  if (w < 1024) {
-    // Mobile/tablet: center the icosahedron and scale it down
+// ── Mobile solar system state ──────────────────────────────────────────────
+let isMobile = false;
+let solarSystemGroup = null;
+let coronaMesh = null;
+const planets = [];
+let mobileTarget = 0;
+const MOBILE_SHIP_SPEED = 0.55;
+
+// ── Solar system (shown on mobile only) ───────────────────────────────────
+function createSolarSystem() {
+  solarSystemGroup = new THREE.Group();
+
+  // Sun core
+  solarSystemGroup.add(new THREE.Mesh(
+    new THREE.SphereGeometry(0.16, 14, 14),
+    new THREE.MeshBasicMaterial({ color: 0xffc107 })
+  ));
+
+  // Sun corona — pulsed each frame
+  coronaMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.24, 14, 14),
+    new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.22 })
+  );
+  solarSystemGroup.add(coronaMesh);
+
+  // Tilt the whole orbital plane to face the camera (camera is at +Z, orbits were in XZ = edge-on)
+  // -π/2 on X rotates the XZ plane into XY plane → orbits appear as circles from camera
+  solarSystemGroup.rotation.x = -Math.PI * 0.52;
+  solarSystemGroup.rotation.z = 0.28; // slight artistic tilt
+
+  const planetDefs = [
+    { orbitRadius: 0.30, size: 0.048, color: 0xe8cda0, speed: 2.2,  tilt: 0.0,   rings: null },
+    { orbitRadius: 0.52, size: 0.060, color: 0x4fc3f7, speed: 1.5,  tilt: 0.05,  rings: null },
+    { orbitRadius: 0.78, size: 0.082, color: 0x81c784, speed: 0.88, tilt: 0.08,  rings: null },
+    { orbitRadius: 1.08, size: 0.068, color: 0xff7043, speed: 0.52, tilt: -0.06, rings: null },
+    { orbitRadius: 1.38, size: 0.090, color: 0xce93d8, speed: 0.30, tilt: 0.10,  rings: null },
+    // Jupiter with rings
+    { orbitRadius: 1.68, size: 0.115, color: 0xc88b3a, speed: 0.18, tilt: -0.08,
+      rings: { inner: 0.145, outer: 0.26, color: 0xb07830, opacity: 0.55 } },
+  ];
+
+  for (const pd of planetDefs) {
+    // Orbit path
+    const ringPts = [];
+    for (let i = 0; i <= 80; i++) {
+      const a = (i / 80) * Math.PI * 2;
+      ringPts.push(new THREE.Vector3(Math.cos(a) * pd.orbitRadius, 0, Math.sin(a) * pd.orbitRadius));
+    }
+    solarSystemGroup.add(new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints(ringPts),
+      new THREE.LineBasicMaterial({ color: 0x1e3a50, transparent: true, opacity: 0.5 })
+    ));
+
+    // Planet sphere
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(pd.size, 12, 12),
+      new THREE.MeshBasicMaterial({ color: pd.color })
+    );
+    const startAngle = Math.random() * Math.PI * 2;
+    mesh.position.set(Math.cos(startAngle) * pd.orbitRadius, pd.tilt, Math.sin(startAngle) * pd.orbitRadius);
+
+    // Saturn-style rings attached to planet so they orbit with it
+    if (pd.rings) {
+      const planetRing = new THREE.Mesh(
+        new THREE.RingGeometry(pd.rings.inner, pd.rings.outer, 48),
+        new THREE.MeshBasicMaterial({
+          color: pd.rings.color, transparent: true,
+          opacity: pd.rings.opacity, side: THREE.DoubleSide,
+        })
+      );
+      // RingGeometry is in XY plane by default; rotate into XZ (orbital plane) + slight tilt for aesthetics
+      planetRing.rotation.x = Math.PI * 0.44;
+      planetRing.rotation.z = 0.22;
+      mesh.add(planetRing);
+    }
+
+    solarSystemGroup.add(mesh);
+    planets.push({ mesh, orbitRadius: pd.orbitRadius, orbitSpeed: pd.speed, angle: startAngle, tilt: pd.tilt });
+  }
+
+  group.add(solarSystemGroup);
+  solarSystemGroup.visible = false;
+}
+
+// ── Responsive layout ──────────────────────────────────────────────────────
+function applyResponsiveLayout(w, h) {
+  isMobile = w < 1024;
+
+  if (isMobile) {
+    // Scale icosahedron so its diameter fills ~78% of visible screen width
+    const visibleHeight = 2 * Math.tan((Math.PI / 180) * 22.5) * 7; // camera FOV=45, z=7
+    const visibleWidth = visibleHeight * (w / h);
+    const scale = Math.min((visibleWidth * 0.95) / (2 * 2.4), 0.92);
+
+    // Clamp Y so the top of the icosahedron never exceeds the viewport edge
+    const maxY = visibleHeight / 2 - 2.4 * scale - 0.18;
     group.position.x = 0;
-    group.position.y = 1.2;
-    group.scale.setScalar(0.65);
+    group.position.y = Math.min(visibleHeight * 0.10, maxY);
+    group.scale.setScalar(scale);
+
+    if (solarSystemGroup) solarSystemGroup.visible = true;
+    if (shipMesh) shipMesh.scale.setScalar(0.5); // extra-small rocket on mobile
   } else {
-    // Desktop: shift right, full size
     group.position.x = 1.2;
     group.position.y = 0;
     group.scale.setScalar(1.0);
+
+    if (solarSystemGroup) solarSystemGroup.visible = false;
+    if (shipMesh) shipMesh.scale.setScalar(1.0);
   }
 }
 
@@ -219,7 +316,6 @@ function init() {
   const { root, engineMesh } = createSpaceship();
   shipMesh = root;
   engineRef = engineMesh;
-  // Start near centre with a random direction
   shipVel.set(
     Math.random() - 0.5,
     Math.random() - 0.5,
@@ -227,10 +323,13 @@ function init() {
   ).normalize().multiplyScalar(SHIP_SPEED);
   group.add(shipMesh);
 
-  // Collision planes (base icosahedron, detail=0, same radius)
+  // Collision planes for desktop bounce (detail=0, same radius)
   facePlanes = buildFacePlanes(2.4);
 
-  applyResponsiveLayout(w);
+  // Solar system (hidden until mobile layout applies)
+  createSolarSystem();
+
+  applyResponsiveLayout(w, h);
 }
 
 // ── Mouse handler ──────────────────────────────────────────────────────────
@@ -247,7 +346,7 @@ function startLoop() {
   function tick() {
     animFrameId = requestAnimationFrame(tick);
     const t = (performance.now() - t0) / 1000;
-    const dt = Math.min(t - prevT, 0.05);   // cap delta-time for tab-switch spikes
+    const dt = Math.min(t - prevT, 0.05);
     prevT = t;
 
     // Mouse smooth
@@ -260,26 +359,59 @@ function startLoop() {
     group.rotation.x = Math.sin(t * 0.10) * 0.12;
 
     // ── Ship physics ───────────────────────────────────────────────────
-    shipMesh.position.addScaledVector(shipVel, dt);
+    if (isMobile && planets.length > 0) {
+      // Animate planet orbits (positions are in solarSystemGroup / group local space)
+      for (const p of planets) {
+        p.angle += p.orbitSpeed * dt;
+        p.mesh.position.set(
+          Math.cos(p.angle) * p.orbitRadius,
+          p.tilt * Math.sin(p.angle * 2), // slight inclination wobble
+          Math.sin(p.angle) * p.orbitRadius
+        );
+      }
 
-    for (const { n, d } of facePlanes) {
-      // Positive dist means the ship has crossed (or is near) this face
-      const penetration = n.dot(shipMesh.position) - (d - SHIP_MARGIN);
-      if (penetration > 0) {
-        // Reflect velocity off the outward face normal
-        // reflect(n) = v - 2·dot(v,n)·n  → inverts the outward component
-        shipVel.reflect(n);
-        // Push ship back inside to avoid tunnelling
-        shipMesh.position.addScaledVector(n, -(penetration + 0.01));
-        break;   // one collision at a time
+      // Sun corona pulse
+      if (coronaMesh) {
+        coronaMesh.scale.setScalar(0.9 + 0.1 * Math.sin(t * 2.8));
+      }
+
+      // Move rocket toward current target planet then pick a random different one
+      // Planet positions are in solarSystemGroup local space; ship is in group local space.
+      // Convert planet world position → group local to compare correctly.
+      const target = planets[mobileTarget];
+      const planetGroupPos = new THREE.Vector3();
+      target.mesh.getWorldPosition(planetGroupPos);
+      group.worldToLocal(planetGroupPos);
+
+      const toTarget = planetGroupPos.sub(shipMesh.position);
+      const dist = toTarget.length();
+      if (dist < 0.18) {
+        let next = mobileTarget;
+        while (next === mobileTarget) next = Math.floor(Math.random() * planets.length);
+        mobileTarget = next;
+      }
+      shipVel.copy(toTarget.normalize().multiplyScalar(MOBILE_SHIP_SPEED));
+      shipMesh.position.addScaledVector(shipVel, dt);
+    } else {
+      // Desktop: bounce inside icosahedron
+      shipMesh.position.addScaledVector(shipVel, dt);
+      for (const { n, d } of facePlanes) {
+        const penetration = n.dot(shipMesh.position) - (d - SHIP_MARGIN);
+        if (penetration > 0) {
+          shipVel.reflect(n);
+          shipMesh.position.addScaledVector(n, -(penetration + 0.01));
+          break;
+        }
       }
     }
 
-    // Smoothly orient nose toward velocity
-    _targetQ.setFromUnitVectors(_forward, shipVel.clone().normalize());
-    shipMesh.quaternion.slerp(_targetQ, 0.14);
+    // Orient nose toward velocity (shared)
+    if (shipVel.lengthSq() > 0.001) {
+      _targetQ.setFromUnitVectors(_forward, shipVel.clone().normalize());
+      shipMesh.quaternion.slerp(_targetQ, 0.14);
+    }
 
-    // Engine glow pulse
+    // Engine glow pulse (shared)
     const pulse = 0.85 + 0.15 * Math.sin(t * 9.0);
     engineRef.scale.setScalar(pulse);
 
@@ -295,7 +427,7 @@ function onResize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
-  applyResponsiveLayout(w);
+  applyResponsiveLayout(w, h);
 }
 
 onMounted(() => {
