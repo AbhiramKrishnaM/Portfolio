@@ -92,12 +92,17 @@ defineExpose({ onGameExit });
 function handleKeydown(event) {
   // ── game menu mode ───────────────────────────────────────────────────
   if (menuState.value) {
-    if (event.key === "ArrowUp") {
+    // If the user has typed something, let Enter execute it normally
+    if (event.key === "Enter" && inputValue.value.trim()) {
+      // fall through to normal mode below
+    } else if (event.key === "ArrowUp") {
       event.preventDefault();
       menuUp();
+      return;
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       menuDown();
+      return;
     } else if (event.key === "Enter") {
       event.preventDefault();
       const gameId = menuConfirm();
@@ -107,12 +112,15 @@ function handleKeydown(event) {
       } else {
         nextTick(scrollToBottom);
       }
+      return;
     } else if (event.key === "Escape") {
       event.preventDefault();
       menuCancel();
       nextTick(scrollToBottom);
+      return;
+    } else {
+      return;
     }
-    return;
   }
 
   // ── tab completion mode ──────────────────────────────────────────────

@@ -178,23 +178,28 @@ export function useCLI() {
     clear() {
       lines.value = [];
       menuState.value = null;
-      runBoot(); // reset to initial state, not empty screen
+      runBoot();
     },
   };
 
   // ─── execute a raw command string ────────────────────────────────────────────
   function execute(raw) {
     const cmd = raw.trim();
-    addLine("input", cmd || "");
-    if (!cmd) return;
+    if (!cmd) {
+      addLine("input", "");
+      return;
+    }
 
     cmdHistory.value.unshift(cmd);
     historyIdx.value = -1;
 
     const handler = commands[cmd.toLowerCase()];
     if (handler) {
+      // clear wipes lines itself — don't echo first or it flashes
+      if (cmd.toLowerCase() !== "clear") addLine("input", cmd);
       handler();
     } else {
+      addLine("input", cmd);
       addLine(
         "error",
         `command not found: ${cmd}  —  type "help" for available commands`
