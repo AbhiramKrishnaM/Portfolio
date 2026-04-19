@@ -15,11 +15,27 @@
       <TerminalOutput :lines="lines" :menu-state="menuState" />
 
       <!-- Inline active $ prompt — hidden while boot animation runs -->
-      <div v-if="!booting" class="flex items-center gap-2 mt-1">
-        <span class="text-accent-variable text-sm select-none">$</span>
-        <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
-          class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
-          @keydown="handleKeydown" />
+      <div v-if="!booting">
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-accent-variable text-sm select-none">$</span>
+          <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+            class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
+            @keydown="handleKeydown" />
+        </div>
+
+        <!-- Tab-completion picker -->
+        <div v-if="tabSuggestions.length" class="pl-5 pt-1 flex flex-wrap gap-x-3 gap-y-1">
+          <span
+            v-for="(cmd, i) in tabSuggestions"
+            :key="cmd"
+            class="text-sm px-1.5 py-0.5 rounded transition-colors duration-100"
+            :class="i === tabIndex
+              ? 'bg-accent-variable text-theme-main font-semibold'
+              : 'text-gray-gradient-01'"
+          >
+            {{ cmd }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -45,12 +61,21 @@ const {
   menuCancel,
   bootAnimated,
   resumeFromGame,
-  tabComplete,
+  getSuggestions,
 } = useCLI();
 
 const inputValue = ref("");
 const outputEl = ref(null);
 const inputRef = ref(null);
+
+// ─── tab completion state ─────────────────────────────────────────────────────
+const tabSuggestions = ref([]);
+const tabIndex = ref(0);
+
+function clearTab() {
+  tabSuggestions.value = [];
+  tabIndex.value = 0;
+}
 
 // ─── public API ───────────────────────────────────────────────────────────────
 function onGameExit(gameId) {
@@ -65,7 +90,7 @@ defineExpose({ onGameExit });
 
 // ─── keyboard handler ─────────────────────────────────────────────────────────
 function handleKeydown(event) {
-  // ── menu mode ────────────────────────────────────────────────────────
+  // ── game menu mode ───────────────────────────────────────────────────
   if (menuState.value) {
     if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -90,14 +115,56 @@ function handleKeydown(event) {
     return;
   }
 
-  // ── normal mode ──────────────────────────────────────────────────────
+  // ── tab completion mode ──────────────────────────────────────────────
   if (event.key === "Tab") {
     event.preventDefault();
-    if (!inputValue.value.trim()) return;
-    const { completed } = tabComplete(inputValue.value);
-    if (completed !== null) inputValue.value = completed;
+    const partial = inputValue.value.trim();
+    if (!partial) return;
+
+    if (tabSuggestions.value.length === 0) {
+      // First Tab press — compute suggestions
+      const matches = getSuggestions(partial);
+      if (matches.length === 0) return;
+      if (matches.length === 1) {
+        // Unique match — complete immediately, no picker
+        inputValue.value = matches[0];
+        return;
+      }
+      tabSuggestions.value = matches;
+      tabIndex.value = 0;
+    } else {
+      // Subsequent Tab — cycle forward (Shift+Tab cycles back)
+      const dir = event.shiftKey ? -1 : 1;
+      tabIndex.value = (tabIndex.value + dir + tabSuggestions.value.length) % tabSuggestions.value.length;
+    }
+    // Fill input with highlighted suggestion (not confirmed yet)
+    inputValue.value = tabSuggestions.value[tabIndex.value];
     nextTick(scrollToBottom);
-  } else if (event.key === "ArrowUp") {
+    return;
+  }
+
+  // Any other key dismisses the picker
+  if (tabSuggestions.value.length) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      clearTab();
+      return;
+    }
+    // Enter confirms the highlighted suggestion then executes
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const cmd = tabSuggestions.value[tabIndex.value];
+      clearTab();
+      inputValue.value = "";
+      execute(cmd);
+      nextTick(scrollToBottom);
+      return;
+    }
+    clearTab();
+  }
+
+  // ── normal mode ──────────────────────────────────────────────────────
+  if (event.key === "ArrowUp") {
     event.preventDefault();
     inputValue.value = historyUp(inputValue.value);
   } else if (event.key === "ArrowDown") {

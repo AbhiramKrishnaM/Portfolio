@@ -206,31 +206,11 @@ export function useCLI() {
   // ─── tab completion ──────────────────────────────────────────────────────────
   const commandNames = Object.keys(commands);
 
-  function tabComplete(partial) {
+  /** Returns all command names that start with `partial`. Pure — no side effects. */
+  function getSuggestions(partial) {
     const lower = partial.toLowerCase();
-    if (!lower) return { completed: null, suggestions: [] };
-
-    const matches = commandNames.filter((c) => c.startsWith(lower));
-    if (matches.length === 0) return { completed: null, suggestions: [] };
-
-    if (matches.length === 1) return { completed: matches[0], suggestions: [] };
-
-    // Find longest common prefix among matches
-    let prefix = matches[0];
-    for (let i = 1; i < matches.length; i++) {
-      let j = 0;
-      while (j < prefix.length && j < matches[i].length && prefix[j] === matches[i][j]) j++;
-      prefix = prefix.slice(0, j);
-    }
-
-    // Only echo suggestions to output when prefix didn't advance (user already sees all)
-    const advanced = prefix.length > lower.length;
-    if (!advanced) {
-      addLine("input", partial);
-      addLine("suggestions", matches);
-    }
-
-    return { completed: prefix || null, suggestions: matches };
+    if (!lower) return [];
+    return commandNames.filter((c) => c.startsWith(lower));
   }
 
   // ─── command history navigation ──────────────────────────────────────────────
@@ -405,6 +385,6 @@ export function useCLI() {
     boot,
     bootAnimated,
     resumeFromGame,
-    tabComplete,
+    getSuggestions,
   };
 }

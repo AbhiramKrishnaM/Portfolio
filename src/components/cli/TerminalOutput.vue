@@ -73,17 +73,6 @@
         <span class="text-gray-gradient-01">{{ line.content.desc }}</span>
       </div>
 
-      <!-- tab-completion suggestions -->
-      <div v-else-if="line.type === 'suggestions'" class="pl-5 flex flex-wrap gap-x-4 gap-y-0.5 py-0.5">
-        <span
-          v-for="cmd in line.content"
-          :key="cmd"
-          class="text-sm text-accent-variable"
-        >
-          {{ cmd }}
-        </span>
-      </div>
-
       <!-- error -->
       <div
         v-else-if="line.type === 'error'"
