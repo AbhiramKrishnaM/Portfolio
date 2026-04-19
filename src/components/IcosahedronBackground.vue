@@ -162,6 +162,21 @@ const _forward = new THREE.Vector3(0, 0, 1);
 const SHIP_SPEED = 0.90;   // world units / second inside the group
 const SHIP_MARGIN = 0.20;   // how close to a face before bouncing
 
+// ── Responsive group position/scale ───────────────────────────────────────
+function applyResponsiveLayout(w) {
+  if (w < 1024) {
+    // Mobile/tablet: center the icosahedron and scale it down
+    group.position.x = 0;
+    group.position.y = 1.2;
+    group.scale.setScalar(0.65);
+  } else {
+    // Desktop: shift right, full size
+    group.position.x = 1.2;
+    group.position.y = 0;
+    group.scale.setScalar(1.0);
+  }
+}
+
 // ── Scene init ─────────────────────────────────────────────────────────────
 function init() {
   const canvas = canvasRef.value;
@@ -177,7 +192,6 @@ function init() {
   camera.position.z = 7;
 
   group = new THREE.Group();
-  group.position.x = 1.2;
   scene.add(group);
 
   const mouseVec = new THREE.Vector2(0, 0);
@@ -215,6 +229,8 @@ function init() {
 
   // Collision planes (base icosahedron, detail=0, same radius)
   facePlanes = buildFacePlanes(2.4);
+
+  applyResponsiveLayout(w);
 }
 
 // ── Mouse handler ──────────────────────────────────────────────────────────
@@ -279,6 +295,7 @@ function onResize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
+  applyResponsiveLayout(w);
 }
 
 onMounted(() => {

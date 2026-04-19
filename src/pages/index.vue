@@ -1,13 +1,13 @@
 <template>
-  <div class="relative flex items-center justify-center h-full gap-92">
+  <div class="relative flex flex-col lg:flex-row items-center justify-center min-h-full px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0">
     <!-- ── Three.js background ───────────────────────────────────────────── -->
     <IcosahedronBackground />
     <!-- ── Left: intro ───────────────────────────────────────────────── -->
-    <div class="relative z-10">
+    <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
       <div id="section-1" class="text-white-gradient-01 font-normal">
-        <h6 class="text-lg">Hi all, I am</h6>
-        <h1 class="text-6xl">Abhiram Krishna M</h1>
-        <div class="text-3xl text-accent-sub hacking-text mt-3">
+        <h6 class="text-base md:text-lg">Hi all, I am</h6>
+        <h1 class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl">Abhiram Krishna M</h1>
+        <div class="text-xl md:text-2xl lg:text-3xl text-accent-sub hacking-text mt-3 justify-center lg:justify-start">
           <span>&gt;</span>
           <div class="hacking-container">
             <div v-for="(char, index) in currentText" :key="index" class="letter-container">
@@ -25,7 +25,7 @@
             v-if="activeGameGithubUrl"
             :href="activeGameGithubUrl"
             target="_blank"
-            class="mb-2.5 text-accent-sub flex font-medium"
+            class="mb-2.5 text-accent-sub flex font-medium justify-center lg:justify-start"
           >
             const
             <div class="text-accent-variable ml-2">githubLink</div>
@@ -34,7 +34,7 @@
           </a>
         </Transition>
 
-        <ul class="text-gray-gradient-01 font-normal">
+        <ul class="text-gray-gradient-01 font-normal flex flex-col items-center lg:items-start">
           <li>// open the terminal and explore.</li>
           <li>// type /game to play a mini-game.</li>
         </ul>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- ── Right: CLI terminal ↔ game ───────────────────────────────── -->
-    <div class="right-panel relative z-10">
+    <div class="right-panel relative z-10 w-full lg:w-auto">
       <Transition name="panel-fade" mode="out-in">
         <!-- Terminal -->
         <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" @game-selected="launchGame" />
@@ -157,9 +157,27 @@ onUnmounted(() => {
 
 <style scoped>
 .right-panel {
-  /* Keeps the right column stable during transitions so left text doesn't shift */
-  width: 660px;
+  /* Desktop: fixed width to keep left text stable. Mobile: full width. */
+  width: 100%;
   flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .right-panel {
+    width: 500px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .right-panel {
+    width: 580px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .right-panel {
+    width: 660px;
+  }
 }
 
 /* ── panel fade transition ──────────────────────────────────────────────── */

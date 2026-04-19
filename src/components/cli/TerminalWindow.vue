@@ -208,8 +208,8 @@ onMounted(() => {
 
 <style scoped>
 .terminal-window {
-  width: 660px;
-  height: 500px;
+  width: 100%;
+  height: 420px;
   background: linear-gradient(150deg,
       rgba(1, 22, 39, 0.95) 0%,
       rgba(1, 18, 33, 0.98) 100%);
@@ -217,5 +217,26 @@ onMounted(() => {
   border-radius: 8px;
   cursor: text;
   overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .terminal-window {
+    width: 500px;
+    height: 460px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .terminal-window {
+    width: 580px;
+    height: 480px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .terminal-window {
+    width: 660px;
+    height: 500px;
+  }
 }
 </style>
