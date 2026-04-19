@@ -45,6 +45,7 @@ const {
   menuCancel,
   bootAnimated,
   resumeFromGame,
+  tabComplete,
 } = useCLI();
 
 const inputValue = ref("");
@@ -90,7 +91,13 @@ function handleKeydown(event) {
   }
 
   // ── normal mode ──────────────────────────────────────────────────────
-  if (event.key === "ArrowUp") {
+  if (event.key === "Tab") {
+    event.preventDefault();
+    if (!inputValue.value.trim()) return;
+    const { completed } = tabComplete(inputValue.value);
+    if (completed !== null) inputValue.value = completed;
+    nextTick(scrollToBottom);
+  } else if (event.key === "ArrowUp") {
     event.preventDefault();
     inputValue.value = historyUp(inputValue.value);
   } else if (event.key === "ArrowDown") {
