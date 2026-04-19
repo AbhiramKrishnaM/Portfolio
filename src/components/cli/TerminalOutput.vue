@@ -34,8 +34,16 @@
       </div>
 
       <!-- clickable link -->
-      <div v-else-if="line.type === 'link'" class="pl-5 text-sm">
+      <div v-else-if="line.type === 'link'" class="pl-5 text-sm flex items-center gap-2">
+        <router-link
+          v-if="line.content.url.startsWith('/')"
+          :to="line.content.url"
+          class="text-accent-url hover:underline cursor-pointer"
+        >
+          {{ line.content.text }}
+        </router-link>
         <a
+          v-else
           :href="line.content.url"
           target="_blank"
           rel="noopener noreferrer"
@@ -43,6 +51,9 @@
         >
           {{ line.content.text }}
         </a>
+        <span v-if="line.content.note" class="text-gray-gradient-01 text-xs italic">
+          {{ line.content.note }}
+        </span>
       </div>
 
       <!-- help row  cmd    desc -->
