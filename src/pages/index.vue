@@ -83,6 +83,7 @@ function launchGame(gameId) {
 function exitGame() {
   const prev = activeGame.value;
   view.value = "cli";
+  activeGame.value = null;
   // Let the terminal know which game was exited so it can add a context line
   nextTick(() => {
     terminalRef.value?.onGameExit(prev);

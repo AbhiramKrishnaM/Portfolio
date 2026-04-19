@@ -123,7 +123,7 @@
         class="absolute -bottom-36 right-0 rounded-md p-2 border border-white text-white mt-auto"
         @click="$emit('skip')"
       >
-        Skip
+        back
       </button>
     </div>
   </div>
