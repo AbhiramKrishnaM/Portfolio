@@ -334,7 +334,7 @@ export function useCLI() {
 
     // ── whoami ────────────────────────────────────────────────────────
     await typeCommand("whoami");
-    addLine("pair", { label: "ROLE ", value: "Full-Stack Developer" });
+    addLine("pair", { label: "ROLE ", value: "Full-Stack Engineer" });
     await _delay(70);
     addLine("pair", { label: "LOC  ", value: "Kozhikode, Kerala, India" });
     await _delay(70);
