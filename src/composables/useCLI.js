@@ -71,7 +71,7 @@ export function useCLI() {
   // Add a new command by adding a key here. Value must be () => void.
   const commands = {
     whoami() {
-      addLine("pair", { label: "ROLE ", value: "Full-Stack Developer" });
+      addLine("pair", { label: "ROLE ", value: "Full-Stack Engineer" });
       addLine("pair", {
         label: "LOC  ",
         value: "Kozhikode, Kerala, India",
