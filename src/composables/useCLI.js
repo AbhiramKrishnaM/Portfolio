@@ -141,7 +141,7 @@ export function useCLI() {
     contact() {
       addLine("comment", "// get in touch");
       addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-      addLine("link", { text: "dinq", url: "https://dinq.me/admin/mydinq?domain=abhiramkrishna" });
+      addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
       addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
       addLine("link", { text: "send me a message", url: "/contact", note: "// coming soon" });
       blank();
@@ -351,7 +351,7 @@ export function useCLI() {
     await _delay(70);
     addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
     await _delay(70);
-    addLine("link", { text: "dinq", url: "https://dinq.me/admin/mydinq?domain=abhiramkrishna" });
+    addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
     await _delay(70);
     addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
     await _delay(70);
