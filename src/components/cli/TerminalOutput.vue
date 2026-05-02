@@ -12,16 +12,10 @@
       </div>
 
       <!-- pixel name block -->
-      <PixelName
-        v-else-if="line.type === 'pixel-name'"
-        :text="line.content"
-      />
+      <PixelName v-else-if="line.type === 'pixel-name'" :text="line.content" />
 
       <!-- comment  // ... -->
-      <div
-        v-else-if="line.type === 'comment'"
-        class="pl-5 text-gray-gradient-01 text-xs italic"
-      >
+      <div v-else-if="line.type === 'comment'" class="pl-5 text-gray-gradient-01 text-xs italic">
         {{ line.content }}
       </div>
 
@@ -36,33 +30,28 @@
       <!-- clickable link -->
       <div v-else-if="line.type === 'link'" class="pl-5 text-sm flex items-center gap-2">
         <!-- disabled / coming-soon link -->
-        <span
-          v-if="line.content.note"
-          class="text-gray-gradient-01 opacity-50 cursor-not-allowed"
-        >
+        <span v-if="line.content.note" class="text-gray-gradient-01 opacity-50 cursor-not-allowed">
           {{ line.content.text }}
         </span>
         <!-- active internal link -->
-        <router-link
-          v-else-if="line.content.url.startsWith('/')"
-          :to="line.content.url"
-          class="text-accent-url hover:underline cursor-pointer"
-        >
+        <router-link v-else-if="line.content.url.startsWith('/')" :to="line.content.url"
+          class="text-accent-url hover:underline cursor-pointer">
           {{ line.content.text }}
         </router-link>
         <!-- active external link -->
-        <a
-          v-else
-          :href="line.content.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-accent-url hover:underline cursor-pointer"
-        >
+        <a v-else :href="line.content.url" target="_blank" rel="noopener noreferrer"
+          class="text-accent-url hover:underline cursor-pointer">
           {{ line.content.text }}
         </a>
         <span v-if="line.content.note" class="text-xs text-accent-underline opacity-70">
           {{ line.content.note }}
         </span>
+      </div>
+
+      <div v-else-if="line.type === 'project-row'" class="pl-5 flex items-baseline gap-2 text-sm">
+        <span class="text-accent-variable shrink-0">></span>
+        <span class="text-accent-url font-medium shrink-0">{{ line.content.name }}</span>
+        <span class="text-gray-gradient-01">— {{ line.content.desc }}</span>
       </div>
 
       <!-- help row  cmd    desc -->
@@ -74,20 +63,13 @@
       </div>
 
       <!-- error -->
-      <div
-        v-else-if="line.type === 'error'"
-        class="pl-5 text-red-400 text-sm"
-      >
+      <div v-else-if="line.type === 'error'" class="pl-5 text-red-400 text-sm">
         {{ line.content }}
       </div>
 
       <!-- game-menu — inline interactive picker -->
-      <GameSelectMenu
-        v-else-if="line.type === 'game-menu'"
-        :games="line.content.games"
-        :selected-index="menuState?.selectedIndex ?? 0"
-        :frozen-index="line.content.frozenIndex"
-      />
+      <GameSelectMenu v-else-if="line.type === 'game-menu'" :games="line.content.games"
+        :selected-index="menuState?.selectedIndex ?? 0" :frozen-index="line.content.frozenIndex" />
     </template>
   </div>
 </template>
@@ -123,7 +105,14 @@ defineProps({
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 </style>

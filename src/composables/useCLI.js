@@ -104,7 +104,13 @@ export function useCLI() {
     },
 
     "ls projects"() {
-      addLine("comment", "// projects — coming soon");
+      addLine("comment", "// projects");
+      addLine("project-row", { name: "Job Search", desc: "crawls the web and finds relevant job postings based on your prompts" });
+      addLine("project-row", { name: "My Kali", desc: "personal kali linux container" });
+      addLine("project-row", { name: "aidev", desc: "AI-Powered CLI Assistant for Developers" });
+      addLine("project-row", { name: "Guitar Pro 1", desc: "application to build guitar chords" });
+      blank();
+      addLine("comment", "Run \"cd projects\" to see them all.");
       blank();
     },
 
