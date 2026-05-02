@@ -28,7 +28,7 @@ export const GAME_REGISTRY = [
     id: "sudoku",
     label: "_sudoku",
     description: "number puzzle",
-    comingSoon: true,
+    comingSoon: false,
     githubUrl: null,
   },
   {
