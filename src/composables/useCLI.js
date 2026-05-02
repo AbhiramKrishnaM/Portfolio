@@ -146,10 +146,7 @@ export function useCLI() {
 
     contact() {
       addLine("comment", "// get in touch");
-      addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-      addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
       addLine("link", { text: "abhiramkrishna.8921@gmail.com", url: "mailto:abhiramkrishna.8921@gmail.com" });
-      addLine("link", { text: "send me a message", url: "/contact", note: "// coming soon" });
       blank();
     },
 
