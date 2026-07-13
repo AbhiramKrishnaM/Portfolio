@@ -35,7 +35,7 @@ export const GAME_REGISTRY = [
     id: "tetris",
     label: "_tetris",
     description: "block stacking",
-    comingSoon: true,
+    comingSoon: false,
     githubUrl: null,
   },
 ];

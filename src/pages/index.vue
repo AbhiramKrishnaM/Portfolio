@@ -72,6 +72,10 @@
                         v-else-if="activeGame === 'sudoku'"
                         @skip="exitGame"
                     />
+                    <TetrisGame
+                        v-else-if="activeGame === 'tetris'"
+                        @skip="exitGame"
+                    />
                 </div>
             </Transition>
         </div>
@@ -83,6 +87,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
 import SudokuGame from "@/components/SudokuGame.vue";
+import TetrisGame from "@/components/TetrisGame.vue";
 import IcosahedronBackground from "@/components/IcosahedronBackground.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 
