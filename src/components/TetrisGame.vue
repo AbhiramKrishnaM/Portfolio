@@ -4,8 +4,8 @@
       <div :style="{
         transform: `scale(${scale})`,
         transformOrigin: 'top left',
-        width: '580px',
-        height: '480px',
+        width: '500px',
+        height: '510px',
       }">
         <div id="tetris-game" class="relative p-3">
           <div class="top-left-fill -z-10"></div>
@@ -18,7 +18,7 @@
           <img :src="BoltDownLeft" alt="" class="absolute bottom-0 left-0 ml-3 mb-3" />
           <img :src="BoltDownRight" alt="" class="absolute bottom-0 right-0 mr-3 mb-3" />
 
-          <div class="m-9 pt-3">
+          <div class="m-6">
             <p class="text-[10px] text-white/40 mb-2">// tetris</p>
 
             <div class="relative" style="width: 200px;">
@@ -102,8 +102,8 @@ import Right from "@/assets/icons/right.svg";
 defineEmits(["skip"]);
 
 // ─── scaling ─────────────────────────────────────────────────────────────────
-const GAME_W = 580;
-const GAME_H = 480;
+const GAME_W = 500;
+const GAME_H = 510;
 const outerRef = ref(null);
 const scale = ref(1);
 const scaledWidth = computed(() => GAME_W * scale.value);
@@ -526,8 +526,8 @@ onUnmounted(() => {
 
 <style scoped>
 #tetris-game {
-  width: 580px;
-  height: 480px;
+  width: 500px;
+  height: 510px;
   border-radius: 8px;
   border: 1px solid #0c1616;
   background: linear-gradient(150deg,
