@@ -1,16 +1,19 @@
 <template>
-  <div class="fixed left-6 top-1/2 -translate-y-1/2 z-30">
-    <nav class="nav-pill flex flex-col items-center gap-1 py-4 px-2">
+  <div
+    class="fixed z-30 bottom-6 left-1/2 -translate-x-1/2 sm:left-6 sm:top-1/2 sm:bottom-auto sm:translate-x-0 sm:-translate-y-1/2"
+  >
+    <nav class="nav-pill flex flex-row sm:flex-col items-center gap-1 px-4 py-2 sm:px-2 sm:py-4">
       <span
         v-if="indicatorReady"
         class="active-bar"
-        :style="{ transform: `translateY(${indicatorTop}px)` }"
+        :class="isMobile ? 'active-bar--horizontal' : 'active-bar--vertical'"
+        :style="indicatorStyle"
       ></span>
 
       <div
         v-for="(link, index) in visibleLinks"
         :key="link.id"
-        class="relative flex w-full justify-center"
+        class="relative flex items-center justify-center sm:w-full"
         :ref="(el) => setItemRef(el, index)"
       >
         <RouterLink :to="link.to" v-slot="{ isActive }">
@@ -46,7 +49,7 @@
 
 <script setup>
 import { useNavlinks } from "@/composables/navLinks.js";
-import { computed, ref, watch, onMounted, nextTick } from "vue";
+import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
 const { links } = useNavlinks();
@@ -60,12 +63,23 @@ const activeIndex = computed(() =>
   visibleLinks.value.findIndex((link) => link.to === route.path)
 );
 
+// Below this width the pill docks to the bottom as a horizontal bar instead
+// of floating vertically on the left — matches Tailwind's `sm` breakpoint.
+const MOBILE_QUERY = "(max-width: 639px)";
+
 // Drives the sliding indicator — measured from the DOM so it stays correct
-// regardless of item sizing, rather than assuming a fixed row pitch.
-const BAR_HEIGHT = 26;
+// regardless of item sizing, rather than assuming a fixed row/column pitch.
+const BAR_LENGTH = 26;
 const itemRefs = ref([]);
-const indicatorTop = ref(0);
+const indicatorOffset = ref(0);
 const indicatorReady = ref(false);
+const isMobile = ref(false);
+
+const indicatorStyle = computed(() => ({
+  transform: isMobile.value
+    ? `translateX(${indicatorOffset.value}px)`
+    : `translateY(${indicatorOffset.value}px)`,
+}));
 
 function setItemRef(el, index) {
   if (el) itemRefs.value[index] = el;
@@ -74,12 +88,32 @@ function setItemRef(el, index) {
 function updateIndicatorPosition() {
   const el = itemRefs.value[activeIndex.value];
   if (!el) return;
-  indicatorTop.value = el.offsetTop + (el.offsetHeight - BAR_HEIGHT) / 2;
+  indicatorOffset.value = isMobile.value
+    ? el.offsetLeft + (el.offsetWidth - BAR_LENGTH) / 2
+    : el.offsetTop + (el.offsetHeight - BAR_LENGTH) / 2;
   indicatorReady.value = true;
 }
 
+let mql;
+function handleViewportChange() {
+  isMobile.value = mql.matches;
+  nextTick(updateIndicatorPosition);
+}
+
 watch(activeIndex, () => nextTick(updateIndicatorPosition));
-onMounted(() => nextTick(updateIndicatorPosition));
+
+onMounted(() => {
+  mql = window.matchMedia(MOBILE_QUERY);
+  isMobile.value = mql.matches;
+  mql.addEventListener("change", handleViewportChange);
+  window.addEventListener("resize", handleViewportChange);
+  nextTick(updateIndicatorPosition);
+});
+
+onUnmounted(() => {
+  mql?.removeEventListener("change", handleViewportChange);
+  window.removeEventListener("resize", handleViewportChange);
+});
 </script>
 
 <style scoped>
@@ -131,12 +165,22 @@ onMounted(() => nextTick(updateIndicatorPosition));
 
 .active-bar {
   position: absolute;
+  border-radius: 2px;
+  background-color: #e99287;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.active-bar--vertical {
   left: -6px;
   top: 0;
   width: 3px;
   height: 26px;
-  border-radius: 2px;
-  background-color: #e99287;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.active-bar--horizontal {
+  left: 0;
+  bottom: -6px;
+  width: 26px;
+  height: 3px;
 }
 </style>
