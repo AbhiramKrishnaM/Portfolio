@@ -12,16 +12,19 @@ export function useNavlinks() {
       id: uuidv4(),
       to: "/blogs",
       name: "Blogs",
+      hidden: true,
     },
     {
       id: uuidv4(),
       to: "/projects",
       name: "Projects",
+      hidden: true,
     },
     {
       id: uuidv4(),
       to: "/contact",
       name: "Contact Me",
+      hidden: true,
     },
   ]);
 
