@@ -2,32 +2,26 @@ import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 export function useNavlinks() {
-  // Placeholder route set — swap these for the real portfolio routes later.
   const links = ref([
     {
       id: uuidv4(),
-      to: "/menus",
-      name: "Menus",
+      to: "/",
+      name: "Home",
     },
     {
       id: uuidv4(),
-      to: "/wine-list",
-      name: "Wine List",
+      to: "/blogs",
+      name: "Blogs",
     },
     {
       id: uuidv4(),
-      to: "/chefs-story",
-      name: "Chef's Story",
+      to: "/projects",
+      name: "Projects",
     },
     {
       id: uuidv4(),
-      to: "/reservations",
-      name: "Reservations",
-    },
-    {
-      id: uuidv4(),
-      to: "/gallery",
-      name: "Gallery",
+      to: "/contact",
+      name: "Contact Me",
     },
   ]);
 

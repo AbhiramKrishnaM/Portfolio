@@ -17,12 +17,7 @@ const routes = [
 
   { path: "/contact", component: Contact, name: "Contact Me" },
 
-  // placeholder nav routes — swap for real pages later
-  { path: "/menus", component: Maintenance, name: "Menus" },
-  { path: "/wine-list", component: Maintenance, name: "Wine List" },
-  { path: "/chefs-story", component: Maintenance, name: "Chef's Story" },
-  { path: "/reservations", component: Maintenance, name: "Reservations" },
-  { path: "/gallery", component: Maintenance, name: "Gallery" },
+  { path: "/blogs", component: Maintenance, name: "Blogs" },
 
   // maintenance component
   { path: "/maintenance", component: Maintenance, name: "maintenance" },
