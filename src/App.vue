@@ -1,5 +1,6 @@
 <template>
   <div class="w-full min-h-screen h-full text-accent-color flex items-center justify-center">
+    <CustomCursor />
     <Navbar />
     <div id="content" class="w-full h-full select-none">
       <router-view></router-view>
@@ -11,4 +12,5 @@
 <script setup>
 // import Footer from "@/components/Footer.vue";
 import Navbar from "@/components/Navbar.vue";
+import CustomCursor from "@/components/CustomCursor.vue";
 </script>
