@@ -7,7 +7,14 @@
             <div id="section-1" class="text-white-gradient-01 font-normal">
                 <h6 class="text-base md:text-lg">Hi all, I am</h6>
                 <h1 class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl">
-                    Abhiram Krishna M
+                    Abhiram Kris<button
+                        type="button"
+                        class="theme-toggle-h"
+                        :class="{ 'theme-toggle-h--flipped': theme === 'light' }"
+                        data-cursor="toggle theme"
+                        aria-label="Toggle light and dark theme"
+                        @click="toggleTheme"
+                    >h</button>na M
                 </h1>
                 <div
                     class="text-xl md:text-2xl lg:text-3xl text-accent-sub hacking-text mt-3 justify-center lg:justify-start"
@@ -90,6 +97,9 @@ import SudokuGame from "@/components/SudokuGame.vue";
 import TetrisGame from "@/components/TetrisGame.vue";
 import IcosahedronBackground from "@/components/IcosahedronBackground.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
+import { useTheme } from "@/composables/useTheme.js";
+
+const { theme, toggleTheme } = useTheme();
 
 const view = ref("cli");
 const activeGame = ref(null);
@@ -181,6 +191,23 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.theme-toggle-h {
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+    transform: rotate(0deg);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-toggle-h--flipped {
+    transform: rotate(180deg);
+}
+
 .right-panel {
     width: 100%;
     flex-shrink: 0;
