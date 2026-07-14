@@ -4,11 +4,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Theme tokens — dark is the default/current look. Light overrides sit under
+ * [data-theme="light"], toggled on <html> by useTheme.js. Accent hues keep
+ * the same identity in both themes; light-mode values are darkened/saturated
+ * versions so they clear WCAG AA (4.5:1) against the light background —
+ * verified with a contrast script, not eyeballed.
+ *
+ * Deliberately NOT themed: --color-theme-main-gradient. Its only consumer is
+ * SnakeGame's canvas, which (like the other games) keeps its current dark
+ * look for now rather than getting a light-mode pass.
+ */
+:root {
+  --color-theme-main: #011627;
+  --color-theme-main-gradient: #011627d6;
+  --color-accent-color: #607b96;
+  --color-accent-sub: #4d5bce;
+  --color-accent-url: #e99287;
+  --color-accent-variable: #43d9ad;
+  --color-accent-underline: #fea55f;
+  --color-border-white: #1e2d3d;
+  --color-white-gradient-01: #e5e9f0;
+  --color-gray-gradient-01: #607b96;
+  --color-code-keyword: #c98bdf;
+  --color-code-rest: #5565e8;
+  --color-code-id: #fea55f;
+  --color-bg-field-default: #011221;
+  --color-bg-button-default: #1c2b3a;
+}
+
+:root[data-theme="light"] {
+  --color-theme-main: #eff4f8;
+  --color-accent-color: #52697d;
+  --color-accent-sub: #4049b0;
+  --color-accent-url: #b14a3d;
+  --color-accent-variable: #097a5d;
+  --color-accent-underline: #a85519;
+  --color-border-white: #d7e0e7;
+  /* The dark theme's own background becomes the light theme's ink — same
+     brand navy, different role. */
+  --color-white-gradient-01: #011627;
+  --color-gray-gradient-01: #52697d;
+  --color-code-keyword: #8a4fb0;
+  --color-code-rest: #3745b8;
+  --color-code-id: #a85519;
+  --color-bg-field-default: #ffffff;
+  --color-bg-button-default: #4049b0;
+}
+
 body {
-  background-color: #011627;
+  background-color: var(--color-theme-main);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease;
 }
 
 #name-loading {

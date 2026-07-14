@@ -3,12 +3,51 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import * as THREE from "three";
+import { useTheme } from "@/composables/useTheme.js";
+
+const { theme } = useTheme();
 
 const canvasRef = ref(null);
 let renderer, scene, camera, group, animFrameId;
 const allUniforms = [];
+let faceUni, edgeUni;
+
+// Dark = "blueprint" (light lines on dark navy). Light = "whiteprint" (dark
+// ink lines on pale paper), reusing the brand navy/indigo for edges/rim so
+// the wireframe stays legible instead of washing out on a light background.
+const THEME_COLORS = {
+  dark: {
+    faceBase: [0.004, 0.09, 0.15],
+    faceShade: [0.0, 0.06, 0.14],
+    faceRim: [0.0, 0.55, 0.8],
+    faceAlpha: 0.55,
+    edge: [0.55, 0.8, 1.0, 0.3],
+  },
+  light: {
+    faceBase: [0.9, 0.945, 0.975],
+    faceShade: [-0.05, -0.04, -0.02],
+    faceRim: [0.25, 0.29, 0.69],
+    faceAlpha: 0.6,
+    edge: [0.004, 0.086, 0.153, 0.55],
+  },
+};
+
+function applyThemeColors() {
+  const c = THEME_COLORS[theme.value] ?? THEME_COLORS.dark;
+  if (faceUni) {
+    faceUni.uBaseColor.value.set(...c.faceBase);
+    faceUni.uShadeColor.value.set(...c.faceShade);
+    faceUni.uRimColor.value.set(...c.faceRim);
+    faceUni.uAlpha.value = c.faceAlpha;
+  }
+  if (edgeUni) {
+    edgeUni.uEdgeColor.value.set(...c.edge);
+  }
+}
+
+watch(theme, applyThemeColors);
 
 // Smoothed mouse in NDC [-1, 1]
 let mx = 0, my = 0, tmx = 0, tmy = 0;
@@ -53,22 +92,27 @@ const edgeVert = `
 `;
 
 const faceFrag = `
+  uniform vec3 uBaseColor;
+  uniform vec3 uShadeColor;
+  uniform vec3 uRimColor;
+  uniform float uAlpha;
   varying vec3 vNormal;
   varying vec3 vViewDir;
 
   void main() {
     vec3 n = normalize(vNormal) * (gl_FrontFacing ? 1.0 : -1.0);
-    vec3 col = vec3(0.004, 0.09, 0.15);
-    col += max(dot(n, normalize(vec3(1.0, 1.5, 2.0))), 0.0) * vec3(0.0, 0.06, 0.14);
+    vec3 col = uBaseColor;
+    col += max(dot(n, normalize(vec3(1.0, 1.5, 2.0))), 0.0) * uShadeColor;
     float fres = 1.0 - abs(dot(n, normalize(vViewDir)));
-    col += pow(fres, 3.0) * vec3(0.0, 0.55, 0.80) * 0.28;
-    gl_FragColor = vec4(col, 0.55);
+    col += pow(fres, 3.0) * uRimColor * 0.28;
+    gl_FragColor = vec4(col, uAlpha);
   }
 `;
 
 const edgeFrag = `
+  uniform vec4 uEdgeColor;
   void main() {
-    gl_FragColor = vec4(0.55, 0.80, 1.0, 0.30);
+    gl_FragColor = uEdgeColor;
   }
 `;
 
@@ -295,7 +339,13 @@ function init() {
 
   // Icosahedron faces
   const faceGeo = new THREE.IcosahedronGeometry(2.4, 1);
-  const faceUni = { uMouse: { value: mouseVec } };
+  faceUni = {
+    uMouse: { value: mouseVec },
+    uBaseColor: { value: new THREE.Vector3() },
+    uShadeColor: { value: new THREE.Vector3() },
+    uRimColor: { value: new THREE.Vector3() },
+    uAlpha: { value: 0.55 },
+  };
   allUniforms.push(faceUni);
   group.add(new THREE.Mesh(faceGeo, new THREE.ShaderMaterial({
     vertexShader: vert, fragmentShader: faceFrag,
@@ -305,12 +355,14 @@ function init() {
 
   // Wireframe edges
   const edgeGeo = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(2.4, 1));
-  const edgeUni = { uMouse: { value: mouseVec } };
+  edgeUni = { uMouse: { value: mouseVec }, uEdgeColor: { value: new THREE.Vector4() } };
   allUniforms.push(edgeUni);
   group.add(new THREE.LineSegments(edgeGeo, new THREE.ShaderMaterial({
     vertexShader: edgeVert, fragmentShader: edgeFrag,
     uniforms: edgeUni, transparent: true,
   })));
+
+  applyThemeColors();
 
   // Spaceship
   const { root, engineMesh } = createSpaceship();

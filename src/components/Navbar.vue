@@ -128,6 +128,17 @@ onUnmounted(() => {
     0px 2px 0px 0px rgba(255, 255, 255, 0.3) inset,
     0px 20px 40px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(32px);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+:root[data-theme="light"] .nav-pill {
+  border-color: var(--color-border-white);
+  background: linear-gradient(150deg,
+      rgba(255, 255, 255, 0.9) 1.7%,
+      rgba(239, 244, 248, 0.75) 81.82%);
+  box-shadow:
+    0px 2px 0px 0px rgba(255, 255, 255, 0.6) inset,
+    0px 16px 32px rgba(11, 32, 54, 0.14);
 }
 
 .nav-item {
@@ -149,25 +160,25 @@ onUnmounted(() => {
 }
 
 .nav-item:hover {
-  color: white;
+  color: var(--color-white-gradient-01);
   transform: scale(1.2);
 }
 
 .nav-item-active {
-  color: #e99287;
+  color: var(--color-accent-url);
   transform: scale(1.18);
 }
 
 .nav-item-active:hover {
-  color: #e99287;
+  color: var(--color-accent-url);
   transform: scale(1.32);
 }
 
 .active-bar {
   position: absolute;
   border-radius: 2px;
-  background-color: #e99287;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background-color: var(--color-accent-url);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
 }
 
 .active-bar--vertical {

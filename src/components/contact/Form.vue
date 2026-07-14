@@ -11,7 +11,7 @@
         type="text"
         id="first_name"
         v-model="contactData.name"
-        class="block p-2.5 w-full border text-gray-400 text-sm rounded-lg bg-bg-field-default border-border-white placeholder-gray-400 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
+        class="block p-2.5 w-full border text-white-gradient-01 text-sm rounded-lg bg-bg-field-default border-border-white placeholder-gray-gradient-01 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
         required
       />
     </div>
@@ -27,7 +27,7 @@
         type="text"
         id="email"
         v-model="contactData.email"
-        class="block p-2.5 w-full border text-gray-400 text-sm rounded-lg bg-bg-field-default border-border-white placeholder-gray-400 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
+        class="block p-2.5 w-full border text-white-gradient-01 text-sm rounded-lg bg-bg-field-default border-border-white placeholder-gray-gradient-01 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
         required
       />
     </div>
@@ -43,7 +43,7 @@
         id="message"
         rows="4"
         v-model="contactData.message"
-        class="block p-2.5 w-full text-sm text-gray-400 rounded-lg border bg-bg-field-default border-border-white placeholder-gray-400 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
+        class="block p-2.5 w-full text-sm text-white-gradient-01 rounded-lg border bg-bg-field-default border-border-white placeholder-gray-gradient-01 focus:ring-2 focus:ring-gray-gradient-01 focus:outline-none"
       ></textarea>
     </div>
 

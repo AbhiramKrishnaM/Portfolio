@@ -48,7 +48,7 @@
                     >
                         const
                         <div class="text-accent-variable ml-2">githubLink</div>
-                        <div class="text-white mx-2">=</div>
+                        <div class="text-white-gradient-01 mx-2">=</div>
                         <div class="text-accent-url">
                             "{{ activeGameGithubUrl }}"
                         </div>

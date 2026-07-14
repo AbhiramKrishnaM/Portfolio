@@ -9,29 +9,32 @@ export default {
     },
     extend: {
       colors: {
-        "theme-main": "#011627",
-        "theme-main-gradient": "#011627D6",
-        "accent-color": "#607B96",
-        "accent-sub": "#4D5BCE",
-        "accent-url": "#E99287",
-        "accent-variable": "#43D9AD",
-        "accent-underline": "#FEA55F",
+        // Sourced from CSS custom properties (see style.css) so every
+        // utility class using these tokens re-colors automatically when
+        // [data-theme] flips — no per-component overrides needed.
+        "theme-main": "var(--color-theme-main)",
+        "theme-main-gradient": "var(--color-theme-main-gradient)",
+        "accent-color": "var(--color-accent-color)",
+        "accent-sub": "var(--color-accent-sub)",
+        "accent-url": "var(--color-accent-url)",
+        "accent-variable": "var(--color-accent-variable)",
+        "accent-underline": "var(--color-accent-underline)",
 
         // border
-        "border-white": "#1E2D3D",
+        "border-white": "var(--color-border-white)",
 
         // text color
-        "white-gradient-01": "#E5E9F0",
-        "gray-gradient-01": "#607B96",
-        "code-keyword": "#C98BDF",
-        "code-rest": "#5565E8",
-        "code-id": "#FEA55F",
+        "white-gradient-01": "var(--color-white-gradient-01)",
+        "gray-gradient-01": "var(--color-gray-gradient-01)",
+        "code-keyword": "var(--color-code-keyword)",
+        "code-rest": "var(--color-code-rest)",
+        "code-id": "var(--color-code-id)",
 
         // form fields
-        "bg-field-default": "#011221",
+        "bg-field-default": "var(--color-bg-field-default)",
 
         // button color
-        "bg-button-default": "#1C2B3A",
+        "bg-button-default": "var(--color-bg-button-default)",
       },
 
       borderRadius: {

@@ -3,7 +3,7 @@
     id="success-message"
     class="w-96 text-center flex flex-col items-center justify-center"
   >
-    <h1 class="text-white text-2xl mb-2">Thank You! 🤘</h1>
+    <h1 class="text-white-gradient-01 text-2xl mb-2">Thank You! 🤘</h1>
     <span>
       Your message has been accepted. You will recieve answer really soon!
     </span>

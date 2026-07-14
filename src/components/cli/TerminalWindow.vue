@@ -213,10 +213,18 @@ onMounted(() => {
   background: linear-gradient(150deg,
       rgba(1, 22, 39, 0.95) 0%,
       rgba(1, 18, 33, 0.98) 100%);
-  border: 1px solid #1e2d3d;
+  border: 1px solid var(--color-border-white);
   border-radius: 8px;
   cursor: text;
   overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+:root[data-theme="light"] .terminal-window {
+  background: linear-gradient(150deg,
+      rgba(255, 255, 255, 0.97) 0%,
+      rgba(239, 244, 248, 0.98) 100%);
+  box-shadow: 0px 12px 32px rgba(11, 32, 54, 0.1);
 }
 
 @media (min-width: 1024px) {
