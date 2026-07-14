@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-52 h-screen sticky top-0 shrink-0 flex flex-col justify-between border-r border-border-white bg-theme-main">
+  <aside class="w-52 h-screen sticky top-0 shrink-0 flex flex-col justify-between bg-theme-main">
     <RouterLink to="/" class="p-6 block w-fit">
       <img src="/icons/terminal-icon.svg" alt="logo" class="w-9 h-9 rounded-md" />
     </RouterLink>
