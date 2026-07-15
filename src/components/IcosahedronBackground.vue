@@ -4,7 +4,32 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from "vue";
-import * as THREE from "three";
+import {
+  BoxGeometry,
+  BufferGeometry,
+  ConeGeometry,
+  CylinderGeometry,
+  DoubleSide,
+  EdgesGeometry,
+  Group,
+  IcosahedronGeometry,
+  LineBasicMaterial,
+  LineLoop,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  MeshNormalMaterial,
+  PerspectiveCamera,
+  Quaternion,
+  RingGeometry,
+  Scene,
+  ShaderMaterial,
+  SphereGeometry,
+  Vector2,
+  Vector3,
+  Vector4,
+  WebGLRenderer,
+} from "three";
 import { useTheme } from "@/composables/useTheme.js";
 
 const { theme } = useTheme();
@@ -119,51 +144,51 @@ const edgeFrag = `
 // ── Spaceship geometry ─────────────────────────────────────────────────────
 // Nose of ship points toward +Z. We'll orient it by aligning +Z → velocity.
 function createSpaceship() {
-  const root = new THREE.Group();
-  const bodyMat = new THREE.MeshNormalMaterial({ flatShading: true });
-  const glowMat = new THREE.MeshBasicMaterial({
+  const root = new Group();
+  const bodyMat = new MeshNormalMaterial({ flatShading: true });
+  const glowMat = new MeshBasicMaterial({
     color: 0x40ffcc, transparent: true, opacity: 0.90,
   });
-  const exhaustMat = new THREE.MeshBasicMaterial({
+  const exhaustMat = new MeshBasicMaterial({
     color: 0x40ffcc, transparent: true, opacity: 0.25,
   });
 
   // Fuselage — tapered cylinder oriented along +Z
-  const fuselage = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.052, 0.088, 0.40, 6),
+  const fuselage = new Mesh(
+    new CylinderGeometry(0.052, 0.088, 0.40, 6),
     bodyMat,
   );
   fuselage.rotation.x = Math.PI / 2;
   root.add(fuselage);
 
   // Nose cone
-  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.052, 0.20, 6), bodyMat);
+  const nose = new Mesh(new ConeGeometry(0.052, 0.20, 6), bodyMat);
   nose.rotation.x = Math.PI / 2;
   nose.position.z = 0.30;
   root.add(nose);
 
   // Wings — flat box swept back
-  const wings = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.012, 0.18), bodyMat);
+  const wings = new Mesh(new BoxGeometry(0.44, 0.012, 0.18), bodyMat);
   wings.position.z = -0.04;
   root.add(wings);
 
   // Cockpit dome
-  const cockpit = new THREE.Mesh(
-    new THREE.SphereGeometry(0.042, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2),
-    new THREE.MeshBasicMaterial({ color: 0x80dfff, transparent: true, opacity: 0.7 }),
+  const cockpit = new Mesh(
+    new SphereGeometry(0.042, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2),
+    new MeshBasicMaterial({ color: 0x80dfff, transparent: true, opacity: 0.7 }),
   );
   cockpit.position.z = 0.14;
   cockpit.position.y = 0.048;
   root.add(cockpit);
 
   // Engine glow
-  const engineMesh = new THREE.Mesh(new THREE.SphereGeometry(0.048, 10, 10), glowMat);
+  const engineMesh = new Mesh(new SphereGeometry(0.048, 10, 10), glowMat);
   engineMesh.position.z = -0.23;
   root.add(engineMesh);
 
   // Exhaust cone
-  const exhaust = new THREE.Mesh(
-    new THREE.ConeGeometry(0.034, 0.14, 8),
+  const exhaust = new Mesh(
+    new ConeGeometry(0.034, 0.14, 8),
     exhaustMat,
   );
   exhaust.rotation.x = Math.PI / 2;
@@ -177,16 +202,16 @@ function createSpaceship() {
 // Each plane: outward unit normal n, plane distance d (dot(n, p) = d).
 // Ship bounces when dot(n, shipPos) > d - margin.
 function buildFacePlanes(radius) {
-  const geo = new THREE.IcosahedronGeometry(radius, 0);
+  const geo = new IcosahedronGeometry(radius, 0);
   const pos = geo.attributes.position;
   const planes = [];
 
   for (let i = 0; i < pos.count; i += 3) {
-    const a = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-    const b = new THREE.Vector3(pos.getX(i + 1), pos.getY(i + 1), pos.getZ(i + 1));
-    const c = new THREE.Vector3(pos.getX(i + 2), pos.getY(i + 2), pos.getZ(i + 2));
+    const a = new Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+    const b = new Vector3(pos.getX(i + 1), pos.getY(i + 1), pos.getZ(i + 1));
+    const c = new Vector3(pos.getX(i + 2), pos.getY(i + 2), pos.getZ(i + 2));
 
-    const n = new THREE.Vector3()
+    const n = new Vector3()
       .crossVectors(b.clone().sub(a), c.clone().sub(a))
       .normalize();
     if (n.dot(a) < 0) n.negate();   // ensure outward
@@ -200,9 +225,9 @@ function buildFacePlanes(radius) {
 let shipMesh = null;
 let engineRef = null;
 let facePlanes = null;
-let shipVel = new THREE.Vector3();
-const _targetQ = new THREE.Quaternion();
-const _forward = new THREE.Vector3(0, 0, 1);
+let shipVel = new Vector3();
+const _targetQ = new Quaternion();
+const _forward = new Vector3(0, 0, 1);
 const SHIP_SPEED = 0.90;
 const SHIP_MARGIN = 0.20;
 
@@ -216,18 +241,18 @@ const MOBILE_SHIP_SPEED = 0.55;
 
 // ── Solar system (shown on mobile only) ───────────────────────────────────
 function createSolarSystem() {
-  solarSystemGroup = new THREE.Group();
+  solarSystemGroup = new Group();
 
   // Sun core
-  solarSystemGroup.add(new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 14, 14),
-    new THREE.MeshBasicMaterial({ color: 0xffc107 })
+  solarSystemGroup.add(new Mesh(
+    new SphereGeometry(0.16, 14, 14),
+    new MeshBasicMaterial({ color: 0xffc107 })
   ));
 
   // Sun corona — pulsed each frame
-  coronaMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(0.24, 14, 14),
-    new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.22 })
+  coronaMesh = new Mesh(
+    new SphereGeometry(0.24, 14, 14),
+    new MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.22 })
   );
   solarSystemGroup.add(coronaMesh);
 
@@ -252,28 +277,28 @@ function createSolarSystem() {
     const ringPts = [];
     for (let i = 0; i <= 80; i++) {
       const a = (i / 80) * Math.PI * 2;
-      ringPts.push(new THREE.Vector3(Math.cos(a) * pd.orbitRadius, 0, Math.sin(a) * pd.orbitRadius));
+      ringPts.push(new Vector3(Math.cos(a) * pd.orbitRadius, 0, Math.sin(a) * pd.orbitRadius));
     }
-    solarSystemGroup.add(new THREE.LineLoop(
-      new THREE.BufferGeometry().setFromPoints(ringPts),
-      new THREE.LineBasicMaterial({ color: 0x1e3a50, transparent: true, opacity: 0.5 })
+    solarSystemGroup.add(new LineLoop(
+      new BufferGeometry().setFromPoints(ringPts),
+      new LineBasicMaterial({ color: 0x1e3a50, transparent: true, opacity: 0.5 })
     ));
 
     // Planet sphere
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(pd.size, 12, 12),
-      new THREE.MeshBasicMaterial({ color: pd.color })
+    const mesh = new Mesh(
+      new SphereGeometry(pd.size, 12, 12),
+      new MeshBasicMaterial({ color: pd.color })
     );
     const startAngle = Math.random() * Math.PI * 2;
     mesh.position.set(Math.cos(startAngle) * pd.orbitRadius, pd.tilt, Math.sin(startAngle) * pd.orbitRadius);
 
     // Saturn-style rings attached to planet so they orbit with it
     if (pd.rings) {
-      const planetRing = new THREE.Mesh(
-        new THREE.RingGeometry(pd.rings.inner, pd.rings.outer, 48),
-        new THREE.MeshBasicMaterial({
+      const planetRing = new Mesh(
+        new RingGeometry(pd.rings.inner, pd.rings.outer, 48),
+        new MeshBasicMaterial({
           color: pd.rings.color, transparent: true,
-          opacity: pd.rings.opacity, side: THREE.DoubleSide,
+          opacity: pd.rings.opacity, side: DoubleSide,
         })
       );
       // RingGeometry is in XY plane by default; rotate into XZ (orbital plane) + slight tilt for aesthetics
@@ -324,40 +349,40 @@ function init() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+  scene = new Scene();
+  camera = new PerspectiveCamera(45, w / h, 0.1, 100);
   camera.position.z = 7;
 
-  group = new THREE.Group();
+  group = new Group();
   scene.add(group);
 
-  const mouseVec = new THREE.Vector2(0, 0);
+  const mouseVec = new Vector2(0, 0);
 
   // Icosahedron faces
-  const faceGeo = new THREE.IcosahedronGeometry(2.4, 1);
+  const faceGeo = new IcosahedronGeometry(2.4, 1);
   faceUni = {
     uMouse: { value: mouseVec },
-    uBaseColor: { value: new THREE.Vector3() },
-    uShadeColor: { value: new THREE.Vector3() },
-    uRimColor: { value: new THREE.Vector3() },
+    uBaseColor: { value: new Vector3() },
+    uShadeColor: { value: new Vector3() },
+    uRimColor: { value: new Vector3() },
     uAlpha: { value: 0.55 },
   };
   allUniforms.push(faceUni);
-  group.add(new THREE.Mesh(faceGeo, new THREE.ShaderMaterial({
+  group.add(new Mesh(faceGeo, new ShaderMaterial({
     vertexShader: vert, fragmentShader: faceFrag,
     uniforms: faceUni, transparent: true,
-    side: THREE.DoubleSide, depthWrite: false,
+    side: DoubleSide, depthWrite: false,
   })));
 
   // Wireframe edges
-  const edgeGeo = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(2.4, 1));
-  edgeUni = { uMouse: { value: mouseVec }, uEdgeColor: { value: new THREE.Vector4() } };
+  const edgeGeo = new EdgesGeometry(new IcosahedronGeometry(2.4, 1));
+  edgeUni = { uMouse: { value: mouseVec }, uEdgeColor: { value: new Vector4() } };
   allUniforms.push(edgeUni);
-  group.add(new THREE.LineSegments(edgeGeo, new THREE.ShaderMaterial({
+  group.add(new LineSegments(edgeGeo, new ShaderMaterial({
     vertexShader: edgeVert, fragmentShader: edgeFrag,
     uniforms: edgeUni, transparent: true,
   })));
@@ -431,7 +456,7 @@ function startLoop() {
       // Planet positions are in solarSystemGroup local space; ship is in group local space.
       // Convert planet world position → group local to compare correctly.
       const target = planets[mobileTarget];
-      const planetGroupPos = new THREE.Vector3();
+      const planetGroupPos = new Vector3();
       target.mesh.getWorldPosition(planetGroupPos);
       group.worldToLocal(planetGroupPos);
 
