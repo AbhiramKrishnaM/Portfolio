@@ -1,27 +1,26 @@
 import { ref } from "vue";
-import { v4 as uuidv4 } from "uuid";
 
 export function useNavlinks() {
   const links = ref([
     {
-      id: uuidv4(),
+      id: "home",
       to: "/",
       name: "Home",
     },
     {
-      id: uuidv4(),
+      id: "blogs",
       to: "/blogs",
       name: "Blogs",
       hidden: true,
     },
     {
-      id: uuidv4(),
+      id: "projects",
       to: "/projects",
       name: "Projects",
       hidden: true,
     },
     {
-      id: uuidv4(),
+      id: "contact",
       to: "/contact",
       name: "Contact Me",
       hidden: true,
