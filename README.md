@@ -8,10 +8,8 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 
 ## Features
 
-- **Interactive Landing Page** - Animated text effects with a playable Snake game integrated directly on the homepage
-- **File Manager Interface** - A unique terminal-style file explorer showcasing my skills and experience across different technologies (JavaScript, Python, Node.js, React, Vue, Django, Docker, AWS, and more)
+- **Interactive Landing Page** - Animated text effects with an interactive terminal on the homepage that launches playable mini-games (Snake, Sudoku, Tetris)
 - **Projects Showcase** - A dedicated projects page with filtering capabilities to browse through different projects by technology stack
-- **About Section** - Detailed information about my background, education, and professional journey presented in an innovative file browser format
 - **Contact Form** - Functional contact form for reaching out
 - **Custom UI Components** - Includes custom shader effects, animated text components, and other interactive elements
 - **Responsive Design** - Fully responsive layout that works seamlessly across different devices

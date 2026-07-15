@@ -5,12 +5,10 @@
     <div id="content" class="w-full h-full select-none">
       <router-view></router-view>
     </div>
-    <!-- <Footer /> -->
   </div>
 </template>
 
 <script setup>
-// import Footer from "@/components/Footer.vue";
 import Navbar from "@/components/Navbar.vue";
 import CustomCursor from "@/components/CustomCursor.vue";
 </script>

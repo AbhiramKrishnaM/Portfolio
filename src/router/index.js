@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 // pages
-import Me from "../pages/me.vue";
-import Landing from "../pages/index.vue";
-import Projects from "../pages/projects.vue";
-import Contact from "../pages/contact.vue";
+const Me = () => import("../pages/me.vue");
+const Landing = () => import("../pages/index.vue");
+const Projects = () => import("../pages/projects.vue");
+const Contact = () => import("../pages/contact.vue");
 
 // components
-import Maintenance from "../components/maintenance.vue";
+const Maintenance = () => import("../components/maintenance.vue");
 
 const routes = [
   { path: "/me", component: Me, name: "Myself" },
