@@ -5,7 +5,7 @@
         <IcosahedronBackground />
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
             <div id="section-1" class="text-white-gradient-01 font-normal">
-                <h6 class="text-base md:text-lg">Hi all, I am</h6>
+                <p class="text-base md:text-lg">Hi all, I am</p>
                 <h1 class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl">
                     Abhiram Kris<button
                         type="button"
