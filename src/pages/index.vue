@@ -2,7 +2,7 @@
     <div
         class="relative flex flex-col lg:flex-row items-center justify-center min-h-full px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0"
     >
-        <IcosahedronBackground />
+        <IcosahedronBackground v-if="showBackground" />
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
             <div id="section-1" class="text-white-gradient-01 font-normal">
                 <p class="text-base md:text-lg">Hi all, I am</p>
@@ -90,14 +90,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, defineAsyncComponent, onMounted, onUnmounted, nextTick } from "vue";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
 import SudokuGame from "@/components/SudokuGame.vue";
 import TetrisGame from "@/components/TetrisGame.vue";
-import IcosahedronBackground from "@/components/IcosahedronBackground.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
+
+// Loaded in its own chunk and mounted after first paint — it's a decorative
+// Three.js scene, not content, so it shouldn't delay the page becoming visible.
+const IcosahedronBackground = defineAsyncComponent(() =>
+    import("@/components/IcosahedronBackground.vue")
+);
+const showBackground = ref(false);
 
 const { theme, toggleTheme } = useTheme();
 
@@ -183,6 +189,12 @@ function startCycling() {
 onMounted(() => {
     generateRandomChars();
     setTimeout(startCycling, INITIAL_DISPLAY_DURATION);
+
+    if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(() => { showBackground.value = true; }, { timeout: 1500 });
+    } else {
+        setTimeout(() => { showBackground.value = true; }, 200);
+    }
 });
 
 onUnmounted(() => {
