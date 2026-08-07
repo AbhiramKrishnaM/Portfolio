@@ -27,15 +27,6 @@
               <path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" />
             </svg>
 
-            <svg v-else-if="link.to === '/blogs'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="3" width="14" height="18" rx="2" />
-              <path d="M9 8h6M9 12h6M9 16h4" />
-            </svg>
-
-            <svg v-else-if="link.to === '/projects'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 7a1 1 0 0 1 1-1h4l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" />
-            </svg>
-
             <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="5" width="18" height="14" rx="2" />
               <path d="m4 7 8 6 8-6" />

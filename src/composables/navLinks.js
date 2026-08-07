@@ -7,24 +7,6 @@ export function useNavlinks() {
       to: "/",
       name: "Home",
     },
-    {
-      id: "blogs",
-      to: "/blogs",
-      name: "Blogs",
-      hidden: true,
-    },
-    {
-      id: "projects",
-      to: "/projects",
-      name: "Projects",
-      hidden: true,
-    },
-    {
-      id: "contact",
-      to: "/contact",
-      name: "Contact Me",
-      hidden: true,
-    },
   ]);
 
   return { links };

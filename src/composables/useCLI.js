@@ -95,11 +95,6 @@ export function useCLI() {
         text: "email",
         url: "mailto:abhiramkrishna.8921@gmail.com",
       });
-      addLine("link", {
-        text: "send me a message",
-        url: "/contact",
-        note: "// coming soon",
-      });
       blank();
     },
 
@@ -357,8 +352,6 @@ export function useCLI() {
     addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
     await _delay(70);
     addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
-    await _delay(70);
-    addLine("link", { text: "send me a message", url: "/contact", note: "// coming soon" });
     await _delay(70);
     blank();
     await _delay(150);
