@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /maintenance
+
+Sitemap: https://www.abhiramkrishnan.com/sitemap.xml
