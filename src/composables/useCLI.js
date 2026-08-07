@@ -71,7 +71,7 @@ export function useCLI() {
   // Add a new command by adding a key here. Value must be () => void.
   const commands = {
     whoami() {
-      addLine("pair", { label: "ROLE ", value: "Full-Stack Engineer" });
+      addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
       addLine("pair", {
         label: "LOC  ",
         value: "Kozhikode, Kerala, India",
@@ -332,7 +332,7 @@ export function useCLI() {
 
     // ── whoami ────────────────────────────────────────────────────────
     await typeCommand("whoami");
-    addLine("pair", { label: "ROLE ", value: "Full-Stack Engineer" });
+    addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
     await _delay(70);
     addLine("pair", { label: "LOC  ", value: "Kozhikode, Kerala, India" });
     await _delay(70);

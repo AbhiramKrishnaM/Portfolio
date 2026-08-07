@@ -126,7 +126,7 @@ function exitGame() {
     });
 }
 
-const texts = ["Software Engineer", "Coding Enthusiast", "Guitarist"];
+const texts = ["Fullstack Engineer", "Coding Enthusiast", "Guitarist"];
 const maxLength = Math.max(...texts.map((t) => t.length));
 const INTERVAL_DELAY = 150;
 const CYCLE_DURATION = 10;
