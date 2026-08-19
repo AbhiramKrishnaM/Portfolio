@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative flex flex-col lg:flex-row items-center justify-center min-h-full px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0"
+        class="relative flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh_-_108px)] px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0"
     >
         <IcosahedronBackground v-if="showBackground" />
         <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
@@ -86,6 +86,8 @@
                 </div>
             </Transition>
         </div>
+
+        <ScrollCue />
     </div>
 </template>
 
@@ -95,6 +97,7 @@ import TerminalWindow from "@/components/cli/TerminalWindow.vue";
 import SnakeGame from "@/components/SnakeGame.vue";
 import SudokuGame from "@/components/SudokuGame.vue";
 import TetrisGame from "@/components/TetrisGame.vue";
+import ScrollCue from "@/components/ScrollCue.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
 
