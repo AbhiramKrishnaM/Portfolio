@@ -1,0 +1,16 @@
+{
+  "name": "Abhi.dev — Abhiram Krishna M",
+  "short_name": "Abhi.dev",
+  "description": "Abhiram Krishna M — fullstack engineer building with Vue, React, Node, Python, Docker, and AWS.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#011627",
+  "theme_color": "#011627",
+  "icons": [
+    {
+      "src": "/icons/terminal-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
