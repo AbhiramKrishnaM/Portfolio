@@ -1,8 +1,9 @@
 <template>
     <div class="relative">
+        <SpaceTimeGrid v-if="showBackground" />
         <section ref="heroRef"
             class="relative flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh_-_108px)] px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0">
-            <IcosahedronBackground v-if="showBackground" />
+            <IcosahedronBackground v-if="showBackground && SHOW_ICOSAHEDRON" />
             <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
                 <div id="section-1" class="text-white-gradient-01 font-normal">
                     <p class="text-base md:text-lg">Hi all, I am</p>
@@ -87,7 +88,13 @@ gsap.registerPlugin(ScrollTrigger);
 const IcosahedronBackground = defineAsyncComponent(() =>
     import("@/components/IcosahedronBackground.vue")
 );
+const SpaceTimeGrid = defineAsyncComponent(() =>
+    import("@/components/SpaceTimeGrid.vue")
+);
 const showBackground = ref(false);
+// Hidden for now while SpaceTimeGrid is the primary background — flip back
+// to true to bring the icosahedron/solar-system scene back.
+const SHOW_ICOSAHEDRON = false;
 
 const { theme, toggleTheme } = useTheme();
 
