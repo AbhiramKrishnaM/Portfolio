@@ -72,8 +72,3 @@ body {
 .border-1px-1e2d3d {
   border: 1px solid #1e2d3d;
 }
-
-/*  */
-#content {
-  height: calc(100vh - 108px);
-}
