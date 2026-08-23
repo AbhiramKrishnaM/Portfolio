@@ -8,9 +8,15 @@ A dark-terminal aesthetic: monospace type throughout, a navy-black base, muted b
 
 ## Color
 
-All colors are CSS custom properties on `:root` (`src/style.css`), consumed through Tailwind tokens (`tailwind.config.js`) — e.g. `bg-theme-main`, `text-accent-url`. Never hardcode a hex value in a component; add a token instead so both themes stay in sync.
+All colors are CSS custom properties on `:root` (`src/style.css`), consumed through Tailwind tokens (`tailwind.config.js`) — e.g. `bg-theme-main`, `text-accent-url`. Never hardcode a hex value in a component; add a token instead so both themes (and every palette) stay in sync. `TerminalWindow.vue`'s panel background used to be a hardcoded navy `rgba()` that ignored both — fixed to read `var(--color-bg-field-default)` instead; treat any new hardcoded color the same way.
 
-Dark is the default and the primary design target; light is a real second theme (not an afterthought) toggled via `data-theme="light"` on `<html>` (`useTheme.js`, persisted to `localStorage`). Light-mode accent values are independently darkened/saturated to clear WCAG AA (4.5:1) against the light background — verified with a contrast script, not eyeballed.
+Light is the current default (flip `useTheme.js`'s fallback to change it back); dark remains a real second theme, not an afterthought, toggled via `data-theme="light"`/`"dark"` on `<html>` (`useTheme.js`, persisted to `localStorage`). Light-mode accent values are independently darkened/saturated to clear WCAG AA (4.5:1) against the light background — verified with contrast math, not eyeballed.
+
+### Palettes — the color-scheme "connector"
+
+The token values below are no longer the only source of truth. `src/composables/palettes.js` holds a registry of named palettes (currently `terminal` — the original navy/coral/mint values in the table below, still on disk in `style.css` untouched — and `dreamPastel`, the active default), each with a full dark/light token set plus `grid` colors for `SpaceTimeGrid.vue`'s WebGL background. `src/composables/usePalette.js` applies the active one as inline custom-property overrides on `<html>`, which win over `style.css`'s own `:root` block. To add a scheme: add an entry to `PALETTES` (same shape) — no CSS edits, nothing existing removed. To switch: `setPalette("name")`, or change `DEFAULT_PALETTE`.
+
+The table below documents the `terminal` palette specifically (still the on-disk CSS fallback); check `palettes.js` for whatever palette is actually active.
 
 | Token | Dark | Light | Used for |
 |---|---|---|---|
@@ -27,6 +33,8 @@ Dark is the default and the primary design target; light is a real second theme 
 | `--color-bg-button-default` | `#1c2b3a` | `#4049b0` | Primary button background |
 
 `--color-code-keyword` / `--color-code-rest` / `--color-code-id` are defined for code-style syntax coloring but currently have no consumers in `src/` — available for a future code-snippet or CV-style page.
+
+Mini-games (`SnakeGame.vue`, `SudokuGame.vue`, `TetrisGame.vue`) and `CustomCursor.vue`'s hover-label chip still use hardcoded hex rather than tokens — a pre-existing, deliberate choice (the games "keep their current dark look for now rather than getting a light-mode pass," per the maintenance note below) rather than an oversight. Leave them as-is unless asked to theme them too.
 
 `--color-theme-main-gradient` is deliberately **not** re-themed for light mode — its only consumer (SnakeGame's canvas) intentionally keeps its dark look regardless of site theme.
 

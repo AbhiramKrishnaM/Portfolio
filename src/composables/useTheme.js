@@ -4,7 +4,7 @@ const THEME_KEY = "theme";
 
 const stored =
   typeof localStorage !== "undefined" ? localStorage.getItem(THEME_KEY) : null;
-const theme = ref(stored === "light" ? "light" : "dark");
+const theme = ref(stored === "dark" ? "dark" : "light");
 
 function applyTheme(value) {
   if (typeof document === "undefined") return;

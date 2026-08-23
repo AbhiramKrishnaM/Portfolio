@@ -211,8 +211,8 @@ onMounted(() => {
   width: 100%;
   height: 420px;
   background: linear-gradient(150deg,
-      rgba(1, 22, 39, 0.95) 0%,
-      rgba(1, 18, 33, 0.98) 100%);
+      var(--color-bg-field-default) 0%,
+      color-mix(in srgb, var(--color-bg-field-default) 88%, black 12%) 100%);
   border: 1px solid var(--color-border-white);
   border-radius: 8px;
   cursor: text;
@@ -221,9 +221,6 @@ onMounted(() => {
 }
 
 :root[data-theme="light"] .terminal-window {
-  background: linear-gradient(150deg,
-      rgba(255, 255, 255, 0.97) 0%,
-      rgba(239, 244, 248, 0.98) 100%);
   box-shadow: 0px 12px 32px rgba(11, 32, 54, 0.1);
 }
 

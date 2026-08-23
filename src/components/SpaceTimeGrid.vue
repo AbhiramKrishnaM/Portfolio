@@ -24,36 +24,33 @@ import {
   WebGLRenderer,
 } from "three";
 import { useTheme } from "@/composables/useTheme.js";
+import { usePalette } from "@/composables/usePalette.js";
+import { PALETTES } from "@/composables/palettes.js";
 
 const { theme } = useTheme();
+const { palette } = usePalette();
 
 const canvasRef = ref(null);
 let renderer, scene, camera, group, mesh, raycaster, animFrameId, gridUniforms;
-
-// Dark = dim indigo tiles that flare mint near the cursor. Light = pale
-// slate tiles that deepen toward the brand indigo — same "energizes near
-// the cursor" idea, inverted for a light backdrop. `fog` matches the page
-// background (--color-theme-main) so distant tiles dissolve into it instead
-// of the grid visibly stopping partway up the screen. `fresnel` is the
-// glossy-floor glint color that rims tiles viewed at a grazing angle.
-const THEME_COLORS = {
-  dark: { base: 0x0c1f33, hover: 0x43d9ad, fog: 0x011627, fresnel: 0xbfe9ff },
-  light: { base: 0xc7d4de, hover: 0x4049b0, fog: 0xeff4f8, fresnel: 0xd7e6f5 },
-};
 
 const baseColor = new Color();
 const hoverColor = new Color();
 const tmpColor = new Color();
 
+// Reads the active palette's `grid` colors (dim resting tiles, the bright
+// hover/energy-wave glow, and the fresnel glint) plus its `themeMain` for
+// fog, so switching palettes recolors the grid the same way it recolors
+// everything else — see composables/palettes.js and usePalette.js.
 function applyThemeColors() {
-  const c = THEME_COLORS[theme.value] ?? THEME_COLORS.dark;
-  baseColor.set(c.base);
-  hoverColor.set(c.hover);
-  if (scene?.fog) scene.fog.color.set(c.fog);
-  if (gridUniforms) gridUniforms.uFresnelColor.value.set(c.fresnel);
+  const scheme = PALETTES[palette.value] ?? PALETTES.terminal;
+  const grid = scheme.grid?.[theme.value] ?? PALETTES.terminal.grid[theme.value];
+  baseColor.set(grid.base);
+  hoverColor.set(grid.hover);
+  if (scene?.fog) scene.fog.color.set(scheme[theme.value]?.themeMain ?? scheme.dark.themeMain);
+  if (gridUniforms) gridUniforms.uFresnelColor.value.set(grid.fresnel);
 }
 
-watch(theme, applyThemeColors);
+watch([theme, palette], applyThemeColors);
 
 // ── Grid layout ─────────────────────────────────────────────────────────
 // Small tiles with a visible gap between them, laid out on the group's local
