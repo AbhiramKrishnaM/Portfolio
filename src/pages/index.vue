@@ -2,7 +2,7 @@
     <div class="relative">
         <SpaceTimeGrid v-if="showBackground" />
         <section ref="heroRef"
-            class="relative flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh_-_108px)] px-5 md:px-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 py-12 lg:py-0">
+            class="relative flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh_-_108px)] px-5 sm:pl-28 md:px-10 md:pl-28 lg:pl-10 lg:gap-8 xl:gap-16 2xl:gap-24 gap-10 pt-12 pb-28 sm:pb-12 lg:py-0">
             <IcosahedronBackground v-if="showBackground && SHOW_ICOSAHEDRON" />
             <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
                 <div id="section-1" class="text-white-gradient-01 font-normal">
@@ -62,7 +62,8 @@
             </div>
         </section>
 
-        <section class="relative flex flex-col items-start justify-center min-h-screen px-5 md:px-10 lg:px-20">
+        <section
+            class="relative hidden lg:flex flex-col items-start justify-center min-h-screen px-5 md:px-10 lg:pl-32 lg:pr-20 xl:pl-36">
             <div ref="dockRef" class="terminal-dock w-full lg:w-[500px] xl:w-[580px] 2xl:w-[660px]" aria-hidden="true">
             </div>
         </section>
@@ -200,26 +201,36 @@ function setupTerminalMotionPath() {
     terminalScrollMM.add("(min-width: 1024px)", () => {
         if (!heroRef.value || !terminalPanelRef.value || !dockRef.value) return;
 
-        const startRect = terminalPanelRef.value.getBoundingClientRect();
-        const dockRect = dockRef.value.getBoundingClientRect();
-        const dx = (dockRect.left + dockRect.width / 2) - (startRect.left + startRect.width / 2);
-        const dy = (dockRect.top + dockRect.height / 2) - (startRect.top + startRect.height / 2);
-        const p1 = { x: 0, y: dy * 0.6 };
-        const p2 = { x: dx * 0.4, y: dy * 0.95 };
-
         const progress = { value: 0 };
+        let path;
+
+        const applyPoint = () => {
+            const point = bezierPoint(progress.value, path.p1, path.p2, path.dx, path.dy);
+            gsap.set(terminalPanelRef.value, { x: point.x, y: point.y });
+        };
+
+        const measurePath = () => {
+            gsap.set(terminalPanelRef.value, { x: 0, y: 0 });
+            const startRect = terminalPanelRef.value.getBoundingClientRect();
+            const dockRect = dockRef.value.getBoundingClientRect();
+            const dx = (dockRect.left + dockRect.width / 2) - (startRect.left + startRect.width / 2);
+            const dy = (dockRect.top + dockRect.height / 2) - (startRect.top + startRect.height / 2);
+            path = { dx, dy, p1: { x: 0, y: dy * 0.6 }, p2: { x: dx * 0.4, y: dy * 0.95 } };
+            applyPoint();
+        };
+
+        measurePath();
+
         const tween = gsap.to(progress, {
             value: 1,
             ease: "none",
-            onUpdate: () => {
-                const point = bezierPoint(progress.value, p1, p2, dx, dy);
-                gsap.set(terminalPanelRef.value, { x: point.x, y: point.y });
-            },
+            onUpdate: applyPoint,
             scrollTrigger: {
                 trigger: heroRef.value,
                 start: "top top",
                 end: "bottom top",
                 scrub: 1,
+                onRefresh: measurePath,
             },
         });
 

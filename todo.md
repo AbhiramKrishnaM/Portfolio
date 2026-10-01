@@ -1,9 +1,9 @@
 # TODO — this week
 
 ## 1. More space between navbar and terminal on scroll
-- [ ] Check where the terminal lands after scrolling (the dock in section 2 of `index.vue`)
-- [ ] Add top margin/padding to the dock so it sits lower under the navbar
-- [ ] Check it on lg, xl, and 2xl screens
+- [x] Check where the terminal lands after scrolling (the dock in section 2 of `index.vue`)
+- [x] Add left padding to the dock so it clears the vertical navbar pill (`lg:pl-32 xl:pl-36`)
+- [x] Check it on lg, xl, and 2xl screens
 
 ## 2. Terminal switches to `$ projects` on scroll
 - [ ] Add a projects data list (name, short description, link)
