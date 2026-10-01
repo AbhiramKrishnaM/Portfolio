@@ -68,6 +68,14 @@
         <span class="text-gray-gradient-01">{{ line.content.desc }}</span>
       </div>
 
+      <!-- git log --oneline row: hash message (repo, time ago) -->
+      <div v-else-if="line.type === 'commit-row'" class="pl-5 flex flex-wrap items-baseline gap-x-2 text-sm">
+        <a :href="line.content.url" target="_blank" rel="noopener noreferrer"
+          class="text-accent-underline hover:underline shrink-0" :data-cursor="`view ${line.content.sha}`">{{ line.content.sha }}</a>
+        <span class="text-white-gradient-01 min-w-0 break-words">{{ line.content.message }}</span>
+        <span class="text-gray-gradient-01 text-xs shrink-0">({{ line.content.repo }}, {{ line.content.ago }})</span>
+      </div>
+
       <!-- preformatted ASCII art (cowsay, sl) — clipped, never wraps -->
       <pre v-else-if="line.type === 'pre'" class="pl-5 text-xs leading-snug whitespace-pre overflow-hidden"
         :class="line.content.tone === 'accent' ? 'text-accent-variable' : 'text-white-gradient-01'"

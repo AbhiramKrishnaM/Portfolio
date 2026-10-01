@@ -8,6 +8,7 @@
 import { ref } from "vue";
 import { PROJECTS } from "@/composables/projects.js";
 import { SOCIALS, EMAIL, social } from "@/composables/socials.js";
+import { getRecentCommits, timeAgo, GITHUB_USER } from "@/composables/githubLog.js";
 import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
 
 // ─── Boot animation helpers ────────────────────────────────────────────────────
@@ -161,6 +162,14 @@ export function useCLI() {
       blank();
     },
 
+    "git log"() {
+      runGitLog();
+    },
+
+    "git log --oneline"() {
+      runGitLog();
+    },
+
     contact() {
       addLine("comment", "// get in touch");
       addLine("link", { text: EMAIL, url: social("email").url });
@@ -178,6 +187,7 @@ export function useCLI() {
       addLine("help-row", { cmd: "cat cv", desc: "quick CV overview" });
       addLine("help-row", { cmd: "cd cv", desc: "view full CV" });
       addLine("help-row", { cmd: "whoami", desc: "who am I?" });
+      addLine("help-row", { cmd: "git log", desc: "my recent commits" });
       addLine("help-row", { cmd: "contact", desc: "get in touch" });
       addLine("help-row", { cmd: "/game", desc: "launch a mini-game" });
       addLine("help-row", { cmd: "clear", desc: "clear terminal" });
@@ -256,6 +266,48 @@ export function useCLI() {
     if (kind === "vim") addLine("comment", "// you escaped vim. put that on your resume.");
     if (kind === "matrix") addLine("comment", "// welcome back to the real world.");
     blank();
+  }
+
+  /** `git log` — recent public commits from GitHub, one line each. */
+  async function runGitLog() {
+    const token = sceneToken; // a scene change (scrolling) discards the result
+    booting.value = true;
+    const loadingId = uid();
+    lines.value.push({ id: loadingId, type: "comment", content: `// fetching recent commits from github.com/${GITHUB_USER}…` });
+
+    let result = null;
+    let error = null;
+    try {
+      result = await getRecentCommits();
+    } catch (err) {
+      error = err;
+    }
+    if (token !== sceneToken) return; // new scene owns the terminal now
+    lines.value = lines.value.filter((l) => l.id !== loadingId);
+
+    if (result) {
+      if (!result.commits.length) addLine("comment", "// no public commits yet");
+      result.commits.forEach((c) => addLine("commit-row", { ...c, ago: timeAgo(c.date) }));
+      if (result.source === "cache") {
+        addLine("comment", `// cached ${timeAgo(result.fetchedAt)} · refreshes every 10m`);
+      } else if (result.source === "stale") {
+        addLine("comment", `// couldn't reach github just now — showing commits from ${timeAgo(result.fetchedAt)}`);
+      }
+    } else {
+      addLine("comment", gitLogErrorMessage(error));
+    }
+    addLine("link", { text: `github.com/${GITHUB_USER}`, url: `https://github.com/${GITHUB_USER}` });
+    blank();
+    booting.value = false;
+  }
+
+  function gitLogErrorMessage(err) {
+    if (err?.kind === "rate-limit") {
+      const mins = err.resetAt ? Math.max(1, Math.ceil((err.resetAt - Date.now()) / 60000)) : 1;
+      return `// github's rate limit says slow down — try again in ~${mins} min. meanwhile:`;
+    }
+    if (err?.kind === "network") return "// couldn't reach github — are you offline? the commits live here:";
+    return `// github returned an error${err?.status ? ` (${err.status})` : ""} — try again in a bit. meanwhile:`;
   }
 
   /** `sl` — drives an ASCII train across the output, right to left. */

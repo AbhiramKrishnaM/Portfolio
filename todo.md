@@ -49,10 +49,10 @@
 - [x] Style it like the terminal chrome (see `DESIGN.md`)
 
 ## 7. `git log` command (real GitHub activity)
-- [ ] Fetch recent public commits from the GitHub API
-- [ ] Print them like `git log --oneline` (hash, message, repo, time ago)
-- [ ] Cache the result so it doesn't hit the API on every run
-- [ ] Show a friendly message if the API fails or rate-limits
+- [x] Fetch recent public commits from the GitHub API
+- [x] Print them like `git log --oneline` (hash, message, repo, time ago)
+- [x] Cache the result so it doesn't hit the API on every run
+- [x] Show a friendly message if the API fails or rate-limits
 
 ## 8. `now` command (what I'm up to)
 - [ ] Add a `now` command: currently building / learning / listening to
