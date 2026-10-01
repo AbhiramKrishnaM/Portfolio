@@ -68,6 +68,11 @@
         <span class="text-gray-gradient-01">{{ line.content.desc }}</span>
       </div>
 
+      <!-- preformatted ASCII art (cowsay, sl) — clipped, never wraps -->
+      <pre v-else-if="line.type === 'pre'" class="pl-5 text-xs leading-snug whitespace-pre overflow-hidden"
+        :class="line.content.tone === 'accent' ? 'text-accent-variable' : 'text-white-gradient-01'"
+        role="img" :aria-label="line.content.label">{{ line.content.text }}</pre>
+
       <!-- error -->
       <div v-else-if="line.type === 'error'" class="pl-5 text-red-400 text-sm">
         {{ line.content }}

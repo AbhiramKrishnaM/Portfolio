@@ -7,6 +7,7 @@
 
 import { ref } from "vue";
 import { PROJECTS } from "@/composables/projects.js";
+import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
 
 // ─── Boot animation helpers ────────────────────────────────────────────────────
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -59,6 +60,15 @@ export function useCLI() {
   /** True while the boot animation is running — hides the input prompt. */
   const booting = ref(false);
 
+  /**
+   * Full-terminal takeover for hidden commands — "matrix" | "vim" | null.
+   * TerminalWindow renders the matching overlay and hides the prompt.
+   */
+  const overlay = ref(null);
+
+  /** Approx. character columns of the output area (text-xs), set by TerminalWindow. */
+  const columns = ref(60);
+
   /** Animated-scene state — see playScene() below. */
   const SCENE_CANCELLED = Symbol("scene-cancelled");
   let sceneToken = 0;
@@ -72,6 +82,16 @@ export function useCLI() {
   const addLine = (type, content) =>
     lines.value.push({ id: uid(), type, content });
   const blank = () => addLine("blank", null);
+
+  /**
+   * Preformatted multi-line block (ASCII art). `label` is what screen readers
+   * announce instead of the art; tone: "text" | "accent".
+   */
+  const addPre = (text, label, tone = "text") => {
+    const id = uid();
+    lines.value.push({ id, type: "pre", content: { text, label, tone } });
+    return id;
+  };
 
   function printProjects() {
     addLine("comment", "// projects");
@@ -190,6 +210,79 @@ export function useCLI() {
     },
   };
 
+  // ─── hidden commands ─────────────────────────────────────────────────────────
+  // Not listed in `help` and not offered by tab completion — they're for people
+  // who poke around ("Some commands aren't listed. Try things.").
+  const secretCommands = {
+    fortune() {
+      addLine("comment", `// ${randomFortune()}`);
+      blank();
+    },
+
+    sl() {
+      runTrain();
+    },
+
+    matrix() {
+      overlay.value = "matrix";
+    },
+  };
+
+  // Commands that take free-text arguments: handler receives the rest of the line.
+  const argCommands = {
+    cowsay(text) {
+      const message = text || "moo. try: cowsay <text>";
+      addPre(cowsay(message, Math.min(40, columns.value - 8)), `a cow says: ${message}`);
+      blank();
+    },
+
+    sudo(args) {
+      if (args.toLowerCase() === "hire-me") {
+        addLine("comment", "[sudo] password for visitor: ********");
+        addLine("comment", "// access granted. excellent decision.");
+        addLine("comment", "// initiating hire sequence — next step is yours:");
+        addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
+        addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
+        addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
+      } else {
+        addLine("error", "visitor is not in the sudoers file. This incident will be reported.");
+      }
+      blank();
+    },
+
+    vim() {
+      overlay.value = "vim";
+    },
+  };
+  argCommands.vi = argCommands.vim;
+  argCommands.nvim = argCommands.vim;
+
+  /** Called by the overlay components when the visitor gets out. */
+  function exitOverlay() {
+    const kind = overlay.value;
+    overlay.value = null;
+    if (kind === "vim") addLine("comment", "// you escaped vim. put that on your resume.");
+    if (kind === "matrix") addLine("comment", "// welcome back to the real world.");
+    blank();
+  }
+
+  /** `sl` — drives an ASCII train across the output, right to left. */
+  async function runTrain() {
+    const token = sceneToken; // a scene change (scrolling) aborts the ride
+    booting.value = true;
+    const label = "a train drives across the terminal";
+    const id = addPre("", label, "accent");
+    for (let offset = columns.value, frame = 0; offset > -TRAIN_WIDTH; offset--, frame++) {
+      await _delay(30);
+      if (token !== sceneToken) return; // new scene owns the terminal now
+      const idx = lines.value.findIndex((l) => l.id === id);
+      if (idx === -1) return;
+      lines.value[idx] = { id, type: "pre", content: { text: trainFrame(Math.floor(frame / 4), offset), label, tone: "accent" } };
+    }
+    lines.value = lines.value.filter((l) => l.id !== id);
+    booting.value = false;
+  }
+
   // ─── execute a raw command string ────────────────────────────────────────────
   function execute(raw) {
     const cmd = raw.trim();
@@ -201,11 +294,17 @@ export function useCLI() {
     cmdHistory.value.unshift(cmd);
     historyIdx.value = -1;
 
-    const handler = commands[cmd.toLowerCase()];
+    const lower = cmd.toLowerCase();
+    const handler = commands[lower] ?? secretCommands[lower];
+    const [name] = lower.split(/\s+/, 1);
+    const argHandler = argCommands[name];
     if (handler) {
       // clear wipes lines itself — don't echo first or it flashes
-      if (cmd.toLowerCase() !== "clear") addLine("input", cmd);
+      if (lower !== "clear") addLine("input", cmd);
       handler();
+    } else if (argHandler) {
+      addLine("input", cmd);
+      argHandler(cmd.slice(name.length).trim());
     } else {
       addLine("input", cmd);
       addLine(
@@ -374,6 +473,7 @@ export function useCLI() {
     currentScene = name;
     lines.value = [];
     menuState.value = null;
+    overlay.value = null;
     booting.value = true;
 
     const wait = async (ms) => {
@@ -440,6 +540,9 @@ export function useCLI() {
     lines,
     menuState,
     booting,
+    overlay,
+    columns,
+    exitOverlay,
     execute,
     historyUp,
     historyDown,

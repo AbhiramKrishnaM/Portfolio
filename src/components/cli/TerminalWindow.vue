@@ -11,33 +11,39 @@
     </div>
 
     <!-- ── scrollable output + inline input ───────────────────────────── -->
-    <div ref="outputEl" class="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin min-h-0">
-      <TerminalOutput :lines="lines" :menu-state="menuState" :selected-project="selectedProject"
-        @project-select="emit('project-select', $event)" />
+    <div class="relative flex-1 min-h-0">
+      <div ref="outputEl" class="h-full overflow-y-auto px-4 py-3 scrollbar-thin">
+        <TerminalOutput :lines="lines" :menu-state="menuState" :selected-project="selectedProject"
+          @project-select="emit('project-select', $event)" />
 
-      <!-- Inline active $ prompt — hidden while boot animation runs -->
-      <div v-if="!booting">
-        <div class="flex items-center gap-2 mt-1">
-          <span class="text-accent-variable text-sm select-none">$</span>
-          <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
-            class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
-            @keydown="handleKeydown" />
-        </div>
+        <!-- Inline active $ prompt — hidden while an animation or overlay runs -->
+        <div v-if="!booting && !overlay">
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-accent-variable text-sm select-none">$</span>
+            <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+              class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
+              @keydown="handleKeydown" />
+          </div>
 
-        <!-- Tab-completion picker -->
-        <div v-if="tabSuggestions.length" class="pl-5 pt-1 flex flex-wrap gap-x-3 gap-y-1">
-          <span
-            v-for="(cmd, i) in tabSuggestions"
-            :key="cmd"
-            class="text-sm px-1.5 py-0.5 rounded transition-colors duration-100"
-            :class="i === tabIndex
-              ? 'bg-accent-variable text-theme-main font-semibold'
-              : 'text-gray-gradient-01'"
-          >
-            {{ cmd }}
-          </span>
+          <!-- Tab-completion picker -->
+          <div v-if="tabSuggestions.length" class="pl-5 pt-1 flex flex-wrap gap-x-3 gap-y-1">
+            <span
+              v-for="(cmd, i) in tabSuggestions"
+              :key="cmd"
+              class="text-sm px-1.5 py-0.5 rounded transition-colors duration-100"
+              :class="i === tabIndex
+                ? 'bg-accent-variable text-theme-main font-semibold'
+                : 'text-gray-gradient-01'"
+            >
+              {{ cmd }}
+            </span>
+          </div>
         </div>
       </div>
+
+      <!-- Hidden-command takeovers (matrix / vim) cover the output area -->
+      <MatrixRain v-if="overlay === 'matrix'" @exit="onOverlayExit" />
+      <VimTrap v-else-if="overlay === 'vim'" @exit="onOverlayExit" />
     </div>
   </div>
 </template>
@@ -46,6 +52,8 @@
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useCLI } from "@/composables/useCLI.js";
 import TerminalOutput from "./TerminalOutput.vue";
+import MatrixRain from "./MatrixRain.vue";
+import VimTrap from "./VimTrap.vue";
 
 const props = defineProps({
   /** Which animated scene to show: "intro" (whoami + socials) or "projects". */
@@ -66,6 +74,9 @@ const {
   lines,
   menuState,
   booting,
+  overlay,
+  columns,
+  exitOverlay,
   execute,
   historyUp,
   historyDown,
@@ -181,6 +192,7 @@ function handleKeydown(event) {
       inputValue.value = "";
       execute(cmd);
       nextTick(scrollToBottom);
+      focusWhenIdle();
       return;
     }
     clearTab();
@@ -198,7 +210,33 @@ function handleKeydown(event) {
     inputValue.value = "";
     execute(cmd);
     nextTick(scrollToBottom);
+    focusWhenIdle();
   }
+}
+
+function onOverlayExit() {
+  exitOverlay();
+  nextTick(() => {
+    scrollToBottom();
+    focusInput();
+  });
+}
+
+// Rough column count for ASCII art (text-xs Fira Code ≈ 0.6em = 7.2px/char,
+// minus the 1.25rem indent and horizontal padding).
+function measureColumns() {
+  if (outputEl.value) columns.value = Math.max(20, Math.floor((outputEl.value.clientWidth - 52) / 7.2));
+}
+
+// A command that runs an animation (e.g. `sl`) hides the prompt; give focus
+// back once it's done so the visitor can keep typing.
+function focusWhenIdle() {
+  if (!booting.value) return;
+  const stop = watch(booting, (busy) => {
+    if (busy) return;
+    stop();
+    nextTick(() => inputRef.value?.focus({ preventScroll: true }));
+  });
 }
 
 function focusInput() {
@@ -223,13 +261,18 @@ watch(() => props.scene, (scene) => {
 });
 
 onMounted(() => {
+  measureColumns();
+  window.addEventListener("resize", measureColumns);
   const start = props.scene === "intro" ? bootAnimated() : showScene(props.scene);
   start.then(() => {
     nextTick(() => focusInput());
   });
 });
 
-onUnmounted(() => clearTimeout(sceneTimer));
+onUnmounted(() => {
+  clearTimeout(sceneTimer);
+  window.removeEventListener("resize", measureColumns);
+});
 </script>
 
 <style scoped>

@@ -33,13 +33,13 @@
 - [x] On mobile, show the card below the terminal
 
 ## 5. Fun terminal commands
-- [ ] `sudo hire-me` — cheeky reply + contact links
-- [ ] `cowsay <text>` — ASCII cow says the text
-- [ ] `fortune` — random dev quote/joke
-- [ ] `sl` — ASCII train drives across the terminal
-- [ ] `matrix` — falling code rain inside the terminal, any key exits
-- [ ] `vim` — trap mode, only `:q!` gets you out
-- [ ] Keep these out of `help` (let people discover them) or add a `// secret` hint
+- [x] `sudo hire-me` — cheeky reply + contact links
+- [x] `cowsay <text>` — ASCII cow says the text
+- [x] `fortune` — random dev quote/joke
+- [x] `sl` — ASCII train drives across the terminal
+- [x] `matrix` — falling code rain inside the terminal, any key exits
+- [x] `vim` — trap mode, only `:q!` gets you out
+- [x] Keep these out of `help` (let people discover them) or add a `// secret` hint
 
 ## 6. Command palette (Cmd/Ctrl + K)
 - [ ] Build a `CommandPalette` modal (search input + list)
