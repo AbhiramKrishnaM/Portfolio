@@ -104,3 +104,9 @@
 - [ ] Define looks for dawn / day / dusk / night (grid color, glow, background)
 - [ ] Blend smoothly between them
 - [ ] Theme toggle still overrides it manually
+
+## 16. Remove code comments
+- [ ] Remove comments from all files in `src/`
+- [ ] List any comment that seems truly needed and get approval before keeping it
+- [ ] Run `npx eslint src/` and `npm run build` after to make sure nothing broke
+- [ ] Rule going forward: no comments in new code unless approved
