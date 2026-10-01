@@ -6,6 +6,7 @@
  */
 
 import { ref } from "vue";
+import { PROJECTS } from "@/composables/projects.js";
 
 // ─── Boot animation helpers ────────────────────────────────────────────────────
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -58,6 +59,11 @@ export function useCLI() {
   /** True while the boot animation is running — hides the input prompt. */
   const booting = ref(false);
 
+  /** Animated-scene state — see playScene() below. */
+  const SCENE_CANCELLED = Symbol("scene-cancelled");
+  let sceneToken = 0;
+  let currentScene = null;
+
   /** Command input history (most recent first). */
   const cmdHistory = ref([]);
   const historyIdx = ref(-1);
@@ -66,6 +72,12 @@ export function useCLI() {
   const addLine = (type, content) =>
     lines.value.push({ id: uid(), type, content });
   const blank = () => addLine("blank", null);
+
+  function printProjects() {
+    addLine("comment", "// projects");
+    PROJECTS.forEach((project) => addLine("project-row", project));
+    blank();
+  }
 
   // ─── command registry ────────────────────────────────────────────────────────
   // Add a new command by adding a key here. Value must be () => void.
@@ -98,15 +110,12 @@ export function useCLI() {
       blank();
     },
 
+    projects() {
+      printProjects();
+    },
+
     "ls projects"() {
-      addLine("comment", "// projects");
-      addLine("project-row", { name: "Job Search", desc: "crawls the web and finds relevant job postings based on your prompts" });
-      addLine("project-row", { name: "My Kali", desc: "personal kali linux container" });
-      addLine("project-row", { name: "aidev", desc: "AI-Powered CLI Assistant for Developers" });
-      addLine("project-row", { name: "Guitar Pro 1", desc: "application to build guitar chords" });
-      blank();
-      addLine("comment", "Run \"cd projects\" to see them all.");
-      blank();
+      printProjects();
     },
 
     "ls blog"() {
@@ -147,7 +156,7 @@ export function useCLI() {
 
     help() {
       addLine("comment", "Available commands:");
-      addLine("help-row", { cmd: "ls projects", desc: "list projects" });
+      addLine("help-row", { cmd: "projects", desc: "list projects" });
       addLine("help-row", { cmd: "ls blog", desc: "list blog posts" });
       addLine("help-row", { cmd: "ls socials", desc: "list social links" });
       addLine("help-row", { cmd: "cd projects", desc: "go to projects" });
@@ -176,6 +185,7 @@ export function useCLI() {
     clear() {
       lines.value = [];
       menuState.value = null;
+      currentScene = "intro";
       runBoot();
     },
   };
@@ -296,7 +306,7 @@ export function useCLI() {
     commands.whoami();
     addLine("input", "ls socials");
     commands["ls socials"]();
-    addLine("comment", '// type "help" to see available commands');
+    addLine("comment", "// type \"help\" to see available commands");
     blank();
   }
 
@@ -304,62 +314,116 @@ export function useCLI() {
     runBoot();
   }
 
-  /**
-   * Animated boot — types each command character-by-character,
-   * then staggers the output lines. Used on initial page load.
-   */
-  async function bootAnimated() {
-    if (_hasBooted) {
-      runBoot();
-      return;
+  // ─── animated scenes ─────────────────────────────────────────────────────────
+  // A scene clears the terminal and types its commands out character-by-
+  // character. Starting a new scene cancels the one in progress, so fast
+  // scrolling between scenes never interleaves two animations.
+
+  async function introScene({ wait, typeCommand }) {
+    // ── whoami ────────────────────────────────────────────────────────
+    await typeCommand("whoami");
+    addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
+    await wait(70);
+    addLine("pair", { label: "LOC  ", value: "Kozhikode, Kerala, India" });
+    await wait(70);
+    addLine("pair", { label: "STACK", value: "Vue · React · Node · Python · Docker · AWS" });
+    await wait(70);
+    blank();
+    await wait(180);
+
+    // ── ls socials ────────────────────────────────────────────────────
+    await typeCommand("ls socials");
+    addLine("comment", "// socials");
+    await wait(70);
+    addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
+    await wait(70);
+    addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
+    await wait(70);
+    addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
+    await wait(70);
+    addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
+    await wait(70);
+    blank();
+    await wait(150);
+
+    addLine("comment", "// type \"help\" to see available commands");
+    blank();
+  }
+
+  async function projectsScene({ wait, typeCommand }) {
+    await typeCommand("projects");
+    addLine("comment", "// projects");
+    for (const project of PROJECTS) {
+      await wait(140);
+      addLine("project-row", project);
     }
-    _hasBooted = true;
+    await wait(140);
+    blank();
+    addLine("comment", "// type \"help\" to see available commands");
+    blank();
+  }
+
+  const SCENES = { intro: introScene, projects: projectsScene };
+
+  /**
+   * Clears the terminal and plays a scene. Resolves true if the scene ran to
+   * the end, false if a newer scene cancelled it part-way.
+   */
+  async function playScene(name) {
+    const token = ++sceneToken;
+    currentScene = name;
+    lines.value = [];
+    menuState.value = null;
     booting.value = true;
+
+    const wait = async (ms) => {
+      await _delay(ms);
+      if (token !== sceneToken) throw SCENE_CANCELLED;
+    };
 
     // ── helper: type a command into a new input line ──────────────────
     async function typeCommand(cmd) {
       const lineId = uid();
       lines.value.push({ id: lineId, type: "input", content: "", cursor: true });
       for (let i = 0; i <= cmd.length; i++) {
-        await _delay(55);
+        await wait(55);
         const idx = lines.value.findIndex((l) => l.id === lineId);
         if (idx !== -1) {
           lines.value[idx] = { id: lineId, type: "input", content: cmd.slice(0, i), cursor: i < cmd.length };
         }
       }
-      await _delay(220);
+      await wait(220);
     }
 
-    // ── whoami ────────────────────────────────────────────────────────
-    await typeCommand("whoami");
-    addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
-    await _delay(70);
-    addLine("pair", { label: "LOC  ", value: "Kozhikode, Kerala, India" });
-    await _delay(70);
-    addLine("pair", { label: "STACK", value: "Vue · React · Node · Python · Docker · AWS" });
-    await _delay(70);
-    blank();
-    await _delay(180);
-
-    // ── ls socials ────────────────────────────────────────────────────
-    await typeCommand("ls socials");
-    addLine("comment", "// socials");
-    await _delay(70);
-    addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
-    await _delay(70);
-    addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-    await _delay(70);
-    addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
-    await _delay(70);
-    addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
-    await _delay(70);
-    blank();
-    await _delay(150);
-
-    addLine("comment", "// type \"help\" to see available commands");
-    blank();
-
+    try {
+      await SCENES[name]({ wait, typeCommand });
+    } catch (err) {
+      if (err !== SCENE_CANCELLED) throw err;
+      return false;
+    }
     booting.value = false;
+    return true;
+  }
+
+  /** Plays a scene unless it's already the one showing (or playing). */
+  function showScene(name) {
+    if (name === currentScene) return Promise.resolve(false);
+    return playScene(name);
+  }
+
+  /**
+   * Animated boot — types the intro on initial page load. After the first
+   * boot (e.g. navigating back to the page) the intro appears instantly.
+   */
+  async function bootAnimated() {
+    if (_hasBooted) {
+      sceneToken++;
+      currentScene = "intro";
+      runBoot();
+      return true;
+    }
+    _hasBooted = true;
+    return playScene("intro");
   }
 
   /**
@@ -385,6 +449,7 @@ export function useCLI() {
     menuCancel,
     boot,
     bootAnimated,
+    showScene,
     resumeFromGame,
     getSuggestions,
   };

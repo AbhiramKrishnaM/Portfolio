@@ -42,9 +42,17 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useCLI } from "@/composables/useCLI.js";
 import TerminalOutput from "./TerminalOutput.vue";
+
+const props = defineProps({
+  /** Which animated scene to show: "intro" (whoami + socials) or "projects". */
+  scene: {
+    type: String,
+    default: "intro",
+  },
+});
 
 const emit = defineEmits(["game-selected"]);
 
@@ -60,6 +68,7 @@ const {
   menuConfirm,
   menuCancel,
   bootAnimated,
+  showScene,
   resumeFromGame,
   getSuggestions,
 } = useCLI();
@@ -199,11 +208,22 @@ function scrollToBottom() {
 // Auto-scroll as lines are added during the boot animation
 watch(lines, () => nextTick(scrollToBottom), { deep: true });
 
+// Short debounce so flicking back and forth across the scroll threshold
+// doesn't restart the typing animation on every crossing.
+let sceneTimer = null;
+watch(() => props.scene, (scene) => {
+  clearTimeout(sceneTimer);
+  sceneTimer = setTimeout(() => showScene(scene), 150);
+});
+
 onMounted(() => {
-  bootAnimated().then(() => {
+  const start = props.scene === "intro" ? bootAnimated() : showScene(props.scene);
+  start.then(() => {
     nextTick(() => focusInput());
   });
 });
+
+onUnmounted(() => clearTimeout(sceneTimer));
 </script>
 
 <style scoped>

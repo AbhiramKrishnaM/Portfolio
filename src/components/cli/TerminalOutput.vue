@@ -50,7 +50,9 @@
 
       <div v-else-if="line.type === 'project-row'" class="pl-5 flex items-baseline gap-2 text-sm">
         <span class="text-accent-variable shrink-0">></span>
-        <span class="text-accent-url font-medium shrink-0">{{ line.content.name }}</span>
+        <a v-if="line.content.url" :href="line.content.url" target="_blank" rel="noopener noreferrer"
+          class="text-accent-url font-medium shrink-0 hover:underline cursor-pointer">{{ line.content.name }}</a>
+        <span v-else class="text-accent-url font-medium shrink-0">{{ line.content.name }}</span>
         <span class="text-gray-gradient-01">— {{ line.content.desc }}</span>
       </div>
 

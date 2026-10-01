@@ -51,7 +51,8 @@
 
             <div ref="terminalPanelRef" class="right-panel relative z-10 w-full lg:w-auto">
                 <Transition name="panel-fade" mode="out-in">
-                    <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" @game-selected="launchGame" />
+                    <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" :scene="terminalScene"
+                        @game-selected="launchGame" />
 
                     <div v-else key="game">
                         <SnakeGame v-if="activeGame === 'snake'" @skip="exitGame" />
@@ -106,6 +107,9 @@ const terminalRef = ref(null);
 const heroRef = ref(null);
 const terminalPanelRef = ref(null);
 const dockRef = ref(null);
+// "projects" once the terminal has scrolled down onto the dock. While a game
+// is open the terminal isn't mounted, so it only picks this up on return.
+const terminalScene = ref("intro");
 let terminalScrollMM = null;
 
 const activeGameGithubUrl = computed(() => {
@@ -234,7 +238,16 @@ function setupTerminalMotionPath() {
             },
         });
 
+        const sceneTrigger = ScrollTrigger.create({
+            trigger: heroRef.value,
+            start: "bottom 15%",
+            onEnter: () => { terminalScene.value = "projects"; },
+            onLeaveBack: () => { terminalScene.value = "intro"; },
+        });
+
         return () => {
+            sceneTrigger.kill();
+            terminalScene.value = "intro";
             tween.scrollTrigger?.kill();
             tween.kill();
         };
