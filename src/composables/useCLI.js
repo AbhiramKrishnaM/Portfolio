@@ -7,6 +7,7 @@
 
 import { ref } from "vue";
 import { PROJECTS } from "@/composables/projects.js";
+import { SOCIALS, EMAIL, social } from "@/composables/socials.js";
 import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
 
 // ─── Boot animation helpers ────────────────────────────────────────────────────
@@ -82,6 +83,7 @@ export function useCLI() {
   const addLine = (type, content) =>
     lines.value.push({ id: uid(), type, content });
   const blank = () => addLine("blank", null);
+  const addSocial = ({ text, url }) => addLine("link", { text, url });
 
   /**
    * Preformatted multi-line block (ASCII art). `label` is what screen readers
@@ -117,16 +119,7 @@ export function useCLI() {
 
     "ls socials"() {
       addLine("comment", "// socials");
-      addLine("link", {
-        text: "github",
-        url: "https://github.com/AbhiramKrishnaM",
-      });
-      addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-      addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
-      addLine("link", {
-        text: "email",
-        url: "mailto:abhiramkrishna.8921@gmail.com",
-      });
+      SOCIALS.forEach(addSocial);
       blank();
     },
 
@@ -170,7 +163,7 @@ export function useCLI() {
 
     contact() {
       addLine("comment", "// get in touch");
-      addLine("link", { text: "abhiramkrishna.8921@gmail.com", url: "mailto:abhiramkrishna.8921@gmail.com" });
+      addLine("link", { text: EMAIL, url: social("email").url });
       blank();
     },
 
@@ -189,6 +182,7 @@ export function useCLI() {
       addLine("help-row", { cmd: "/game", desc: "launch a mini-game" });
       addLine("help-row", { cmd: "clear", desc: "clear terminal" });
       addLine("help-row", { cmd: "help", desc: "show this message" });
+      addLine("help-row", { cmd: "ctrl/⌘ + k", desc: "command palette" });
       blank();
       addLine("comment", "Some commands aren't listed. Try things.");
       blank();
@@ -241,9 +235,7 @@ export function useCLI() {
         addLine("comment", "[sudo] password for visitor: ********");
         addLine("comment", "// access granted. excellent decision.");
         addLine("comment", "// initiating hire sequence — next step is yours:");
-        addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
-        addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-        addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
+        ["email", "linkedin", "github"].forEach((id) => addSocial(social(id)));
       } else {
         addLine("error", "visitor is not in the sudoers file. This incident will be reported.");
       }
@@ -434,14 +426,10 @@ export function useCLI() {
     await typeCommand("ls socials");
     addLine("comment", "// socials");
     await wait(70);
-    addLine("link", { text: "github", url: "https://github.com/AbhiramKrishnaM" });
-    await wait(70);
-    addLine("link", { text: "linkedin", url: "https://www.linkedin.com/in/abhiram-krishna/" });
-    await wait(70);
-    addLine("link", { text: "dinq", url: "https://dinq.me/abhiramkrishna" });
-    await wait(70);
-    addLine("link", { text: "email", url: "mailto:abhiramkrishna.8921@gmail.com" });
-    await wait(70);
+    for (const link of SOCIALS) {
+      addSocial(link);
+      await wait(70);
+    }
     blank();
     await wait(150);
 

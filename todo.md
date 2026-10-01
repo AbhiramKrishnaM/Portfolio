@@ -42,11 +42,11 @@
 - [x] Keep these out of `help` (let people discover them) or add a `// secret` hint
 
 ## 6. Command palette (Cmd/Ctrl + K)
-- [ ] Build a `CommandPalette` modal (search input + list)
-- [ ] Items: jump to projects, socials, games, toggle theme
-- [ ] Keyboard nav (↑/↓, Enter, Esc)
-- [ ] Open with Cmd/Ctrl + K from anywhere on the page
-- [ ] Style it like the terminal chrome (see `DESIGN.md`)
+- [x] Build a `CommandPalette` modal (search input + list)
+- [x] Items: jump to projects, socials, games, toggle theme
+- [x] Keyboard nav (↑/↓, Enter, Esc)
+- [x] Open with Cmd/Ctrl + K from anywhere on the page
+- [x] Style it like the terminal chrome (see `DESIGN.md`)
 
 ## 7. `git log` command (real GitHub activity)
 - [ ] Fetch recent public commits from the GitHub API

@@ -65,7 +65,7 @@
 
             <!-- Below lg there's no scroll-docked projects section, so the card
                  sits under the terminal instead. -->
-            <div class="relative z-10 w-full lg:hidden">
+            <div class="relative z-10 w-full lg:hidden" data-section-fallback="projects">
                 <Transition name="card-swap" mode="out-in">
                     <ProjectCard :key="selectedProject.slug" :project="selectedProject" :index="selectedIdx"
                         :total="PROJECTS.length" @prev="stepProject(-1)" @next="stepProject(1)" />
@@ -108,6 +108,7 @@ import { PROJECTS } from "@/composables/projects.js";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { useNavlinks } from "@/composables/navLinks.js";
+import { pendingGame } from "@/composables/commandPalette.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -167,6 +168,17 @@ function launchGame(gameId) {
     activeGame.value = gameId;
     view.value = "game";
 }
+
+// Games launched from the command palette. Below lg the terminal panel may be
+// scrolled out of view, so bring it back; on desktop it's always on screen.
+watch(pendingGame, (gameId) => {
+    if (!gameId) return;
+    pendingGame.value = null;
+    launchGame(gameId);
+    if (window.innerWidth < 1024) {
+        terminalPanelRef.value?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}, { immediate: true });
 
 function exitGame() {
     const prev = activeGame.value;

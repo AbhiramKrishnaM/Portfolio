@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { useNavlinks } from "@/composables/navLinks.js";
+import { useNavlinks, scrollToSection } from "@/composables/navLinks.js";
 import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
@@ -83,10 +83,7 @@ function onNavClick(event, link, navigate) {
     return;
   }
   event.preventDefault();
-  const target = link.section && document.getElementById(link.section);
-  if (target) {
-    target.scrollIntoView({ behavior: "smooth" });
-  } else {
+  if (!(link.section && scrollToSection(link.section))) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
