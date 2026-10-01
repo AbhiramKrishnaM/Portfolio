@@ -13,25 +13,39 @@
       <div
         v-for="(link, index) in visibleLinks"
         :key="link.id"
-        class="relative flex items-center justify-center sm:w-full"
+        class="relative items-center justify-center sm:w-full"
+        :class="link.section ? 'hidden lg:flex' : 'flex'"
         :ref="(el) => setItemRef(el, index)"
       >
-        <RouterLink :to="link.to" v-slot="{ isActive }">
-          <span
-            class="nav-item"
-            :class="isActive ? 'nav-item-active' : 'text-gray-gradient-01'"
-            :data-cursor="link.name"
+        <RouterLink :to="link.to" custom v-slot="{ href, navigate }">
+          <a
+            :href="link.section ? `${href}#${link.section}` : href"
+            :aria-label="link.name"
+            :aria-current="index === activeIndex ? 'page' : undefined"
+            @click="onNavClick($event, link, navigate)"
           >
-            <svg v-if="link.to === '/'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 11.5 12 4l8 7.5" />
-              <path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" />
-            </svg>
+            <span
+              class="nav-item"
+              :class="index === activeIndex ? 'nav-item-active' : 'text-gray-gradient-01'"
+              :data-cursor="link.name"
+            >
+              <svg v-if="link.id === 'home'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 11.5 12 4l8 7.5" />
+                <path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" />
+              </svg>
 
-            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="m4 7 8 6 8-6" />
-            </svg>
-          </span>
+              <svg v-else-if="link.id === 'projects'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <path d="m10 11-2 2 2 2" />
+                <path d="m14 11 2 2-2 2" />
+              </svg>
+
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+            </span>
+          </a>
         </RouterLink>
       </div>
     </nav>
@@ -43,16 +57,39 @@ import { useNavlinks } from "@/composables/navLinks.js";
 import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
-const { links } = useNavlinks();
+const { links, activeSection } = useNavlinks();
 const route = useRoute();
 
 const visibleLinks = computed(() => {
   return links.value.filter((link) => !link.hidden);
 });
 
-const activeIndex = computed(() =>
-  visibleLinks.value.findIndex((link) => link.to === route.path)
-);
+// A section link wins while its section is in view; otherwise the plain
+// route link for the current page is active.
+const activeIndex = computed(() => {
+  const onPage = (link) => link.to === route.path;
+  const sectionIdx = visibleLinks.value.findIndex(
+    (link) => link.section && onPage(link) && link.section === activeSection.value
+  );
+  if (sectionIdx !== -1) return sectionIdx;
+  return visibleLinks.value.findIndex((link) => !link.section && onPage(link));
+});
+
+// Already on the link's page → scroll smoothly (to its section, or back to the
+// top for a plain page link) instead of a no-op navigation.
+function onNavClick(event, link, navigate) {
+  if (link.to !== route.path) {
+    navigate(event);
+    return;
+  }
+  event.preventDefault();
+  const target = link.section && document.getElementById(link.section);
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
 
 // Below this width the pill docks to the bottom as a horizontal bar instead
 // of floating vertically on the left — matches Tailwind's `sm` breakpoint.

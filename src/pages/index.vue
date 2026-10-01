@@ -63,7 +63,7 @@
             </div>
         </section>
 
-        <section
+        <section id="projects"
             class="relative hidden lg:flex flex-col items-start justify-center min-h-screen px-5 md:px-10 lg:pl-32 lg:pr-20 xl:pl-36">
             <div ref="dockRef" class="terminal-dock w-full lg:w-[500px] xl:w-[580px] 2xl:w-[660px]" aria-hidden="true">
             </div>
@@ -84,6 +84,7 @@ import TetrisGame from "@/components/TetrisGame.vue";
 import ScrollCue from "@/components/ScrollCue.vue";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
+import { useNavlinks } from "@/composables/navLinks.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -99,6 +100,7 @@ const showBackground = ref(false);
 const SHOW_ICOSAHEDRON = false;
 
 const { theme, toggleTheme } = useTheme();
+const { activeSection } = useNavlinks();
 
 const view = ref("cli");
 const activeGame = ref(null);
@@ -241,13 +243,20 @@ function setupTerminalMotionPath() {
         const sceneTrigger = ScrollTrigger.create({
             trigger: heroRef.value,
             start: "bottom 15%",
-            onEnter: () => { terminalScene.value = "projects"; },
-            onLeaveBack: () => { terminalScene.value = "intro"; },
+            onEnter: () => {
+                terminalScene.value = "projects";
+                activeSection.value = "projects";
+            },
+            onLeaveBack: () => {
+                terminalScene.value = "intro";
+                activeSection.value = null;
+            },
         });
 
         return () => {
             sceneTrigger.kill();
             terminalScene.value = "intro";
+            activeSection.value = null;
             tween.scrollTrigger?.kill();
             tween.kill();
         };

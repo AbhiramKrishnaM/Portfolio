@@ -17,9 +17,9 @@
 - [x] Add `projects` to the `help` list
 
 ## 3. Projects link in navbar
-- [ ] Add a Projects entry to `navLinks.js`
-- [ ] Clicking it scrolls smoothly to the projects section
-- [ ] Highlight the link while the projects section is in view
+- [x] Add a Projects entry to `navLinks.js`
+- [x] Clicking it scrolls smoothly to the projects section
+- [x] Highlight the link while the projects section is in view
 
 ## 4. Project preview card next to the terminal
 - [ ] Build a `ProjectCard` component (label `Project N // _slug`, preview image, tech icon badge, description, `view-project` button)
