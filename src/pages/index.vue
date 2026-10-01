@@ -52,7 +52,8 @@
             <div ref="terminalPanelRef" class="right-panel relative z-10 w-full lg:w-auto">
                 <Transition name="panel-fade" mode="out-in">
                     <TerminalWindow v-if="view === 'cli'" key="cli" ref="terminalRef" :scene="terminalScene"
-                        @game-selected="launchGame" />
+                        :selected-project="selectedProject.slug" @game-selected="launchGame"
+                        @project-select="selectProject" />
 
                     <div v-else key="game">
                         <SnakeGame v-if="activeGame === 'snake'" @skip="exitGame" />
@@ -61,11 +62,31 @@
                     </div>
                 </Transition>
             </div>
+
+            <!-- Below lg there's no scroll-docked projects section, so the card
+                 sits under the terminal instead. -->
+            <div class="relative z-10 w-full lg:hidden">
+                <Transition name="card-swap" mode="out-in">
+                    <ProjectCard :key="selectedProject.slug" :project="selectedProject" :index="selectedIdx"
+                        :total="PROJECTS.length" @prev="stepProject(-1)" @next="stepProject(1)" />
+                </Transition>
+            </div>
         </section>
 
         <section id="projects"
-            class="relative hidden lg:flex flex-col items-start justify-center min-h-screen px-5 md:px-10 lg:pl-32 lg:pr-20 xl:pl-36">
-            <div ref="dockRef" class="terminal-dock w-full lg:w-[500px] xl:w-[580px] 2xl:w-[660px]" aria-hidden="true">
+            class="relative hidden lg:flex flex-row items-center justify-center min-h-screen px-5 md:px-10 lg:pl-32 lg:pr-20 xl:pl-36 min-[1672px]:pr-36 gap-8 xl:gap-16">
+            <div ref="dockRef" class="terminal-dock shrink-0 w-full lg:w-[500px] xl:w-[580px] 2xl:w-[660px]" aria-hidden="true">
+            </div>
+
+            <div class="project-slot flex-1 min-w-0">
+                <Transition name="card-reveal">
+                    <div v-if="terminalScene === 'projects'" class="h-full">
+                        <Transition name="card-swap" mode="out-in">
+                            <ProjectCard :key="selectedProject.slug" :project="selectedProject" :index="selectedIdx"
+                                :total="PROJECTS.length" @prev="stepProject(-1)" @next="stepProject(1)" />
+                        </Transition>
+                    </div>
+                </Transition>
             </div>
         </section>
 
@@ -74,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, watch, defineAsyncComponent, onMounted, onUnmounted, nextTick } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
@@ -82,6 +103,8 @@ import SnakeGame from "@/components/SnakeGame.vue";
 import SudokuGame from "@/components/SudokuGame.vue";
 import TetrisGame from "@/components/TetrisGame.vue";
 import ScrollCue from "@/components/ScrollCue.vue";
+import ProjectCard from "@/components/ProjectCard.vue";
+import { PROJECTS } from "@/composables/projects.js";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { useNavlinks } from "@/composables/navLinks.js";
@@ -112,6 +135,25 @@ const dockRef = ref(null);
 // "projects" once the terminal has scrolled down onto the dock. While a game
 // is open the terminal isn't mounted, so it only picks this up on return.
 const terminalScene = ref("intro");
+
+// Project shown in the ProjectCard — hovering/clicking a row in the
+// terminal's project list, or the card's own pager, changes it.
+const selectedIdx = ref(0);
+const selectedProject = computed(() => PROJECTS[selectedIdx.value]);
+
+function selectProject(slug) {
+    const idx = PROJECTS.findIndex((p) => p.slug === slug);
+    if (idx !== -1) selectedIdx.value = idx;
+}
+
+function stepProject(step) {
+    selectedIdx.value = (selectedIdx.value + step + PROJECTS.length) % PROJECTS.length;
+}
+
+// Each time the projects scene starts over, so does the card.
+watch(terminalScene, (scene) => {
+    if (scene === "projects") selectedIdx.value = 0;
+});
 let terminalScrollMM = null;
 
 const activeGameGithubUrl = computed(() => {
@@ -316,17 +358,35 @@ onUnmounted(() => {
     .right-panel {
         width: 500px;
     }
+
+    /* ProjectCard slot beside the docked terminal — same height as the
+       terminal window (TerminalWindow.vue) and at most the same width; on
+       narrower desktops it takes whatever room is left. */
+    .project-slot {
+        height: 460px;
+        max-width: 500px;
+    }
 }
 
 @media (min-width: 1280px) {
     .right-panel {
         width: 580px;
     }
+
+    .project-slot {
+        height: 480px;
+        max-width: 580px;
+    }
 }
 
 @media (min-width: 1536px) {
     .right-panel {
         width: 660px;
+    }
+
+    .project-slot {
+        height: 500px;
+        max-width: 660px;
     }
 }
 
@@ -343,6 +403,44 @@ onUnmounted(() => {
 }
 
 .panel-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+/* ProjectCard appearing beside the docked terminal — delayed slightly so it
+   follows the terminal settling into the dock rather than racing it. */
+.card-reveal-enter-active {
+    transition:
+        opacity 0.5s ease 0.25s,
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+}
+
+.card-reveal-leave-active {
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.card-reveal-enter-from,
+.card-reveal-leave-to {
+    opacity: 0;
+    transform: translateX(24px);
+}
+
+/* Swapping between projects */
+.card-swap-enter-active,
+.card-swap-leave-active {
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.card-swap-enter-from {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.card-swap-leave-to {
     opacity: 0;
     transform: translateY(-8px);
 }

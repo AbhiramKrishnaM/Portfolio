@@ -12,7 +12,8 @@
 
     <!-- ── scrollable output + inline input ───────────────────────────── -->
     <div ref="outputEl" class="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin min-h-0">
-      <TerminalOutput :lines="lines" :menu-state="menuState" />
+      <TerminalOutput :lines="lines" :menu-state="menuState" :selected-project="selectedProject"
+        @project-select="emit('project-select', $event)" />
 
       <!-- Inline active $ prompt — hidden while boot animation runs -->
       <div v-if="!booting">
@@ -52,9 +53,14 @@ const props = defineProps({
     type: String,
     default: "intro",
   },
+  /** Slug of the project shown in the ProjectCard — highlighted in the list. */
+  selectedProject: {
+    type: String,
+    default: null,
+  },
 });
 
-const emit = defineEmits(["game-selected"]);
+const emit = defineEmits(["game-selected", "project-select"]);
 
 const {
   lines,

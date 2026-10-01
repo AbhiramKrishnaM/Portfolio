@@ -22,15 +22,15 @@
 - [x] Highlight the link while the projects section is in view
 
 ## 4. Project preview card next to the terminal
-- [ ] Build a `ProjectCard` component (label `Project N // _slug`, preview image, tech icon badge, description, `view-project` button)
-- [ ] Add placeholder data for each project (image, slug, description, tech, link)
-- [ ] Place the card in the empty space right of the docked terminal
-- [ ] Keep it hidden on the hero; fade it in only once the terminal lands on the projects section
-- [ ] Hide it again when scrolling back up
-- [ ] Show the first project by default
-- [ ] Hovering/clicking a project in the terminal list swaps the card to that project
-- [ ] Smooth transition when the card swaps
-- [ ] On mobile, show the card below the terminal
+- [x] Build a `ProjectCard` component (label `Project N // _slug`, preview image, tech icon badge, description, `view-project` button)
+- [x] Add placeholder data for each project (image, slug, description, tech, link)
+- [x] Place the card in the empty space right of the docked terminal
+- [x] Keep it hidden on the hero; fade it in only once the terminal lands on the projects section
+- [x] Hide it again when scrolling back up
+- [x] Show the first project by default
+- [x] Hovering/clicking a project in the terminal list swaps the card to that project
+- [x] Smooth transition when the card swaps
+- [x] On mobile, show the card below the terminal
 
 ## 5. Fun terminal commands
 - [ ] `sudo hire-me` — cheeky reply + contact links

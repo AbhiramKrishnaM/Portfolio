@@ -48,13 +48,17 @@
         </span>
       </div>
 
-      <div v-else-if="line.type === 'project-row'" class="pl-5 flex items-baseline gap-2 text-sm">
-        <span class="text-accent-variable shrink-0">></span>
-        <a v-if="line.content.url" :href="line.content.url" target="_blank" rel="noopener noreferrer"
-          class="text-accent-url font-medium shrink-0 hover:underline cursor-pointer">{{ line.content.name }}</a>
-        <span v-else class="text-accent-url font-medium shrink-0">{{ line.content.name }}</span>
+      <!-- project row — hover/click selects it for the ProjectCard -->
+      <button v-else-if="line.type === 'project-row'" type="button"
+        class="project-row pl-5 flex items-baseline gap-2 text-sm text-left"
+        :class="{ 'project-row--selected': line.content.slug === selectedProject }"
+        :aria-pressed="line.content.slug === selectedProject" :data-cursor="line.content.name"
+        @mouseenter="$emit('project-select', line.content.slug)" @focus="$emit('project-select', line.content.slug)"
+        @click="$emit('project-select', line.content.slug)">
+        <span class="project-row-marker text-accent-variable shrink-0">></span>
+        <span class="text-accent-url font-medium shrink-0">{{ line.content.name }}</span>
         <span class="text-gray-gradient-01">— {{ line.content.desc }}</span>
-      </div>
+      </button>
 
       <!-- help row  cmd    desc -->
       <div v-else-if="line.type === 'help-row'" class="pl-5 flex gap-3 text-sm">
@@ -93,10 +97,27 @@ defineProps({
     type: Object,
     default: null,
   },
+  /** Slug of the project shown in the ProjectCard — its row is highlighted. */
+  selectedProject: {
+    type: String,
+    default: null,
+  },
 });
+
+defineEmits(["project-select"]);
 </script>
 
 <style scoped>
+.project-row-marker {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.project-row:hover .project-row-marker,
+.project-row--selected .project-row-marker {
+  opacity: 1;
+}
+
 .typing-cursor {
   display: inline-block;
   width: 7px;
