@@ -64,6 +64,13 @@
         <span class="text-gray-gradient-01 text-xs shrink-0">({{ line.content.repo }}, {{ line.content.ago }})</span>
       </div>
 
+      <div v-else-if="line.type === 'achievement-row'" class="pl-5 flex items-baseline gap-2 text-sm">
+        <span class="shrink-0 w-4" :class="line.content.unlocked ? 'text-accent-variable' : 'text-gray-gradient-01'"
+          :aria-label="line.content.unlocked ? 'unlocked' : 'locked'">{{ line.content.unlocked ? "✓" : "·" }}</span>
+        <span class="shrink-0 font-medium" :class="line.content.unlocked ? 'text-white-gradient-01' : 'text-gray-gradient-01'">{{ line.content.name }}</span>
+        <span class="text-gray-gradient-01">— {{ line.content.desc }}</span>
+      </div>
+
       <pre v-else-if="line.type === 'pre'" class="pl-5 text-xs leading-snug whitespace-pre overflow-hidden"
         :class="line.content.tone === 'accent' ? 'text-accent-variable' : 'text-white-gradient-01'"
         role="img" :aria-label="line.content.label">{{ line.content.text }}</pre>

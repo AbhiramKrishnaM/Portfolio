@@ -1,10 +1,25 @@
 import { ref, watchEffect } from "vue";
+import { unlock } from "@/composables/achievements.js";
 
 const THEME_KEY = "theme";
 
-const stored =
-  typeof localStorage !== "undefined" ? localStorage.getItem(THEME_KEY) : null;
-const theme = ref(stored === "light" ? "light" : "dark");
+function readStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function storeTheme(value) {
+  try {
+    localStorage.setItem(THEME_KEY, value);
+  } catch {
+    return;
+  }
+}
+
+const theme = ref(readStoredTheme() === "light" ? "light" : "dark");
 
 function applyTheme(value) {
   if (typeof document === "undefined") return;
@@ -15,14 +30,13 @@ applyTheme(theme.value);
 
 watchEffect(() => {
   applyTheme(theme.value);
-  if (typeof localStorage !== "undefined") {
-    localStorage.setItem(THEME_KEY, theme.value);
-  }
+  storeTheme(theme.value);
 });
 
 export function useTheme() {
   function toggleTheme() {
     theme.value = theme.value === "dark" ? "light" : "dark";
+    unlock("theme");
   }
 
   return { theme, toggleTheme };

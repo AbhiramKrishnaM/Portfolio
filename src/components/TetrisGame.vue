@@ -88,6 +88,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { unlock } from "@/composables/achievements.js";
 import Green from "@/assets/vectors/Green.svg";
 import Blue from "@/assets/vectors/Blue.svg";
 import BoltDownLeft from "@/assets/icons/bolt-down-left.svg";
@@ -421,6 +422,7 @@ function startGame() {
 }
 
 function endGame() {
+  unlock("game-over");
   running = false;
   gameRunning.value = false;
   gameOver.value = true;

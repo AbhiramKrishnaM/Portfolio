@@ -60,6 +60,7 @@ import { scrollToSection } from "@/composables/navLinks.js";
 import { SOCIALS, EMAIL } from "@/composables/socials.js";
 import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
+import { unlock } from "@/composables/achievements.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -151,6 +152,7 @@ function open() {
   query.value = "";
   activeIndex.value = 0;
   paletteOpen.value = true;
+  unlock("power-user");
 }
 
 function close() {

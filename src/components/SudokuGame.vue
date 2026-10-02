@@ -81,6 +81,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { unlock } from "@/composables/achievements.js";
 import Green from "@/assets/vectors/Green.svg";
 import Blue from "@/assets/vectors/Blue.svg";
 import BoltDownLeft from "@/assets/icons/bolt-down-left.svg";
@@ -212,7 +213,10 @@ function inputNumber(n) {
   if (solution.value[r][c] !== n) {
     errors.value[r][c] = true;
     mistakes.value++;
-    if (mistakes.value >= 3) gameOver.value = true;
+    if (mistakes.value >= 3) {
+      gameOver.value = true;
+      unlock("game-over");
+    }
   } else {
     errors.value[r][c] = false;
     checkCompleted();
@@ -236,6 +240,8 @@ function checkCompleted() {
     }
   }
   completed.value = true;
+  unlock("game-over");
+  unlock("sudoku");
 }
 
 function isRelated(r, c) {

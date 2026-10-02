@@ -60,11 +60,11 @@
 - [ ] Later: pull "listening to" from the Spotify API
 
 ## 9. Easter eggs
-- [ ] Konami code (↑↑↓↓←→←→BA) triggers chaos mode / confetti
-- [ ] Achievements: unlock badges for trying commands, finishing a game, finding secrets
-- [ ] Show a small toast in the corner when one unlocks
-- [ ] Save unlocked achievements in `localStorage`
-- [ ] `achievements` command lists unlocked / locked ones
+- [x] Konami code (↑↑↓↓←→←→BA) triggers chaos mode / confetti
+- [x] Achievements: unlock badges for trying commands, finishing a game, finding secrets
+- [x] Show a small toast in the corner when one unlocks
+- [x] Save unlocked achievements in `localStorage`
+- [x] `achievements` command lists unlocked / locked ones
 
 // version 2 next week updates
 ## 10. Gravity well in the spacetime grid
@@ -126,3 +126,31 @@
 - [ ] Keep components small: one job per file
 - [ ] Update `CLAUDE.md` / `README.md` so a new dev can find things quickly
 - [ ] Lint + build + click through the site to confirm nothing changed visually
+
+## 19. Experience section
+- [ ] Add experience data (company, role, dates, 2–3 impact points)
+- [ ] Build a timeline-style section on the page
+- [ ] Add an `experience` terminal command that prints the same data
+- [ ] Add it to the navbar and `help`
+
+## 20. About section
+- [ ] Write a short story: background, what I care about, a bit of personality (guitar!)
+- [ ] Add an About section on the page
+- [ ] Expand `whoami` or add `cat about.txt` in the terminal
+- [ ] Add it to the navbar
+
+## 21. Contact call to action
+- [ ] Add a clear "let's talk" section near the end of the page
+- [ ] Copy-email-to-clipboard button with a "copied" toast
+- [ ] Add a `contact` terminal command
+- [ ] Add it to the navbar
+
+## 22. Footer
+- [ ] Build a `Footer` component: socials, email, copyright
+- [ ] Add a closing line ("let's build something together")
+- [ ] Match the terminal style from `DESIGN.md`
+
+## 23. Resume download
+- [ ] Add the resume PDF to `public/`
+- [ ] Add a "download resume" button (hero or navbar)
+- [ ] Add a `resume` terminal command that opens/downloads it

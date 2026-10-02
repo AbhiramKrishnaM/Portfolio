@@ -4,6 +4,7 @@ import { SOCIALS, EMAIL, social } from "@/composables/socials.js";
 import { getRecentCommits, timeAgo, GITHUB_USER } from "@/composables/githubLog.js";
 import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
 import { NOW } from "@/composables/now.js";
+import { ACHIEVEMENTS, isUnlocked, unlockedCount, unlock, recordCommand, recordSecret } from "@/composables/achievements.js";
 
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -66,6 +67,7 @@ export function useCLI() {
   };
 
   function printProjects() {
+    unlock("portfolio");
     addLine("comment", "// projects");
     PROJECTS.forEach((project) => addLine("project-row", project));
     blank();
@@ -97,6 +99,20 @@ export function useCLI() {
 
     "ls projects"() {
       printProjects();
+    },
+
+    achievements() {
+      addLine("comment", `// achievements · ${unlockedCount.value}/${ACHIEVEMENTS.length} unlocked`);
+      ACHIEVEMENTS.forEach((a) => {
+        const unlocked = isUnlocked(a.id);
+        const hiddenForNow = a.secret && !unlocked;
+        addLine("achievement-row", {
+          name: hiddenForNow ? "???" : a.name,
+          desc: hiddenForNow ? "secret — keep exploring" : a.desc,
+          unlocked,
+        });
+      });
+      blank();
     },
 
     "ls blog"() {
@@ -153,6 +169,7 @@ export function useCLI() {
     },
 
     help() {
+      unlock("rtfm");
       addLine("comment", "Available commands:");
       addLine("help-row", { cmd: "projects", desc: "list projects" });
       addLine("help-row", { cmd: "ls blog", desc: "list blog posts" });
@@ -164,6 +181,7 @@ export function useCLI() {
       addLine("help-row", { cmd: "cd cv", desc: "view full CV" });
       addLine("help-row", { cmd: "whoami", desc: "who am I?" });
       addLine("help-row", { cmd: "now", desc: "what I'm up to" });
+      addLine("help-row", { cmd: "achievements", desc: "badges you've unlocked" });
       addLine("help-row", { cmd: "git log", desc: "my recent commits" });
       addLine("help-row", { cmd: "contact", desc: "get in touch" });
       addLine("help-row", { cmd: "/game", desc: "launch a mini-game" });
@@ -235,12 +253,16 @@ export function useCLI() {
   function exitOverlay() {
     const kind = overlay.value;
     overlay.value = null;
-    if (kind === "vim") addLine("comment", "// you escaped vim. put that on your resume.");
+    if (kind === "vim") {
+      unlock("escape-vim");
+      addLine("comment", "// you escaped vim. put that on your resume.");
+    }
     if (kind === "matrix") addLine("comment", "// welcome back to the real world.");
     blank();
   }
 
   async function runGitLog() {
+    unlock("lurker");
     const token = sceneToken;
     booting.value = true;
     const loadingId = uid();
@@ -313,9 +335,14 @@ export function useCLI() {
     const argHandler = argCommands[name];
     if (handler) {
       if (lower !== "clear") addLine("input", cmd);
+      recordCommand(lower);
+      if (secretCommands[lower]) recordSecret(lower);
       handler();
     } else if (argHandler) {
+      const canonical = argCommands[name] === argCommands.vim ? "vim" : name;
       addLine("input", cmd);
+      recordCommand(canonical);
+      recordSecret(canonical);
       argHandler(cmd.slice(name.length).trim());
     } else {
       addLine("input", cmd);

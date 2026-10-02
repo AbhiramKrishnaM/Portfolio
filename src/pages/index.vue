@@ -107,6 +107,7 @@ import { GAME_REGISTRY } from "@/composables/useCLI.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { useNavlinks } from "@/composables/navLinks.js";
 import { pendingGame } from "@/composables/commandPalette.js";
+import { unlock } from "@/composables/achievements.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -144,7 +145,10 @@ function stepProject(step) {
 }
 
 watch(terminalScene, (scene) => {
-    if (scene === "projects") selectedIdx.value = 0;
+    if (scene === "projects") {
+        selectedIdx.value = 0;
+        unlock("portfolio");
+    }
 });
 let terminalScrollMM = null;
 

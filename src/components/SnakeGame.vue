@@ -144,6 +144,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue";
+import { unlock } from "@/composables/achievements.js";
 import Green from "@/assets/vectors/Green.svg";
 import Blue from "@/assets/vectors/Blue.svg";
 import BoltDownLeft from "@/assets/icons/bolt-down-left.svg";
@@ -259,6 +260,7 @@ function nextAnimationFrame(ctx) {
       else {
         gameRunning.value = false;
         buttonText.value = "retry";
+        unlock("game-over");
       }
     });
   }
