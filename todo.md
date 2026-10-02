@@ -185,3 +185,10 @@
 - [ ] Make sure the box doesn't cover the project card while it moves
 - [ ] Scroll back up reverses everything cleanly
 - [ ] Simple fallback on mobile / reduced motion (static box image or skip)
+
+## 25. Better notifications (replace `AchievementToast`)
+- [ ] Use `vue-sonner` (Vue port of Sonner: stacking, swipe to dismiss, smooth animations)
+- [ ] Replace `AchievementToast.vue` + the manual `toastQueue` with `toast()` calls
+- [ ] Drop the left accent-stripe card look
+- [ ] Style it to match the terminal (Fira Code, theme colors from `DESIGN.md`, light + dark)
+- [ ] Reuse it for other toasts (e.g. "email copied" in task 21)
