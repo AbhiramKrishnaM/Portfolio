@@ -192,3 +192,41 @@
 - [ ] Drop the left accent-stripe card look
 - [ ] Style it to match the terminal (Fira Code, theme colors from `DESIGN.md`, light + dark)
 - [ ] Reuse it for other toasts (e.g. "email copied" in task 21)
+
+## 26. Intro loader (letter wall → name)
+- [ ] Reference: https://www.eugeniagrab.com/en (intro animation)
+- [ ] Build a `PageLoader` component: 5 rows of random Fira Code characters
+- [ ] Hide `ABHIRAM` + `KRISHNA` in the middle row with filler letters between them
+- [ ] Random letters slide in in random order; name letters slide in left → right
+- [ ] Fade filler letters to gray so the name pops
+- [ ] Filler slides out, letters between first/last name collapse, name snaps together
+- [ ] Exit with a Bayer dither wipe that reveals the page
+- [ ] Keep it ~2–3s total
+- [ ] Page loads underneath (non-blocking), so it doesn't hurt speed or SEO
+- [ ] Skip it on repeat visits (`sessionStorage`)
+- [ ] Reduced motion: quick fade instead
+
+## 27. Photo particles (About section)
+- [ ] Reference: https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/
+- [ ] **[Abhiram to provide]** iPhone photo of myself:
+  - plain or dark background (Portrait mode helps)
+  - good, even light on the face (particles follow brightness)
+  - head + shoulders, roughly square
+  - full resolution, original file (not a screenshot)
+- [ ] Remove the background if needed
+- [ ] Sample the photo's pixels and place a particle wherever it's bright
+- [ ] Cursor pushes particles away; they drift back to re-form the face
+- [ ] Place it in the About section (task 20)
+- [ ] Lazy-load it only when About scrolls into view
+- [ ] Mobile: fewer particles, or touch to scatter
+- [ ] Fallback: plain photo if WebGL isn't available
+
+## 28. Sky / background upgrades
+- [ ] Floating box (Hubtown-style): sealed `node_modules` box floats and slowly turns in the hero sky, drops onto the grid at projects (ties into task 24)
+- [ ] Reference: https://www.awwwards.com/sites/hubtown
+- [ ] Bayer dither: retro pixel layer in the sky, click sends a ripple
+- [ ] Reference: https://tympanus.net/codrops/2025/07/30/interactive-webgl-backgrounds-a-quick-guide-to-bayer-dithering/
+- [ ] Wave grid: waves ripple across the grid
+- [ ] Reference: https://tympanus.net/codrops/2026/07/09/building-an-interactive-wave-propagation-cube-grid-with-three-js/
+- [ ] Decide how the three combine (e.g. dither sky + wave grid floor + box) without getting too busy
+- [ ] Keep it all inside the lazy-loaded `SpaceTimeGrid` scene
