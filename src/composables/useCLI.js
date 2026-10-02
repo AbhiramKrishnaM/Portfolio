@@ -3,6 +3,7 @@ import { PROJECTS } from "@/composables/projects.js";
 import { SOCIALS, EMAIL, social } from "@/composables/socials.js";
 import { getRecentCommits, timeAgo, GITHUB_USER } from "@/composables/githubLog.js";
 import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
+import { NOW } from "@/composables/now.js";
 
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -128,6 +129,15 @@ export function useCLI() {
       blank();
     },
 
+    now() {
+      const updated = new Date(NOW.updated).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+      addLine("comment", `// what I'm up to · updated ${updated}`);
+      addLine("pair", { label: "BUILD", value: NOW.building });
+      addLine("pair", { label: "LEARN", value: NOW.learning });
+      addLine("pair", { label: "MUSIC", value: `♪ ${NOW.listening}` });
+      blank();
+    },
+
     "git log"() {
       runGitLog();
     },
@@ -153,6 +163,7 @@ export function useCLI() {
       addLine("help-row", { cmd: "cat cv", desc: "quick CV overview" });
       addLine("help-row", { cmd: "cd cv", desc: "view full CV" });
       addLine("help-row", { cmd: "whoami", desc: "who am I?" });
+      addLine("help-row", { cmd: "now", desc: "what I'm up to" });
       addLine("help-row", { cmd: "git log", desc: "my recent commits" });
       addLine("help-row", { cmd: "contact", desc: "get in touch" });
       addLine("help-row", { cmd: "/game", desc: "launch a mini-game" });

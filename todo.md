@@ -55,8 +55,8 @@
 - [x] Show a friendly message if the API fails or rate-limits
 
 ## 8. `now` command (what I'm up to)
-- [ ] Add a `now` command: currently building / learning / listening to
-- [ ] Start with static text in a composable
+- [x] Add a `now` command: currently building / learning / listening to
+- [x] Start with static text in a composable
 - [ ] Later: pull "listening to" from the Spotify API
 
 ## 9. Easter eggs
