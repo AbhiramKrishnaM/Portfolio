@@ -87,6 +87,9 @@
 - [ ] Fall back to a plain image if WebGL isn't available
 
 ## 13. Glass refraction on the hero name
+- [ ] Reference: https://www.dorianlods.fr/ (match this feel)
+- [ ] Use the 2D lens shader approach (name drawn to a WebGL texture, bent around the cursor)
+- [ ] Add subtle rainbow edge split (chromatic aberration)
 - [ ] Prototype the glass/refraction effect on the name text
 - [ ] Make the distortion follow the cursor
 - [ ] Keep the real `h1` text in the DOM for SEO and screen readers
@@ -99,9 +102,9 @@
 - [ ] On scroll into stack, terminal clears and types `$ ls stack`
 - [ ] Pick the engine (Matter.js for 2D or Rapier for 3D)
 - [ ] Make tech logos (Vue, React, Node, Python, Docker, AWS) physics bodies
-- [ ] Logos spill out of the terminal's right edge and pile up on the floor
+- [ ] Logos tumble out of the `node_modules` box (see task 24) and pile up on the floor
 - [ ] Let people grab and throw them with the mouse
-- [ ] Drop only once; logos stay piled when scrolling back and forth
+- [ ] Logos stay piled while in stack; they get repacked into the box when leaving (task 24)
 - [ ] Add a "Stack" navbar link and an `ls stack` command
 - [ ] Static logo grid on mobile and for reduced-motion users
 - [ ] Lazy-load the physics engine so it doesn't slow the landing page
@@ -161,3 +164,21 @@
 - [ ] Add the resume PDF to `public/`
 - [ ] Add a "download resume" button (hero or navbar)
 - [ ] Add a `resume` terminal command that opens/downloads it
+
+## 24. `node_modules` box story (projects → stack → contact)
+- [ ] Reference: https://tympanus.net/codrops/2022/12/13/how-to-code-an-on-scroll-folding-3d-cardboard-box-animation-with-three-js-and-gsap/
+- [ ] Build a 3D cardboard box with foldable flaps and a `node_modules` label
+- [ ] Projects: box appears sealed near the terminal (left)
+- [ ] Projects: on scroll, box slides left → right while the tape peels and flaps unfold
+- [ ] Stack: box lands open on the right, logos tumble out into the physics pile (task 14)
+- [ ] Leaving stack: box shrinks and jumps back to the left
+- [ ] Experience + About: small box travels left → right (conveyor belt) while packing
+- [ ] Packing is visible: logos fly back in one by one, flaps fold, tape seals the top
+- [ ] Time it so packing finishes exactly as Contact arrives
+- [ ] Keep the small box out of the way of Experience/About content
+- [ ] Contact: box grows big, sitting slightly off-center to the right
+- [ ] Contact: stamps hit in sequence with a thud/shake (`FRAGILE` → `node_modules` → `FROM: abhiram` → `SHIPPED`)
+- [ ] Then the "let's talk" CTA appears (task 21)
+- [ ] Make sure the box doesn't cover the project card while it moves
+- [ ] Scroll back up reverses everything cleanly
+- [ ] Simple fallback on mobile / reduced motion (static box image or skip)
