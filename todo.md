@@ -167,7 +167,10 @@
 
 ## 24. `node_modules` box story (projects → stack → contact)
 - [ ] Reference: https://tympanus.net/codrops/2022/12/13/how-to-code-an-on-scroll-folding-3d-cardboard-box-animation-with-three-js-and-gsap/
-- [ ] Build a 3D cardboard box with foldable flaps and a `node_modules` label
+- [ ] Box code source: https://github.com/uuuulala/Threejs-folding-cardboard-box-tutorial (MIT, built in code, no model file)
+- [ ] Port its `main.js` box code into a Vue component, update for three 0.180 (`mergeBufferGeometries` → `mergeGeometries`)
+- [ ] Keep the MIT license notice + credit to Ksenia Kondrashova / Codrops
+- [ ] Draw the `node_modules` label and stamps on canvas textures (same trick the demo uses)
 - [ ] Projects: box appears sealed near the terminal (left)
 - [ ] Projects: on scroll, box slides left → right while the tape peels and flaps unfold
 - [ ] Stack: box lands open on the right, logos tumble out into the physics pile (task 14)
