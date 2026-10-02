@@ -24,6 +24,7 @@
 ## 4. Project preview card next to the terminal
 - [x] Build a `ProjectCard` component (label `Project N // _slug`, preview image, tech icon badge, description, `view-project` button)
 - [x] Add placeholder data for each project (image, slug, description, tech, link)
+- [ ] **[Abhiram to provide]** Real project details to replace placeholders: name, slug, description, tech, live/GitHub link, screenshot
 - [x] Place the card in the empty space right of the docked terminal
 - [x] Keep it hidden on the hero; fade it in only once the terminal lands on the projects section
 - [x] Hide it again when scrolling back up
@@ -138,13 +139,13 @@
 - [ ] Lint + build + click through the site to confirm nothing changed visually
 
 ## 19. Experience section
-- [ ] Add experience data (company, role, dates, 2–3 impact points)
+- [ ] **[Abhiram to provide]** Experience data: company, role, dates, 2–3 impact points each
 - [ ] Build a timeline-style section on the page
 - [ ] Add an `experience` terminal command that prints the same data
 - [ ] Add it to the navbar and `help`
 
 ## 20. About section
-- [ ] Write a short story: background, what I care about, a bit of personality (guitar!)
+- [ ] **[Abhiram to provide]** Short About story: background, what I care about, a bit of personality (guitar!)
 - [ ] Add an About section on the page
 - [ ] Expand `whoami` or add `cat about.txt` in the terminal
 - [ ] Add it to the navbar
@@ -161,7 +162,7 @@
 - [ ] Match the terminal style from `DESIGN.md`
 
 ## 23. Resume download
-- [ ] Add the resume PDF to `public/`
+- [ ] **[Abhiram to provide]** Resume PDF (then add it to `public/`)
 - [ ] Add a "download resume" button (hero or navbar)
 - [ ] Add a `resume` terminal command that opens/downloads it
 
