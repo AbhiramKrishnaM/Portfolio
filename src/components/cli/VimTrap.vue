@@ -1,10 +1,7 @@
 <template>
-  <!-- tabindex lets it hold keyboard focus; Tab is never intercepted, so this is
-       only a "trap" in the joke sense, not a real keyboard trap. -->
   <div ref="rootEl" class="vim absolute inset-0 flex flex-col text-sm outline-none" tabindex="0"
     role="application" aria-label="Fake vim editor. Type :q! then Enter to exit." @keydown="onKeydown"
     @click.stop="rootEl.focus()">
-    <!-- buffer: tildes for empty lines + the splash screen -->
     <div class="flex-1 min-h-0 overflow-hidden px-2 pt-1 relative">
       <div v-for="n in 40" :key="n" class="vim-tilde leading-5">~</div>
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 gap-0.5 text-white-gradient-01">
@@ -15,13 +12,11 @@
       </div>
     </div>
 
-    <!-- status line -->
     <div class="vim-status px-2 leading-6 flex justify-between text-xs">
       <span>"~/abhiram/portfolio.txt" [Modified]</span>
       <span>0,0-1 All</span>
     </div>
 
-    <!-- command / message line -->
     <div class="px-2 leading-6 min-h-6 truncate"
       :class="messageIsError ? 'text-red-400' : 'text-white-gradient-01'">
       <template v-if="cmdline !== null">{{ cmdline }}<span class="vim-cursor" /></template>
@@ -37,7 +32,6 @@ import { ref, onMounted } from "vue";
 const emit = defineEmits(["exit"]);
 
 const rootEl = ref(null);
-/** Text after ":" while typing an ex command, or null when not in command mode. */
 const cmdline = ref(null);
 const insertMode = ref(false);
 const message = ref("");
@@ -51,7 +45,6 @@ function say(text, isError = true) {
 
 function fail(text) {
   failedAttempts++;
-  // After a few tries, nudge them toward the real answer.
   say(failedAttempts >= 3 ? `${text}  — psst: try :q!` : text);
 }
 
@@ -68,7 +61,7 @@ function runCommand(raw) {
 }
 
 function onKeydown(event) {
-  if (event.key === "Tab" || event.metaKey || event.altKey) return; // leave focus + browser shortcuts alone
+  if (event.key === "Tab" || event.metaKey || event.altKey) return;
   event.preventDefault();
 
   if (event.ctrlKey) {
@@ -76,7 +69,6 @@ function onKeydown(event) {
     return;
   }
 
-  // ── ex command line ─────────────────────────────────────────────
   if (cmdline.value !== null) {
     if (event.key === "Escape") cmdline.value = null;
     else if (event.key === "Enter") {
@@ -91,13 +83,11 @@ function onKeydown(event) {
     return;
   }
 
-  // ── insert mode: typing goes nowhere, Esc leaves ───────────────────
   if (insertMode.value) {
     if (event.key === "Escape") insertMode.value = false;
     return;
   }
 
-  // ── normal mode ─────────────────────────────────────────────────
   if (event.key === ":") {
     cmdline.value = ":";
     say("");

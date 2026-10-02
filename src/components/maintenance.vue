@@ -10,7 +10,6 @@ const emits = defineEmits(["animation-complete"]);
 
 const { underConstructionPage } = useAdditional();
 
-// hooks
 onMounted(() => {
   gsap.registerPlugin(TextPlugin, RoughEase);
 
@@ -18,7 +17,6 @@ onMounted(() => {
   animateWords();
 });
 
-// methods
 function cursorAnimate() {
   gsap.from("#cursor", {
     opacity: 0,

@@ -63,8 +63,6 @@
                 </Transition>
             </div>
 
-            <!-- Below lg there's no scroll-docked projects section, so the card
-                 sits under the terminal instead. -->
             <div class="relative z-10 w-full lg:hidden" data-section-fallback="projects">
                 <Transition name="card-swap" mode="out-in">
                     <ProjectCard :key="selectedProject.slug" :project="selectedProject" :index="selectedIdx"
@@ -119,8 +117,6 @@ const SpaceTimeGrid = defineAsyncComponent(() =>
     import("@/components/SpaceTimeGrid.vue")
 );
 const showBackground = ref(false);
-// Hidden for now while SpaceTimeGrid is the primary background — flip back
-// to true to bring the icosahedron/solar-system scene back.
 const SHOW_ICOSAHEDRON = false;
 
 const { theme, toggleTheme } = useTheme();
@@ -133,12 +129,8 @@ const terminalRef = ref(null);
 const heroRef = ref(null);
 const terminalPanelRef = ref(null);
 const dockRef = ref(null);
-// "projects" once the terminal has scrolled down onto the dock. While a game
-// is open the terminal isn't mounted, so it only picks this up on return.
 const terminalScene = ref("intro");
 
-// Project shown in the ProjectCard — hovering/clicking a row in the
-// terminal's project list, or the card's own pager, changes it.
 const selectedIdx = ref(0);
 const selectedProject = computed(() => PROJECTS[selectedIdx.value]);
 
@@ -151,7 +143,6 @@ function stepProject(step) {
     selectedIdx.value = (selectedIdx.value + step + PROJECTS.length) % PROJECTS.length;
 }
 
-// Each time the projects scene starts over, so does the card.
 watch(terminalScene, (scene) => {
     if (scene === "projects") selectedIdx.value = 0;
 });
@@ -169,8 +160,6 @@ function launchGame(gameId) {
     view.value = "game";
 }
 
-// Games launched from the command palette. Below lg the terminal panel may be
-// scrolled out of view, so bring it back; on desktop it's always on screen.
 watch(pendingGame, (gameId) => {
     if (!gameId) return;
     pendingGame.value = null;
@@ -371,9 +360,6 @@ onUnmounted(() => {
         width: 500px;
     }
 
-    /* ProjectCard slot beside the docked terminal — same height as the
-       terminal window (TerminalWindow.vue) and at most the same width; on
-       narrower desktops it takes whatever room is left. */
     .project-slot {
         height: 460px;
         max-width: 500px;
@@ -419,8 +405,6 @@ onUnmounted(() => {
     transform: translateY(-8px);
 }
 
-/* ProjectCard appearing beside the docked terminal — delayed slightly so it
-   follows the terminal settling into the dock rather than racing it. */
 .card-reveal-enter-active {
     transition:
         opacity 0.5s ease 0.25s,
@@ -439,7 +423,6 @@ onUnmounted(() => {
     transform: translateX(24px);
 }
 
-/* Swapping between projects */
 .card-swap-enter-active,
 .card-swap-leave-active {
     transition:

@@ -1,8 +1,3 @@
-/**
- * Social / contact links — used by the terminal (`ls socials`, the intro,
- * `sudo hire-me`, `contact`) and the command palette.
- */
-
 export const EMAIL = "abhiramkrishna.8921@gmail.com";
 
 export const SOCIALS = [
@@ -12,5 +7,4 @@ export const SOCIALS = [
   { id: "email", text: "email", label: "Email", url: `mailto:${EMAIL}` },
 ];
 
-/** Looks up a social link by id, e.g. social("email"). */
 export const social = (id) => SOCIALS.find((s) => s.id === id);

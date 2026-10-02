@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-// pages
 const Landing = () => import("../pages/index.vue");
 
-// components
 const Maintenance = () => import("../components/maintenance.vue");
 
 const routes = [
@@ -13,7 +11,6 @@ const routes = [
     meta: { title: "Fullstack Engineer" },
   },
 
-  // maintenance component
   {
     path: "/maintenance",
     component: Maintenance,

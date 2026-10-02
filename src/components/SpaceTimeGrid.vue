@@ -30,12 +30,6 @@ const { theme } = useTheme();
 const canvasRef = ref(null);
 let renderer, scene, camera, group, mesh, raycaster, animFrameId, gridUniforms;
 
-// Dark = dim indigo tiles that flare mint near the cursor. Light = pale
-// slate tiles that deepen toward the brand indigo — same "energizes near
-// the cursor" idea, inverted for a light backdrop. `fog` matches the page
-// background (--color-theme-main) so distant tiles dissolve into it instead
-// of the grid visibly stopping partway up the screen. `fresnel` is the
-// glossy-floor glint color that rims tiles viewed at a grazing angle.
 const THEME_COLORS = {
   dark: { base: 0x0c1f33, hover: 0x43d9ad, fog: 0x011627, fresnel: 0xbfe9ff },
   light: { base: 0xc7d4de, hover: 0x4049b0, fog: 0xeff4f8, fresnel: 0xd7e6f5 },
@@ -55,22 +49,14 @@ function applyThemeColors() {
 
 watch(theme, applyThemeColors);
 
-// ── Grid layout ─────────────────────────────────────────────────────────
-// Small tiles with a visible gap between them, laid out on the group's local
-// XY plane; the group itself is tilted so the plane reads as a floor the
-// page's content rests on, receding away from the camera.
 const COLS = 64;
 const ROWS = 60;
 const CELL = 0.34;
-const FILL = 0.72; // fraction of each cell the visible tile occupies (rest = gap)
+const FILL = 0.72;
 const LIFT_RADIUS = 1.6;
 const MAX_LIFT = 0.42;
-const LIFT_EASE = 0.12; // per-frame damping toward the target lift
+const LIFT_EASE = 0.12;
 
-// Ambient sea-swell: several sine fields, each with a randomized direction,
-// frequency, speed and phase (picked once, at load). Because their speeds and
-// frequencies are incommensurate, the sum never falls into a visible repeat —
-// it reads as genuinely irregular chop rather than one clean uniform ripple.
 const WAVE_AMPLITUDE = 0.09;
 const WAVE_OCTAVES = 6;
 const waveField = Array.from({ length: WAVE_OCTAVES }, () => {
@@ -94,14 +80,12 @@ function waveHeight(x, y, t) {
   return (h / waveWeightSum) * WAVE_AMPLITUDE;
 }
 
-// Energy waves: expanding rings spawned by a click, each pushing tiles up and
-// flaring their color as the ring front passes through, then dying out.
 const MAX_WAVES = 6;
-const WAVE_RING_SPEED = 2.4;   // world units/sec the ring front expands
-const WAVE_RING_WIDTH = 0.55;  // ring thickness
-const WAVE_RING_HEIGHT = 0.55; // extra lift at the ring front
-const WAVE_RING_LIFETIME = 2.4; // seconds until a ring is fully spent
-let activeWaves = []; // { x, y, start } in local grid space / seconds since t0
+const WAVE_RING_SPEED = 2.4;
+const WAVE_RING_WIDTH = 0.55;
+const WAVE_RING_HEIGHT = 0.55;
+const WAVE_RING_LIFETIME = 2.4;
+let activeWaves = [];
 let currentT = 0;
 
 function spawnEnergyWave(x, y) {
@@ -109,20 +93,15 @@ function spawnEnergyWave(x, y) {
   activeWaves.push({ x, y, start: currentT });
 }
 
-let cellCenters = null; // Float32Array[COLS*ROWS*2] local (x, y) per instance
-let lift = null;        // Float32Array[COLS*ROWS] current eased lift per instance
+let cellCenters = null;
+let lift = null;
 const _matrix = new Matrix4();
 const _mousePoint = new Vector3();
 const _planeNormal = new Vector3();
 const groundPlane = new ThreePlane();
 
-// Smoothed mouse in NDC [-1, 1]; null while the pointer hasn't moved onto the page.
 let tmx = null, tmy = null;
 
-// ── Shaders ─────────────────────────────────────────────────────────────
-// instanceMatrix/instanceColor are declared by Three automatically for any
-// material rendering an InstancedMesh with instance colors — no need (and no
-// room, it'd be a redeclaration error) to declare them ourselves here.
 const gridVert = `
   varying vec3 vColor;
   varying vec3 vWorldPos;
@@ -165,7 +144,7 @@ const gridFrag = `
 function buildGrid() {
   const geometry = new PlaneGeometry(CELL * FILL, CELL * FILL);
   gridUniforms = {
-    ...UniformsUtils.clone(UniformsLib.fog), // fogColor/fogNear/fogFar — refreshFogUniforms writes into these
+    ...UniformsUtils.clone(UniformsLib.fog),
     uFresnelColor: { value: new Color(0xbfe9ff) },
     uOpacity: { value: 0.55 },
   };
@@ -235,9 +214,9 @@ function init() {
   group.rotation.x = -Math.PI * 0.42;
   scene.add(group);
 
-  applyThemeColors(); // sets baseColor/hoverColor before buildGrid() uses them
+  applyThemeColors();
   buildGrid();
-  applyThemeColors(); // now gridUniforms exists too — sets the fresnel color
+  applyThemeColors();
   applyResponsiveLayout(w);
 }
 
@@ -276,7 +255,6 @@ function startLoop() {
     const t = (performance.now() - t0) / 1000;
     currentT = t;
 
-    // Gentle ambient sway — a "space-time fabric" breathing, not a static grid.
     group.rotation.z = Math.sin(t * 0.12) * 0.03;
 
     updateGroundPlane();
@@ -306,15 +284,13 @@ function startLoop() {
         const dy = cy - localY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         target = dist < LIFT_RADIUS ? 1 - dist / LIFT_RADIUS : 0;
-        target = target * target; // ease-out falloff, sharper near the cursor
+        target = target * target;
       }
 
       lift[i] += (target - lift[i]) * LIFT_EASE;
       const l = lift[i];
       const wave = waveHeight(cx, cy, t);
 
-      // Energy-wave rings: an expanding front that lifts and flares tiles as
-      // it sweeps past them, then fades — sum in case a few overlap.
       let ring = 0;
       for (let w = 0; w < activeWaves.length; w++) {
         const rw = activeWaves[w];
@@ -333,7 +309,7 @@ function startLoop() {
       mesh.setMatrixAt(i, _matrix);
 
       tmpColor.copy(baseColor).lerp(hoverColor, l);
-      tmpColor.multiplyScalar(1 + wave * 0.9); // crests glint, troughs dim
+      tmpColor.multiplyScalar(1 + wave * 0.9);
       tmpColor.r = Math.min(1, tmpColor.r + hoverColor.r * ring);
       tmpColor.g = Math.min(1, tmpColor.g + hoverColor.g * ring);
       tmpColor.b = Math.min(1, tmpColor.b + hoverColor.b * ring);

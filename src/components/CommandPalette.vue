@@ -4,7 +4,6 @@
       @mousedown.self="close" @wheel="blockPageScroll" @touchmove="blockPageScroll">
       <div class="palette-window w-full max-w-[560px] flex flex-col" role="dialog" aria-modal="true"
         aria-label="Command palette">
-        <!-- ── terminal-style chrome bar ───────────────────────────────── -->
         <div class="flex items-center gap-1.5 px-4 py-3 border-b border-border-white shrink-0">
           <span class="w-3 h-3 rounded-full bg-red-500 opacity-80" />
           <span class="w-3 h-3 rounded-full bg-yellow-400 opacity-80" />
@@ -12,7 +11,6 @@
           <span class="ml-auto text-xs text-gray-gradient-01 select-none">abhiram@portfolio ~ $ palette</span>
         </div>
 
-        <!-- ── search ──────────────────────────────────────────────────── -->
         <div class="flex items-center gap-2 px-4 py-3 border-b border-border-white">
           <span class="text-accent-variable text-sm select-none">$</span>
           <input ref="inputRef" v-model="query" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
@@ -22,7 +20,6 @@
             @keydown="onKeydown" />
         </div>
 
-        <!-- ── results ─────────────────────────────────────────────────── -->
         <ul id="palette-list" ref="listRef" role="listbox" aria-label="Commands"
           class="max-h-[50vh] overflow-y-auto scrollbar-thin py-2">
           <template v-for="(item, i) in filtered" :key="item.id">
@@ -45,7 +42,6 @@
           </li>
         </ul>
 
-        <!-- ── key hints ───────────────────────────────────────────────── -->
         <div class="flex gap-4 px-4 py-2 border-t border-border-white text-xs text-gray-gradient-01 select-none">
           <span>↑↓ navigate</span>
           <span>enter select</span>
@@ -75,8 +71,6 @@ const inputRef = ref(null);
 const listRef = ref(null);
 let returnFocusTo = null;
 
-// ─── items ────────────────────────────────────────────────────────────────────
-// Each item: { id, group, label, detail?, keywords?, external?, run() }
 const items = computed(() => [
   {
     id: "projects",
@@ -111,7 +105,6 @@ const items = computed(() => [
   },
 ]);
 
-/** Every whitespace-separated term must appear somewhere in the item's text. */
 const filtered = computed(() => {
   const terms = query.value.toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return items.value;
@@ -125,7 +118,6 @@ const activeItem = computed(() => filtered.value[activeIndex.value] ?? null);
 
 watch(query, () => { activeIndex.value = 0; });
 
-// ─── actions ──────────────────────────────────────────────────────────────────
 async function ensureOnLanding() {
   if (route.path !== "/") {
     await router.push("/");
@@ -154,7 +146,6 @@ function run(item) {
   item.run();
 }
 
-// ─── open / close ─────────────────────────────────────────────────────────────
 function open() {
   returnFocusTo = document.activeElement;
   query.value = "";
@@ -174,7 +165,6 @@ watch(paletteOpen, (isOpen) => {
   }
 });
 
-// ─── keyboard ─────────────────────────────────────────────────────────────────
 function scrollActiveIntoView() {
   nextTick(() => {
     const el = activeItem.value && document.getElementById(`palette-item-${activeItem.value.id}`);
@@ -199,13 +189,10 @@ function onKeydown(event) {
     event.preventDefault();
     close();
   } else if (event.key === "Tab") {
-    // The input is the only focusable control; keep focus inside the dialog
-    // (Esc always closes it, so this never strands keyboard users).
     event.preventDefault();
   }
 }
 
-/** Cmd/Ctrl + K anywhere on the page toggles the palette. */
 function onGlobalKeydown(event) {
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
     event.preventDefault();
@@ -214,7 +201,6 @@ function onGlobalKeydown(event) {
   }
 }
 
-/** Wheel/touch over the backdrop shouldn't scroll the page (and fire its scroll animations). */
 function blockPageScroll(event) {
   if (!listRef.value?.contains(event.target)) event.preventDefault();
 }
@@ -233,7 +219,6 @@ onUnmounted(() => window.removeEventListener("keydown", onGlobalKeydown));
   background-color: rgba(11, 32, 54, 0.25);
 }
 
-/* Same panel treatment as TerminalWindow.vue */
 .palette-window {
   background: linear-gradient(150deg,
       rgba(1, 22, 39, 0.97) 0%,

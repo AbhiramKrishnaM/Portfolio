@@ -18,13 +18,10 @@ const GLYPHS = "アイウエオカキクケコサシスセソタチツテトナ�
 
 let rafId = null;
 let lastFrame = 0;
-// The Enter that ran `matrix` is still bubbling up to window when this mounts —
-// ignore anything that happened before we appeared.
 let mountedAt = Infinity;
 
 const glyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
 
-/** Theme colors come from CSS custom properties so light/dark both work. */
 function themeColors() {
   const styles = getComputedStyle(document.documentElement);
   const bg = styles.getPropertyValue("--color-theme-main").trim() || "#011627";
@@ -36,8 +33,7 @@ function themeColors() {
 
 function onKeydown(event) {
   if (event.timeStamp <= mountedAt) return;
-  if (event.key === "Tab") return; // never trap keyboard focus
-  // Leave browser shortcuts (cmd/ctrl+R, etc.) working; just exit.
+  if (event.key === "Tab") return;
   if (!event.metaKey && !event.ctrlKey && !event.altKey) event.preventDefault();
   emit("exit");
 }
@@ -71,7 +67,6 @@ onMounted(() => {
   };
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    // One settled still frame instead of continuous animation.
     for (let i = 0; i < rows * 2; i++) step();
   } else {
     const loop = (t) => {

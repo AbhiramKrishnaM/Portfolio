@@ -1,9 +1,3 @@
-/**
- * Content for the terminal's hidden commands (fortune, cowsay, sl).
- * They're deliberately left out of `help` and tab completion — see useCLI.js.
- */
-
-// ─── fortune ───────────────────────────────────────────────────────────────────
 export const FORTUNES = [
   "There are only two hard things in computer science: cache invalidation and naming things. — Phil Karlton",
   "Talk is cheap. Show me the code. — Linus Torvalds",
@@ -24,7 +18,6 @@ export const FORTUNES = [
 
 let _lastFortune = -1;
 
-/** Random fortune, never the same one twice in a row. */
 export function randomFortune() {
   let idx;
   do {
@@ -34,7 +27,6 @@ export function randomFortune() {
   return FORTUNES[idx];
 }
 
-// ─── cowsay ────────────────────────────────────────────────────────────────────
 const COW = [
   "        \\   ^__^",
   "         \\  (oo)\\_______",
@@ -43,7 +35,6 @@ const COW = [
   "                ||     ||",
 ];
 
-/** Greedy word-wrap; words longer than `width` are hard-split. */
 function wrap(text, width) {
   const out = [];
   let line = "";
@@ -62,7 +53,6 @@ function wrap(text, width) {
   return out;
 }
 
-/** Returns the cow + speech bubble as a single multi-line string. */
 export function cowsay(text, maxWidth = 40) {
   const rows = wrap(text, Math.max(10, maxWidth));
   const width = Math.max(...rows.map((r) => r.length));
@@ -86,8 +76,6 @@ export function cowsay(text, maxWidth = 40) {
   ].join("\n");
 }
 
-// ─── sl ────────────────────────────────────────────────────────────────────────
-// Two frames so the smoke puffs and the wheels turn as it drives.
 export const TRAIN_FRAMES = [
   [
     "      ( ) (@@) ( )  (@)  ()",
@@ -109,7 +97,6 @@ export const TRAIN_FRAMES = [
 
 export const TRAIN_WIDTH = Math.max(...TRAIN_FRAMES.flat().map((l) => l.length));
 
-/** One frame of the train shifted to `offset` columns (negative = off the left edge). */
 export function trainFrame(frameIdx, offset) {
   return TRAIN_FRAMES[frameIdx % TRAIN_FRAMES.length]
     .map((l) => (offset >= 0 ? " ".repeat(offset) + l : l.slice(-offset)))

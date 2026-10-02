@@ -4,17 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
- * Theme tokens — dark is the default/current look. Light overrides sit under
- * [data-theme="light"], toggled on <html> by useTheme.js. Accent hues keep
- * the same identity in both themes; light-mode values are darkened/saturated
- * versions so they clear WCAG AA (4.5:1) against the light background —
- * verified with a contrast script, not eyeballed.
- *
- * Deliberately NOT themed: --color-theme-main-gradient. Its only consumer is
- * SnakeGame's canvas, which (like the other games) keeps its current dark
- * look for now rather than getting a light-mode pass.
- */
 :root {
   --color-theme-main: #011627;
   --color-theme-main-gradient: #011627d6;
@@ -41,8 +30,6 @@
   --color-accent-variable: #097a5d;
   --color-accent-underline: #a85519;
   --color-border-white: #d7e0e7;
-  /* The dark theme's own background becomes the light theme's ink — same
-     brand navy, different role. */
   --color-white-gradient-01: #011627;
   --color-gray-gradient-01: #52697d;
   --color-code-keyword: #8a4fb0;

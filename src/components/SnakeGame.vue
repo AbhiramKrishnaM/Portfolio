@@ -1,5 +1,4 @@
 <template>
-  <!-- Outer sizer: matches the visual footprint of the scaled game -->
   <div ref="outerRef" class="w-full">
     <div
       class="mx-auto overflow-visible"
@@ -144,9 +143,7 @@
 </template>
 
 <script setup>
-// vue
 import { ref, onMounted, onUnmounted, computed } from "vue";
-// assets
 import Green from "@/assets/vectors/Green.svg";
 import Blue from "@/assets/vectors/Blue.svg";
 import BoltDownLeft from "@/assets/icons/bolt-down-left.svg";
@@ -161,10 +158,8 @@ import Right from "@/assets/icons/right.svg";
 import ActiveSnakeFood from "@/assets/icons/active-snake-food.svg";
 import InActiveSnakeFood from "@/assets/icons/inactive-snake-food.svg";
 
-// emits
 defineEmits(["skip"]);
 
-// scaling
 const GAME_W = 510;
 const GAME_H = 475;
 const outerRef = ref(null);
@@ -179,7 +174,6 @@ function computeScale() {
 
 let ro;
 
-// state
 const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
@@ -187,14 +181,12 @@ const buttonText = ref("start-game");
 const foodEatenCount = ref(0);
 const highlightedKey = ref("");
 
-// game configuration
 const size = {
   width: 240,
   height: 406,
 };
 const unitSize = 14;
 
-// game variables
 let running = false;
 let xVelocity = 0;
 let yVelocity = -unitSize;
@@ -205,11 +197,9 @@ let snake = [];
 let snakeFoodImage = new Image();
 let foodLoaded = false;
 
-// Speed control variables
 let frameCounter = 0;
 const speedFactor = 10;
 
-// Computed property to manage food images in the UI
 const foodImages = computed(() => {
   const images = [];
   for (let i = 0; i < 15; i++) {
@@ -222,7 +212,6 @@ const foodImages = computed(() => {
   return images.reverse();
 });
 
-// functions
 function startGame() {
   resetGame();
   loadGame();
@@ -483,7 +472,6 @@ function resetGame() {
   gameOver.value = false;
 }
 
-// hook
 onMounted(() => {
   const ctx = gameBoard.value.getContext("2d");
   initializeSnake();

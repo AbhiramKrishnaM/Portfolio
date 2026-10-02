@@ -64,8 +64,6 @@ const visibleLinks = computed(() => {
   return links.value.filter((link) => !link.hidden);
 });
 
-// A section link wins while its section is in view; otherwise the plain
-// route link for the current page is active.
 const activeIndex = computed(() => {
   const onPage = (link) => link.to === route.path;
   const sectionIdx = visibleLinks.value.findIndex(
@@ -75,8 +73,6 @@ const activeIndex = computed(() => {
   return visibleLinks.value.findIndex((link) => !link.section && onPage(link));
 });
 
-// Already on the link's page → scroll smoothly (to its section, or back to the
-// top for a plain page link) instead of a no-op navigation.
 function onNavClick(event, link, navigate) {
   if (link.to !== route.path) {
     navigate(event);
@@ -88,12 +84,8 @@ function onNavClick(event, link, navigate) {
   }
 }
 
-// Below this width the pill docks to the bottom as a horizontal bar instead
-// of floating vertically on the left — matches Tailwind's `sm` breakpoint.
 const MOBILE_QUERY = "(max-width: 639px)";
 
-// Drives the sliding indicator — measured from the DOM so it stays correct
-// regardless of item sizing, rather than assuming a fixed row/column pitch.
 const BAR_LENGTH = 26;
 const itemRefs = ref([]);
 const indicatorOffset = ref(0);

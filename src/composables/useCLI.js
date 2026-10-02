@@ -1,25 +1,13 @@
-/**
- * useCLI — command registry, output history, and menu state.
- *
- * To add a new command:   add a key + handler to `commands` below.
- * To add a new game:      add an entry to GAME_REGISTRY below.
- */
-
 import { ref } from "vue";
 import { PROJECTS } from "@/composables/projects.js";
 import { SOCIALS, EMAIL, social } from "@/composables/socials.js";
 import { getRecentCommits, timeAgo, GITHUB_USER } from "@/composables/githubLog.js";
 import { randomFortune, cowsay, trainFrame, TRAIN_WIDTH } from "@/composables/easterEggs.js";
 
-// ─── Boot animation helpers ────────────────────────────────────────────────────
 const _delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Persists across navigation but resets on page refresh
 let _hasBooted = false;
 
-// ─── Game Registry ─────────────────────────────────────────────────────────────
-// Each entry needs: id (unique), label (display name), description.
-// Set comingSoon: true to show the item as disabled in the picker.
 export const GAME_REGISTRY = [
   {
     id: "snake",
@@ -44,52 +32,32 @@ export const GAME_REGISTRY = [
   },
 ];
 
-// ─── Internal uid ──────────────────────────────────────────────────────────────
 let _uid = 0;
 const uid = () => ++_uid;
 
-// ─── Composable ────────────────────────────────────────────────────────────────
 export function useCLI() {
-  /** Array of rendered output lines. Each line: { id, type, content } */
   const lines = ref([]);
 
-  /**
-   * Active menu state — null when no menu is open.
-   * { selectedIndex: number }
-   */
   const menuState = ref(null);
 
-  /** True while the boot animation is running — hides the input prompt. */
   const booting = ref(false);
 
-  /**
-   * Full-terminal takeover for hidden commands — "matrix" | "vim" | null.
-   * TerminalWindow renders the matching overlay and hides the prompt.
-   */
   const overlay = ref(null);
 
-  /** Approx. character columns of the output area (text-xs), set by TerminalWindow. */
   const columns = ref(60);
 
-  /** Animated-scene state — see playScene() below. */
   const SCENE_CANCELLED = Symbol("scene-cancelled");
   let sceneToken = 0;
   let currentScene = null;
 
-  /** Command input history (most recent first). */
   const cmdHistory = ref([]);
   const historyIdx = ref(-1);
 
-  // ─── line helpers ────────────────────────────────────────────────────────────
   const addLine = (type, content) =>
     lines.value.push({ id: uid(), type, content });
   const blank = () => addLine("blank", null);
   const addSocial = ({ text, url }) => addLine("link", { text, url });
 
-  /**
-   * Preformatted multi-line block (ASCII art). `label` is what screen readers
-   * announce instead of the art; tone: "text" | "accent".
-   */
   const addPre = (text, label, tone = "text") => {
     const id = uid();
     lines.value.push({ id, type: "pre", content: { text, label, tone } });
@@ -102,8 +70,6 @@ export function useCLI() {
     blank();
   }
 
-  // ─── command registry ────────────────────────────────────────────────────────
-  // Add a new command by adding a key here. Value must be () => void.
   const commands = {
     whoami() {
       addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
@@ -199,7 +165,7 @@ export function useCLI() {
     },
 
     "/game"() {
-      if (menuState.value) return; // guard: only one menu at a time
+      if (menuState.value) return;
       addLine("comment", "// ↑ ↓ to navigate  ·  enter to launch  ·  esc to cancel");
       addLine("game-menu", { games: GAME_REGISTRY, frozenIndex: null });
       blank();
@@ -214,9 +180,6 @@ export function useCLI() {
     },
   };
 
-  // ─── hidden commands ─────────────────────────────────────────────────────────
-  // Not listed in `help` and not offered by tab completion — they're for people
-  // who poke around ("Some commands aren't listed. Try things.").
   const secretCommands = {
     fortune() {
       addLine("comment", `// ${randomFortune()}`);
@@ -232,7 +195,6 @@ export function useCLI() {
     },
   };
 
-  // Commands that take free-text arguments: handler receives the rest of the line.
   const argCommands = {
     cowsay(text) {
       const message = text || "moo. try: cowsay <text>";
@@ -259,7 +221,6 @@ export function useCLI() {
   argCommands.vi = argCommands.vim;
   argCommands.nvim = argCommands.vim;
 
-  /** Called by the overlay components when the visitor gets out. */
   function exitOverlay() {
     const kind = overlay.value;
     overlay.value = null;
@@ -268,9 +229,8 @@ export function useCLI() {
     blank();
   }
 
-  /** `git log` — recent public commits from GitHub, one line each. */
   async function runGitLog() {
-    const token = sceneToken; // a scene change (scrolling) discards the result
+    const token = sceneToken;
     booting.value = true;
     const loadingId = uid();
     lines.value.push({ id: loadingId, type: "comment", content: `// fetching recent commits from github.com/${GITHUB_USER}…` });
@@ -282,7 +242,7 @@ export function useCLI() {
     } catch (err) {
       error = err;
     }
-    if (token !== sceneToken) return; // new scene owns the terminal now
+    if (token !== sceneToken) return;
     lines.value = lines.value.filter((l) => l.id !== loadingId);
 
     if (result) {
@@ -310,15 +270,14 @@ export function useCLI() {
     return `// github returned an error${err?.status ? ` (${err.status})` : ""} — try again in a bit. meanwhile:`;
   }
 
-  /** `sl` — drives an ASCII train across the output, right to left. */
   async function runTrain() {
-    const token = sceneToken; // a scene change (scrolling) aborts the ride
+    const token = sceneToken;
     booting.value = true;
     const label = "a train drives across the terminal";
     const id = addPre("", label, "accent");
     for (let offset = columns.value, frame = 0; offset > -TRAIN_WIDTH; offset--, frame++) {
       await _delay(30);
-      if (token !== sceneToken) return; // new scene owns the terminal now
+      if (token !== sceneToken) return;
       const idx = lines.value.findIndex((l) => l.id === id);
       if (idx === -1) return;
       lines.value[idx] = { id, type: "pre", content: { text: trainFrame(Math.floor(frame / 4), offset), label, tone: "accent" } };
@@ -327,7 +286,6 @@ export function useCLI() {
     booting.value = false;
   }
 
-  // ─── execute a raw command string ────────────────────────────────────────────
   function execute(raw) {
     const cmd = raw.trim();
     if (!cmd) {
@@ -343,7 +301,6 @@ export function useCLI() {
     const [name] = lower.split(/\s+/, 1);
     const argHandler = argCommands[name];
     if (handler) {
-      // clear wipes lines itself — don't echo first or it flashes
       if (lower !== "clear") addLine("input", cmd);
       handler();
     } else if (argHandler) {
@@ -359,17 +316,14 @@ export function useCLI() {
     }
   }
 
-  // ─── tab completion ──────────────────────────────────────────────────────────
   const commandNames = Object.keys(commands);
 
-  /** Returns all command names that start with `partial`. Pure — no side effects. */
   function getSuggestions(partial) {
     const lower = partial.toLowerCase();
     if (!lower) return [];
     return commandNames.filter((c) => c.startsWith(lower));
   }
 
-  // ─── command history navigation ──────────────────────────────────────────────
   function historyUp(current) {
     if (!cmdHistory.value.length) return current;
     historyIdx.value = Math.min(
@@ -388,7 +342,6 @@ export function useCLI() {
     return cmdHistory.value[historyIdx.value];
   }
 
-  // ─── game menu navigation ────────────────────────────────────────────────────
   function menuUp() {
     if (!menuState.value) return;
     const len = GAME_REGISTRY.length;
@@ -405,10 +358,6 @@ export function useCLI() {
     };
   }
 
-  /**
-   * Confirms the current menu selection.
-   * Returns the game id to launch, or null (coming-soon / no menu).
-   */
   function menuConfirm() {
     if (!menuState.value) return null;
 
@@ -421,7 +370,6 @@ export function useCLI() {
       return null;
     }
 
-    // Freeze the menu line at the confirmed selection
     const menuLine = lines.value.find((l) => l.type === "game-menu" && l.content.frozenIndex === null);
     if (menuLine) menuLine.content = { games: GAME_REGISTRY, frozenIndex: idx };
 
@@ -431,7 +379,6 @@ export function useCLI() {
     return game.id;
   }
 
-  /** Cancels the open menu without launching anything. */
   function menuCancel() {
     if (!menuState.value) return;
     addLine("comment", "// cancelled");
@@ -439,11 +386,6 @@ export function useCLI() {
     menuState.value = null;
   }
 
-  // ─── boot sequence ────────────────────────────────────────────────────────────
-  /**
-   * Shared boot content — used by both initial mount and `clear`.
-   * Renders whoami + ls socials exactly as bradeac.dev does.
-   */
   function runBoot() {
     addLine("input", "whoami");
     commands.whoami();
@@ -457,13 +399,7 @@ export function useCLI() {
     runBoot();
   }
 
-  // ─── animated scenes ─────────────────────────────────────────────────────────
-  // A scene clears the terminal and types its commands out character-by-
-  // character. Starting a new scene cancels the one in progress, so fast
-  // scrolling between scenes never interleaves two animations.
-
   async function introScene({ wait, typeCommand }) {
-    // ── whoami ────────────────────────────────────────────────────────
     await typeCommand("whoami");
     addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
     await wait(70);
@@ -474,7 +410,6 @@ export function useCLI() {
     blank();
     await wait(180);
 
-    // ── ls socials ────────────────────────────────────────────────────
     await typeCommand("ls socials");
     addLine("comment", "// socials");
     await wait(70);
@@ -504,10 +439,6 @@ export function useCLI() {
 
   const SCENES = { intro: introScene, projects: projectsScene };
 
-  /**
-   * Clears the terminal and plays a scene. Resolves true if the scene ran to
-   * the end, false if a newer scene cancelled it part-way.
-   */
   async function playScene(name) {
     const token = ++sceneToken;
     currentScene = name;
@@ -521,7 +452,6 @@ export function useCLI() {
       if (token !== sceneToken) throw SCENE_CANCELLED;
     };
 
-    // ── helper: type a command into a new input line ──────────────────
     async function typeCommand(cmd) {
       const lineId = uid();
       lines.value.push({ id: lineId, type: "input", content: "", cursor: true });
@@ -545,16 +475,11 @@ export function useCLI() {
     return true;
   }
 
-  /** Plays a scene unless it's already the one showing (or playing). */
   function showScene(name) {
     if (name === currentScene) return Promise.resolve(false);
     return playScene(name);
   }
 
-  /**
-   * Animated boot — types the intro on initial page load. After the first
-   * boot (e.g. navigating back to the page) the intro appears instantly.
-   */
   async function bootAnimated() {
     if (_hasBooted) {
       sceneToken++;
@@ -566,10 +491,6 @@ export function useCLI() {
     return playScene("intro");
   }
 
-  /**
-   * Called when the user returns from a game.
-   * Adds a contextual line so the terminal feels continuous.
-   */
   function resumeFromGame(gameId) {
     const game = GAME_REGISTRY.find((g) => g.id === gameId);
     addLine("comment", `// session resumed from ${game?.label ?? gameId}`);

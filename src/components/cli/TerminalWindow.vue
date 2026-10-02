@@ -1,6 +1,5 @@
 <template>
   <div class="terminal-window flex flex-col" @click="focusInput">
-    <!-- ── macOS-style chrome bar ──────────────────────────────────────── -->
     <div class="flex items-center gap-1.5 px-4 py-3 border-b border-border-white shrink-0">
       <span class="w-3 h-3 rounded-full bg-red-500 opacity-80" />
       <span class="w-3 h-3 rounded-full bg-yellow-400 opacity-80" />
@@ -10,13 +9,11 @@
       </span>
     </div>
 
-    <!-- ── scrollable output + inline input ───────────────────────────── -->
     <div class="relative flex-1 min-h-0">
       <div ref="outputEl" class="h-full overflow-y-auto px-4 py-3 scrollbar-thin">
         <TerminalOutput :lines="lines" :menu-state="menuState" :selected-project="selectedProject"
           @project-select="emit('project-select', $event)" />
 
-        <!-- Inline active $ prompt — hidden while an animation or overlay runs -->
         <div v-if="!booting && !overlay">
           <div class="flex items-center gap-2 mt-1">
             <span class="text-accent-variable text-sm select-none">$</span>
@@ -25,7 +22,6 @@
               @keydown="handleKeydown" />
           </div>
 
-          <!-- Tab-completion picker -->
           <div v-if="tabSuggestions.length" class="pl-5 pt-1 flex flex-wrap gap-x-3 gap-y-1">
             <span
               v-for="(cmd, i) in tabSuggestions"
@@ -41,7 +37,6 @@
         </div>
       </div>
 
-      <!-- Hidden-command takeovers (matrix / vim) cover the output area -->
       <MatrixRain v-if="overlay === 'matrix'" @exit="onOverlayExit" />
       <VimTrap v-else-if="overlay === 'vim'" @exit="onOverlayExit" />
     </div>
@@ -56,12 +51,10 @@ import MatrixRain from "./MatrixRain.vue";
 import VimTrap from "./VimTrap.vue";
 
 const props = defineProps({
-  /** Which animated scene to show: "intro" (whoami + socials) or "projects". */
   scene: {
     type: String,
     default: "intro",
   },
-  /** Slug of the project shown in the ProjectCard — highlighted in the list. */
   selectedProject: {
     type: String,
     default: null,
@@ -94,7 +87,6 @@ const inputValue = ref("");
 const outputEl = ref(null);
 const inputRef = ref(null);
 
-// ─── tab completion state ─────────────────────────────────────────────────────
 const tabSuggestions = ref([]);
 const tabIndex = ref(0);
 
@@ -103,7 +95,6 @@ function clearTab() {
   tabIndex.value = 0;
 }
 
-// ─── public API ───────────────────────────────────────────────────────────────
 function onGameExit(gameId) {
   resumeFromGame(gameId);
   nextTick(() => {
@@ -114,13 +105,9 @@ function onGameExit(gameId) {
 
 defineExpose({ onGameExit });
 
-// ─── keyboard handler ─────────────────────────────────────────────────────────
 function handleKeydown(event) {
-  // ── game menu mode ───────────────────────────────────────────────────
   if (menuState.value) {
-    // If the user has typed something, let Enter execute it normally
     if (event.key === "Enter" && inputValue.value.trim()) {
-      // fall through to normal mode below
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
       menuUp();
@@ -149,42 +136,35 @@ function handleKeydown(event) {
     }
   }
 
-  // ── tab completion mode ──────────────────────────────────────────────
   if (event.key === "Tab") {
     event.preventDefault();
     const partial = inputValue.value.trim();
     if (!partial) return;
 
     if (tabSuggestions.value.length === 0) {
-      // First Tab press — compute suggestions
       const matches = getSuggestions(partial);
       if (matches.length === 0) return;
       if (matches.length === 1) {
-        // Unique match — complete immediately, no picker
         inputValue.value = matches[0];
         return;
       }
       tabSuggestions.value = matches;
       tabIndex.value = 0;
     } else {
-      // Subsequent Tab — cycle forward (Shift+Tab cycles back)
       const dir = event.shiftKey ? -1 : 1;
       tabIndex.value = (tabIndex.value + dir + tabSuggestions.value.length) % tabSuggestions.value.length;
     }
-    // Fill input with highlighted suggestion (not confirmed yet)
     inputValue.value = tabSuggestions.value[tabIndex.value];
     nextTick(scrollToBottom);
     return;
   }
 
-  // Any other key dismisses the picker
   if (tabSuggestions.value.length) {
     if (event.key === "Escape") {
       event.preventDefault();
       clearTab();
       return;
     }
-    // Enter confirms the highlighted suggestion then executes
     if (event.key === "Enter") {
       event.preventDefault();
       const cmd = tabSuggestions.value[tabIndex.value];
@@ -198,7 +178,6 @@ function handleKeydown(event) {
     clearTab();
   }
 
-  // ── normal mode ──────────────────────────────────────────────────────
   if (event.key === "ArrowUp") {
     event.preventDefault();
     inputValue.value = historyUp(inputValue.value);
@@ -222,14 +201,10 @@ function onOverlayExit() {
   });
 }
 
-// Rough column count for ASCII art (text-xs Fira Code ≈ 0.6em = 7.2px/char,
-// minus the 1.25rem indent and horizontal padding).
 function measureColumns() {
   if (outputEl.value) columns.value = Math.max(20, Math.floor((outputEl.value.clientWidth - 52) / 7.2));
 }
 
-// A command that runs an animation (e.g. `sl`) hides the prompt; give focus
-// back once it's done so the visitor can keep typing.
 function focusWhenIdle() {
   if (!booting.value) return;
   const stop = watch(booting, (busy) => {
@@ -249,11 +224,8 @@ function scrollToBottom() {
   }
 }
 
-// Auto-scroll as lines are added during the boot animation
 watch(lines, () => nextTick(scrollToBottom), { deep: true });
 
-// Short debounce so flicking back and forth across the scroll threshold
-// doesn't restart the typing animation on every crossing.
 let sceneTimer = null;
 watch(() => props.scene, (scene) => {
   clearTimeout(sceneTimer);

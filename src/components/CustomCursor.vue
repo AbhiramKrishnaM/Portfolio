@@ -52,7 +52,6 @@ onUnmounted(() => {
 </script>
 
 <style>
-/* Unscoped: needs to reach every element while the cursor is active. */
 body.custom-cursor-active,
 body.custom-cursor-active * {
   cursor: none !important;

@@ -1,6 +1,5 @@
 <template>
   <article class="project-card h-full flex flex-col gap-4 p-5" :aria-label="`Project ${index + 1}: ${project.name}`">
-    <!-- ── label row ───────────────────────────────────────────────────── -->
     <header class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
       <span class="text-accent-sub font-medium shrink-0">Project {{ index + 1 }}</span>
       <span class="text-gray-gradient-01">// _{{ project.slug }}</span>
@@ -16,9 +15,6 @@
       </div>
     </header>
 
-    <!-- ── preview + tech badges ───────────────────────────────────────── -->
-    <!-- In a fixed-height slot (desktop) the preview stretches to fill it;
-         otherwise it keeps a 16:9 shape. -->
     <div class="relative lg:flex-1 lg:min-h-0 lg:flex lg:flex-col">
       <div class="preview aspect-video lg:aspect-auto lg:flex-1 lg:min-h-0 overflow-hidden">
         <img v-if="project.image" :src="project.image" :alt="`${project.name} preview`"
@@ -39,7 +35,6 @@
       </ul>
     </div>
 
-    <!-- ── description + action ────────────────────────────────────────── -->
     <p class="text-gray-gradient-01 text-sm leading-relaxed pt-3 pr-6">{{ project.desc }}</p>
 
     <a :href="project.demo ?? project.url" target="_blank" rel="noopener noreferrer"
@@ -57,7 +52,6 @@ defineProps({
     type: Object,
     required: true,
   },
-  /** Zero-based position in the list — shown 1-based. */
   index: {
     type: Number,
     required: true,
@@ -95,7 +89,6 @@ defineEmits(["prev", "next"]);
   background-color: var(--color-bg-field-default);
 }
 
-/* Faint grid so the placeholder reads as an empty canvas, not a broken image */
 .preview-placeholder {
   background-image:
     linear-gradient(var(--color-border-white) 1px, transparent 1px),

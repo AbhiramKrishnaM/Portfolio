@@ -101,7 +101,6 @@ import Right from "@/assets/icons/right.svg";
 
 defineEmits(["skip"]);
 
-// ─── scaling ─────────────────────────────────────────────────────────────────
 const GAME_W = 500;
 const GAME_H = 510;
 const outerRef = ref(null);
@@ -116,15 +115,12 @@ function computeScale() {
 
 let ro;
 
-// ─── board config ────────────────────────────────────────────────────────────
 const COLS = 10;
 const ROWS = 20;
 const BLOCK = 20;
 const BOARD_W = COLS * BLOCK;
 const BOARD_H = ROWS * BLOCK;
 
-// Every piece is defined on a uniform 4x4 grid so rotation is a single
-// generic matrix transform — no per-piece wall-kick tables needed.
 const SHAPES = {
   I: [
     [0, 0, 0, 0],
@@ -182,7 +178,6 @@ const COLORS = {
 
 const PIECE_TYPES = Object.keys(SHAPES);
 
-// ─── reactive state ──────────────────────────────────────────────────────────
 const gameBoard = ref(null);
 const gameRunning = ref(false);
 const gameOver = ref(false);
@@ -212,7 +207,6 @@ function btnClass(dir) {
   };
 }
 
-// ─── non-reactive game state ─────────────────────────────────────────────────
 let board = [];
 let piece = null;
 let running = false;
@@ -221,8 +215,8 @@ let frameCounter = 0;
 let bag = [];
 let heldDirection = null;
 let heldFrames = 0;
-const DAS = 10; // frames before auto-repeat kicks in
-const ARR = 3; // frames between repeats
+const DAS = 10;
+const ARR = 3;
 
 function createEmptyBoard() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(0));

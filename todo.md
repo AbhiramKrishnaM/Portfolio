@@ -106,7 +106,23 @@
 - [ ] Theme toggle still overrides it manually
 
 ## 16. Remove code comments
-- [ ] Remove comments from all files in `src/`
-- [ ] List any comment that seems truly needed and get approval before keeping it
-- [ ] Run `npx eslint src/` and `npm run build` after to make sure nothing broke
-- [ ] Rule going forward: no comments in new code unless approved
+- [x] Remove comments from all files in `src/`
+- [x] List any comment that seems truly needed and get approval before keeping it
+- [x] Run `npx eslint src/` and `npm run build` after to make sure nothing broke
+- [x] Rule going forward: no comments in new code unless approved
+
+## 17. Codebase audit — remove unwanted code
+- [ ] Run the `cleanup-audit` skill (dead files, unused deps, unused assets, stale docs)
+- [ ] Find unused functions, variables, props, and CSS classes inside files
+- [ ] Find leftover code like the hidden icosahedron (`SHOW_ICOSAHEDRON = false`)
+- [ ] Review the list together before deleting anything
+- [ ] Lint + build + click through the site after each round
+
+## 18. Refactor for readability
+- [ ] Split `index.vue` by behaviour (hero text animation, terminal scroll motion, game switching)
+- [ ] Move that logic into composables (e.g. `useHackingText`, `useTerminalScroll`)
+- [ ] Split `useCLI.js` into commands, intro animation, and game registry
+- [ ] Clear, consistent names for files, functions, and variables
+- [ ] Keep components small: one job per file
+- [ ] Update `CLAUDE.md` / `README.md` so a new dev can find things quickly
+- [ ] Lint + build + click through the site to confirm nothing changed visually

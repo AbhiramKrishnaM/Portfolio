@@ -39,9 +39,6 @@ let renderer, scene, camera, group, animFrameId;
 const allUniforms = [];
 let faceUni, edgeUni;
 
-// Dark = "blueprint" (light lines on dark navy). Light = "whiteprint" (dark
-// ink lines on pale paper), reusing the brand navy/indigo for edges/rim so
-// the wireframe stays legible instead of washing out on a light background.
 const THEME_COLORS = {
   dark: {
     faceBase: [0.004, 0.09, 0.15],
@@ -74,10 +71,8 @@ function applyThemeColors() {
 
 watch(theme, applyThemeColors);
 
-// Smoothed mouse in NDC [-1, 1]
 let mx = 0, my = 0, tmx = 0, tmy = 0;
 
-// ── Vertex shader — screen-space mouse proximity pull ─────────────────────
 const vert = `
   uniform vec2 uMouse;
   varying vec3 vNormal;
@@ -141,8 +136,6 @@ const edgeFrag = `
   }
 `;
 
-// ── Spaceship geometry ─────────────────────────────────────────────────────
-// Nose of ship points toward +Z. We'll orient it by aligning +Z → velocity.
 function createSpaceship() {
   const root = new Group();
   const bodyMat = new MeshNormalMaterial({ flatShading: true });
@@ -153,7 +146,6 @@ function createSpaceship() {
     color: 0x40ffcc, transparent: true, opacity: 0.25,
   });
 
-  // Fuselage — tapered cylinder oriented along +Z
   const fuselage = new Mesh(
     new CylinderGeometry(0.052, 0.088, 0.40, 6),
     bodyMat,
@@ -161,18 +153,15 @@ function createSpaceship() {
   fuselage.rotation.x = Math.PI / 2;
   root.add(fuselage);
 
-  // Nose cone
   const nose = new Mesh(new ConeGeometry(0.052, 0.20, 6), bodyMat);
   nose.rotation.x = Math.PI / 2;
   nose.position.z = 0.30;
   root.add(nose);
 
-  // Wings — flat box swept back
   const wings = new Mesh(new BoxGeometry(0.44, 0.012, 0.18), bodyMat);
   wings.position.z = -0.04;
   root.add(wings);
 
-  // Cockpit dome
   const cockpit = new Mesh(
     new SphereGeometry(0.042, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2),
     new MeshBasicMaterial({ color: 0x80dfff, transparent: true, opacity: 0.7 }),
@@ -181,12 +170,10 @@ function createSpaceship() {
   cockpit.position.y = 0.048;
   root.add(cockpit);
 
-  // Engine glow
   const engineMesh = new Mesh(new SphereGeometry(0.048, 10, 10), glowMat);
   engineMesh.position.z = -0.23;
   root.add(engineMesh);
 
-  // Exhaust cone
   const exhaust = new Mesh(
     new ConeGeometry(0.034, 0.14, 8),
     exhaustMat,
@@ -198,9 +185,6 @@ function createSpaceship() {
   return { root, engineMesh };
 }
 
-// ── Face collision planes from the base icosahedron (detail=0, 20 faces) ──
-// Each plane: outward unit normal n, plane distance d (dot(n, p) = d).
-// Ship bounces when dot(n, shipPos) > d - margin.
 function buildFacePlanes(radius) {
   const geo = new IcosahedronGeometry(radius, 0);
   const pos = geo.attributes.position;
@@ -214,14 +198,13 @@ function buildFacePlanes(radius) {
     const n = new Vector3()
       .crossVectors(b.clone().sub(a), c.clone().sub(a))
       .normalize();
-    if (n.dot(a) < 0) n.negate();   // ensure outward
+    if (n.dot(a) < 0) n.negate();
 
     planes.push({ n, d: n.dot(a) });
   }
   return planes;
 }
 
-// ── Ship state ─────────────────────────────────────────────────────────────
 let shipMesh = null;
 let engineRef = null;
 let facePlanes = null;
@@ -231,7 +214,6 @@ const _forward = new Vector3(0, 0, 1);
 const SHIP_SPEED = 0.90;
 const SHIP_MARGIN = 0.20;
 
-// ── Mobile solar system state ──────────────────────────────────────────────
 let isMobile = false;
 let solarSystemGroup = null;
 let coronaMesh = null;
@@ -239,27 +221,22 @@ const planets = [];
 let mobileTarget = 0;
 const MOBILE_SHIP_SPEED = 0.55;
 
-// ── Solar system (shown on mobile only) ───────────────────────────────────
 function createSolarSystem() {
   solarSystemGroup = new Group();
 
-  // Sun core
   solarSystemGroup.add(new Mesh(
     new SphereGeometry(0.16, 14, 14),
     new MeshBasicMaterial({ color: 0xffc107 })
   ));
 
-  // Sun corona — pulsed each frame
   coronaMesh = new Mesh(
     new SphereGeometry(0.24, 14, 14),
     new MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.22 })
   );
   solarSystemGroup.add(coronaMesh);
 
-  // Tilt the whole orbital plane to face the camera (camera is at +Z, orbits were in XZ = edge-on)
-  // -π/2 on X rotates the XZ plane into XY plane → orbits appear as circles from camera
   solarSystemGroup.rotation.x = -Math.PI * 0.52;
-  solarSystemGroup.rotation.z = 0.28; // slight artistic tilt
+  solarSystemGroup.rotation.z = 0.28;
 
   const planetDefs = [
     { orbitRadius: 0.30, size: 0.048, color: 0xe8cda0, speed: 2.2,  tilt: 0.0,   rings: null },
@@ -267,13 +244,11 @@ function createSolarSystem() {
     { orbitRadius: 0.78, size: 0.082, color: 0x81c784, speed: 0.88, tilt: 0.08,  rings: null },
     { orbitRadius: 1.08, size: 0.068, color: 0xff7043, speed: 0.52, tilt: -0.06, rings: null },
     { orbitRadius: 1.38, size: 0.090, color: 0xce93d8, speed: 0.30, tilt: 0.10,  rings: null },
-    // Jupiter with rings
     { orbitRadius: 1.68, size: 0.115, color: 0xc88b3a, speed: 0.18, tilt: -0.08,
       rings: { inner: 0.145, outer: 0.26, color: 0xb07830, opacity: 0.55 } },
   ];
 
   for (const pd of planetDefs) {
-    // Orbit path
     const ringPts = [];
     for (let i = 0; i <= 80; i++) {
       const a = (i / 80) * Math.PI * 2;
@@ -284,7 +259,6 @@ function createSolarSystem() {
       new LineBasicMaterial({ color: 0x1e3a50, transparent: true, opacity: 0.5 })
     ));
 
-    // Planet sphere
     const mesh = new Mesh(
       new SphereGeometry(pd.size, 12, 12),
       new MeshBasicMaterial({ color: pd.color })
@@ -292,7 +266,6 @@ function createSolarSystem() {
     const startAngle = Math.random() * Math.PI * 2;
     mesh.position.set(Math.cos(startAngle) * pd.orbitRadius, pd.tilt, Math.sin(startAngle) * pd.orbitRadius);
 
-    // Saturn-style rings attached to planet so they orbit with it
     if (pd.rings) {
       const planetRing = new Mesh(
         new RingGeometry(pd.rings.inner, pd.rings.outer, 48),
@@ -301,7 +274,6 @@ function createSolarSystem() {
           opacity: pd.rings.opacity, side: DoubleSide,
         })
       );
-      // RingGeometry is in XY plane by default; rotate into XZ (orbital plane) + slight tilt for aesthetics
       planetRing.rotation.x = Math.PI * 0.44;
       planetRing.rotation.z = 0.22;
       mesh.add(planetRing);
@@ -315,24 +287,21 @@ function createSolarSystem() {
   solarSystemGroup.visible = false;
 }
 
-// ── Responsive layout ──────────────────────────────────────────────────────
 function applyResponsiveLayout(w, h) {
   isMobile = w < 1024;
 
   if (isMobile) {
-    // Scale icosahedron so its diameter fills ~78% of visible screen width
-    const visibleHeight = 2 * Math.tan((Math.PI / 180) * 22.5) * 7; // camera FOV=45, z=7
+    const visibleHeight = 2 * Math.tan((Math.PI / 180) * 22.5) * 7;
     const visibleWidth = visibleHeight * (w / h);
     const scale = Math.min((visibleWidth * 0.95) / (2 * 2.4), 0.92);
 
-    // Clamp Y so the top of the icosahedron never exceeds the viewport edge
     const maxY = visibleHeight / 2 - 2.4 * scale - 0.18;
     group.position.x = 0;
     group.position.y = Math.min(visibleHeight * 0.10, maxY);
     group.scale.setScalar(scale);
 
     if (solarSystemGroup) solarSystemGroup.visible = true;
-    if (shipMesh) shipMesh.scale.setScalar(0.5); // extra-small rocket on mobile
+    if (shipMesh) shipMesh.scale.setScalar(0.5);
   } else {
     group.position.x = 1.2;
     group.position.y = 0;
@@ -343,7 +312,6 @@ function applyResponsiveLayout(w, h) {
   }
 }
 
-// ── Scene init ─────────────────────────────────────────────────────────────
 function init() {
   const canvas = canvasRef.value;
   const w = window.innerWidth;
@@ -362,7 +330,6 @@ function init() {
 
   const mouseVec = new Vector2(0, 0);
 
-  // Icosahedron faces
   const faceGeo = new IcosahedronGeometry(2.4, 1);
   faceUni = {
     uMouse: { value: mouseVec },
@@ -378,7 +345,6 @@ function init() {
     side: DoubleSide, depthWrite: false,
   })));
 
-  // Wireframe edges
   const edgeGeo = new EdgesGeometry(new IcosahedronGeometry(2.4, 1));
   edgeUni = { uMouse: { value: mouseVec }, uEdgeColor: { value: new Vector4() } };
   allUniforms.push(edgeUni);
@@ -389,7 +355,6 @@ function init() {
 
   applyThemeColors();
 
-  // Spaceship
   const { root, engineMesh } = createSpaceship();
   shipMesh = root;
   engineRef = engineMesh;
@@ -400,22 +365,18 @@ function init() {
   ).normalize().multiplyScalar(SHIP_SPEED);
   group.add(shipMesh);
 
-  // Collision planes for desktop bounce (detail=0, same radius)
   facePlanes = buildFacePlanes(2.4);
 
-  // Solar system (hidden until mobile layout applies)
   createSolarSystem();
 
   applyResponsiveLayout(w, h);
 }
 
-// ── Mouse handler ──────────────────────────────────────────────────────────
 function onMouseMove(e) {
   tmx = (e.clientX / window.innerWidth) * 2 - 1;
   tmy = -((e.clientY / window.innerHeight) * 2 - 1);
 }
 
-// ── Render loop ────────────────────────────────────────────────────────────
 function startLoop() {
   const t0 = performance.now();
   let prevT = 0;
@@ -426,35 +387,27 @@ function startLoop() {
     const dt = Math.min(t - prevT, 0.05);
     prevT = t;
 
-    // Mouse smooth
     mx += (tmx - mx) * 0.05;
     my += (tmy - my) * 0.05;
     allUniforms.forEach(u => u.uMouse.value.set(mx, my));
 
-    // Icosahedron idle rotation
     group.rotation.y = t * 0.18;
     group.rotation.x = Math.sin(t * 0.10) * 0.12;
 
-    // ── Ship physics ───────────────────────────────────────────────────
     if (isMobile && planets.length > 0) {
-      // Animate planet orbits (positions are in solarSystemGroup / group local space)
       for (const p of planets) {
         p.angle += p.orbitSpeed * dt;
         p.mesh.position.set(
           Math.cos(p.angle) * p.orbitRadius,
-          p.tilt * Math.sin(p.angle * 2), // slight inclination wobble
+          p.tilt * Math.sin(p.angle * 2),
           Math.sin(p.angle) * p.orbitRadius
         );
       }
 
-      // Sun corona pulse
       if (coronaMesh) {
         coronaMesh.scale.setScalar(0.9 + 0.1 * Math.sin(t * 2.8));
       }
 
-      // Move rocket toward current target planet then pick a random different one
-      // Planet positions are in solarSystemGroup local space; ship is in group local space.
-      // Convert planet world position → group local to compare correctly.
       const target = planets[mobileTarget];
       const planetGroupPos = new Vector3();
       target.mesh.getWorldPosition(planetGroupPos);
@@ -470,7 +423,6 @@ function startLoop() {
       shipVel.copy(toTarget.normalize().multiplyScalar(MOBILE_SHIP_SPEED));
       shipMesh.position.addScaledVector(shipVel, dt);
     } else {
-      // Desktop: bounce inside icosahedron
       shipMesh.position.addScaledVector(shipVel, dt);
       for (const { n, d } of facePlanes) {
         const penetration = n.dot(shipMesh.position) - (d - SHIP_MARGIN);
@@ -482,13 +434,11 @@ function startLoop() {
       }
     }
 
-    // Orient nose toward velocity (shared)
     if (shipVel.lengthSq() > 0.001) {
       _targetQ.setFromUnitVectors(_forward, shipVel.clone().normalize());
       shipMesh.quaternion.slerp(_targetQ, 0.14);
     }
 
-    // Engine glow pulse (shared)
     const pulse = 0.85 + 0.15 * Math.sin(t * 9.0);
     engineRef.scale.setScalar(pulse);
 
@@ -497,7 +447,6 @@ function startLoop() {
   tick();
 }
 
-// ── Resize ─────────────────────────────────────────────────────────────────
 function onResize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
