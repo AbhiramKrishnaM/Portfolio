@@ -93,10 +93,17 @@
 - [ ] Make sure the theme-toggle "h" still works
 
 ## 14. Tech stack physics pile
+- [ ] Add a new Stack section right after projects
+- [ ] Keep the terminal pinned on the left from projects through stack
+- [ ] Use the right side as the physics area (same spot as the project card)
+- [ ] On scroll into stack, terminal clears and types `$ ls stack`
 - [ ] Pick the engine (Matter.js for 2D or Rapier for 3D)
 - [ ] Make tech logos (Vue, React, Node, Python, Docker, AWS) physics bodies
-- [ ] Drop them in when the section scrolls into view
+- [ ] Logos spill out of the terminal's right edge and pile up on the floor
 - [ ] Let people grab and throw them with the mouse
+- [ ] Drop only once; logos stay piled when scrolling back and forth
+- [ ] Add a "Stack" navbar link and an `ls stack` command
+- [ ] Static logo grid on mobile and for reduced-motion users
 - [ ] Lazy-load the physics engine so it doesn't slow the landing page
 
 ## 15. Day/night mode from local time
