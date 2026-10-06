@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
-import { useCLI } from "@/composables/useCLI.js";
+import { useCLI } from "@/composables/cli/useCLI.js";
 import TerminalOutput from "./TerminalOutput.vue";
 import MatrixRain from "./MatrixRain.vue";
 import VimTrap from "./VimTrap.vue";

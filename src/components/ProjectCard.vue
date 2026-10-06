@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { TECH } from "@/composables/projects.js";
+import { TECH } from "@/data/projects.js";
 
 defineProps({
   project: {

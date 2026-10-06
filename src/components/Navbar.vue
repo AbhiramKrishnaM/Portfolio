@@ -53,11 +53,11 @@
 </template>
 
 <script setup>
-import { useNavlinks, scrollToSection } from "@/composables/navLinks.js";
+import { useNavLinks, scrollToSection } from "@/composables/useNavLinks.js";
 import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
-const { links, activeSection } = useNavlinks();
+const { links, activeSection } = useNavLinks();
 const route = useRoute();
 
 const visibleLinks = computed(() => {

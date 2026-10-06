@@ -56,9 +56,9 @@
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { paletteOpen, pendingGame } from "@/composables/commandPalette.js";
-import { scrollToSection } from "@/composables/navLinks.js";
-import { SOCIALS, EMAIL } from "@/composables/socials.js";
-import { GAME_REGISTRY } from "@/composables/useCLI.js";
+import { scrollToSection } from "@/composables/useNavLinks.js";
+import { SOCIALS, EMAIL } from "@/data/socials.js";
+import { GAME_REGISTRY } from "@/data/games.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { unlock } from "@/composables/achievements.js";
 

@@ -13,7 +13,7 @@ export function scrollToSection(id) {
   return true;
 }
 
-export function useNavlinks() {
+export function useNavLinks() {
   const links = ref([
     {
       id: "home",
