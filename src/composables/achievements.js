@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 const STORAGE_KEY = "achievements-v1";
 const CURIOUS_THRESHOLD = 5;
 
-export const SECRET_COMMANDS = ["fortune", "cowsay", "sudo", "sl", "matrix", "vim"];
+const SECRET_COMMANDS = ["fortune", "cowsay", "sudo", "sl", "matrix", "vim"];
 
 export const ACHIEVEMENTS = [
   { id: "hello-world", name: "hello, world", desc: "run your first command" },

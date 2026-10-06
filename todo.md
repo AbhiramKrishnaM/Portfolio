@@ -123,11 +123,11 @@
 - [x] Rule going forward: no comments in new code unless approved
 
 ## 17. Codebase audit — remove unwanted code
-- [ ] Run the `cleanup-audit` skill (dead files, unused deps, unused assets, stale docs)
-- [ ] Find unused functions, variables, props, and CSS classes inside files
-- [ ] Find leftover code like the hidden icosahedron (`SHOW_ICOSAHEDRON = false`)
-- [ ] Review the list together before deleting anything
-- [ ] Lint + build + click through the site after each round
+- [x] Run the `cleanup-audit` skill (dead files, unused deps, unused assets, stale docs)
+- [x] Find unused functions, variables, props, and CSS classes inside files
+- [x] Find leftover code like the hidden icosahedron (`SHOW_ICOSAHEDRON = false`)
+- [x] Review the list together before deleting anything
+- [x] Lint + build + click through the site after each round
 
 ## 18. Refactor for readability
 - [ ] Split `index.vue` by behaviour (hero text animation, terminal scroll motion, game switching)

@@ -4,7 +4,7 @@ const CACHE_KEY = "gitlog-cache-v1";
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const COMMIT_LIMIT = 10;
 
-export class GitLogError extends Error {
+class GitLogError extends Error {
   constructor(kind, { status, resetAt } = {}) {
     super(kind);
     this.kind = kind;

@@ -6,8 +6,6 @@ import { TextPlugin } from "gsap/TextPlugin";
 
 import { useAdditional } from "../composables/additional";
 
-const emits = defineEmits(["animation-complete"]);
-
 const { underConstructionPage } = useAdditional();
 
 onMounted(() => {

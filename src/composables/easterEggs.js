@@ -1,4 +1,4 @@
-export const FORTUNES = [
+const FORTUNES = [
   "There are only two hard things in computer science: cache invalidation and naming things. — Phil Karlton",
   "Talk is cheap. Show me the code. — Linus Torvalds",
   "Simplicity is prerequisite for reliability. — Edsger W. Dijkstra",
@@ -76,7 +76,7 @@ export function cowsay(text, maxWidth = 40) {
   ].join("\n");
 }
 
-export const TRAIN_FRAMES = [
+const TRAIN_FRAMES = [
   [
     "      ( ) (@@) ( )  (@)  ()",
     "    (@@)",

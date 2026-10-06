@@ -507,27 +507,8 @@ onUnmounted(() => {
   backdrop-filter: blur(32px);
 }
 
-.start-button {
-  position: absolute;
-  bottom: 20px;
-  right: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: #43d9ad;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.start-button:hover {
-  background-color: #3ab08c;
-}
-
 .top-left-fill,
-.bottom-left-fill,
-.bottom-right-fill {
+.bottom-left-fill {
   position: absolute;
   width: 100px;
   height: 100px;
@@ -545,11 +526,5 @@ onUnmounted(() => {
   bottom: 9px;
   left: 23px;
   background: #43d9ad;
-}
-
-.bottom-right-fill {
-  bottom: 0;
-  right: 0;
-  background: #4d5bce;
 }
 </style>

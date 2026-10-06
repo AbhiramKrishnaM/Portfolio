@@ -433,10 +433,6 @@ export function useCLI() {
     blank();
   }
 
-  function boot() {
-    runBoot();
-  }
-
   async function introScene({ wait, typeCommand }) {
     await typeCommand("whoami");
     addLine("pair", { label: "ROLE ", value: "Fullstack Engineer" });
@@ -549,7 +545,6 @@ export function useCLI() {
     menuDown,
     menuConfirm,
     menuCancel,
-    boot,
     bootAnimated,
     showScene,
     resumeFromGame,

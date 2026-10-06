@@ -9,8 +9,6 @@
         <span v-if="line.cursor" class="typing-cursor" />
       </div>
 
-      <PixelName v-else-if="line.type === 'pixel-name'" :text="line.content" />
-
       <div v-else-if="line.type === 'comment'" class="pl-5 text-gray-gradient-01 text-xs italic">
         {{ line.content }}
       </div>
@@ -23,20 +21,10 @@
       </div>
 
       <div v-else-if="line.type === 'link'" class="pl-5 text-sm flex items-center gap-2">
-        <span v-if="line.content.note" class="text-gray-gradient-01 opacity-50 cursor-not-allowed">
-          {{ line.content.text }}
-        </span>
-        <router-link v-else-if="line.content.url.startsWith('/')" :to="line.content.url"
-          class="text-accent-url hover:underline cursor-pointer">
-          {{ line.content.text }}
-        </router-link>
-        <a v-else :href="line.content.url" target="_blank" rel="noopener noreferrer"
+        <a :href="line.content.url" target="_blank" rel="noopener noreferrer"
           class="text-accent-url hover:underline cursor-pointer">
           {{ line.content.text }}
         </a>
-        <span v-if="line.content.note" class="text-xs text-accent-underline opacity-70">
-          {{ line.content.note }}
-        </span>
       </div>
 
       <button v-else-if="line.type === 'project-row'" type="button"
@@ -87,7 +75,6 @@
 
 <script setup>
 import GameSelectMenu from "./GameSelectMenu.vue";
-import PixelName from "./PixelName.vue";
 
 defineProps({
   lines: {
