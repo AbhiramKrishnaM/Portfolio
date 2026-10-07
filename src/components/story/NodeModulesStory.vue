@@ -35,6 +35,8 @@ const BASE_ROT_Y = -0.62;
 const POSE_EASE = 0.22;
 const RETURN_MS = 450;
 const EMERGE_MS = 320;
+const HANDOFF_SIZE_PX = 44;
+const HANDOFF_DROP_PX = 26;
 const STAMP_GAP_S = 0.42;
 const LANE_INSET_PX = 20;
 
@@ -165,12 +167,22 @@ function storyFrame(s, m, poses) {
     return { target: lerpPose(poses.laneEnd, poses.stack, smooth(q)), open: 1, tape: 0, packing: 0 };
   }
 
+  if (s < m.experienceTop) {
+    const u = progressBetween(s, m.pinEnd, m.experienceTop);
+    const handoff = story.handoff
+      ? { x: story.handoff.x, y: story.handoff.y + HANDOFF_DROP_PX, size: HANDOFF_SIZE_PX }
+      : poses.conveyorStart;
+    const target = lerpPose(poses.stack, handoff, segment(u, 0.15, 1));
+    return { target, open: 1 - segment(u, 0.45, 0.7), tape: segment(u, 0.7, 0.85), packing: u };
+  }
+
+  if (s < m.experienceEnd) return null;
+
   if (s < m.contactEnter) {
-    const u = progressBetween(s, m.pinEnd, m.contactEnter);
-    const target = u < 0.08
-      ? lerpPose(poses.stack, poses.conveyorStart, smooth(u / 0.08))
-      : lerpPose(poses.conveyorStart, poses.conveyorEnd, (u - 0.08) / 0.92);
-    return { target, open: 1 - segment(u, 0.55, 0.8), tape: segment(u, 0.8, 0.95), packing: u };
+    const v = progressBetween(s, m.experienceEnd, m.contactEnter);
+    const target = lerpPose(poses.conveyorStart, poses.conveyorEnd, v);
+    target.size *= segment(v, 0, 0.08);
+    return { target, open: 0, tape: 1, packing: 1 };
   }
 
   const v = progressBetween(s, m.contactEnter, m.contactSettle);
@@ -334,6 +346,8 @@ function updateLogos(s, m, frame, now) {
     logoState = "packed";
   }
   if (logoState !== "packed" || !captured) return;
+  physics.step();
+  captured = physics.snapshot();
   const mouth = mouthScreen();
   const scrolledAway = s - m.pinEnd;
   captured.forEach((c, i) => {

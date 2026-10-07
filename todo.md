@@ -254,19 +254,20 @@
 - [ ] Fallback on mobile / reduced motion: flat 2D calendar, no twinkle
 
 ## 31. Experience as a hologram story (Eddy-style)
-- [ ] Reference: https://eddy-naboulet.dev/profile ("How I work" section)
-- [ ] Replace the Experience card list with a pinned section (~1 screen of scroll per chapter)
-- [ ] Hologram on the left (glowing wireframe, mint/teal), text panel on the right
-- [ ] One shared board that keeps growing — each chapter adds to it, nothing is removed
-- [ ] `node_modules` box is the recurring character, with a leader-line label
-- [ ] Leader-line labels pinned to 3D points (re-projected every frame)
-- [ ] Progress dots at the bottom
-- [ ] Prologue — college 3rd year → COVID: empty board + box, first browser frame (`HTML · CSS · JS`), ring of book tiles (`2020 / lockdown: learning everything`)
-- [ ] 01 Neolen (Mobile App Developer, intern, 6 mos): phone rises → app screens + React atom (`REACT NATIVE`) → cricket app, pick your XI (`10K+ DOWNLOADS`)
-- [ ] Interlude: book ring returns (`gap / leveling up`)
-- [ ] 02 Caprimul (Jr Fullstack, 4 mos): browser + server blocks linked by packets (`NUXT.JS` / `NODE.JS`) → two shipped apps (`MODERN ELECTRICALS`, `JAMBOREE`)
-- [ ] 03 IOCOD (Frontend Engineer, 1 yr 4 mos): marketplace storefront panels (`MERCHANT MARKETPLACE`) → `600+ US USERS` → pipeline conveyor + server splits into microservices + AWS cloud
-- [ ] 04 Discern (Fullstack, present): several product blocks merge into one platform (`ONE PLATFORM`) → security shield dome + radar sweep → AWS shapes (`ECS · GLUE · REDSHIFT · DYNAMODB`), box label `ABHIRAM / fullstack engineer · now`
-- [ ] Ending: camera pulls back to show the whole board; box packs and heads to Contact (replaces the current conveyor packing during Experience)
-- [ ] Mobile / reduced motion: plain vertical timeline (current cards), no hologram
-- [ ] Decide colour: mint/teal (site accent) vs warm orange like Eddy's
+- [x] Reference: https://eddy-naboulet.dev/profile ("How I work" section)
+- [x] Replace the Experience card list with a pinned section (~1 screen of scroll per chapter)
+- [x] Hologram on the left (glowing wireframe, mint/teal), text panel on the right
+- [x] One scene per chapter (Eddy-style): beats build up inside a chapter; at the chapter change the scene shatters (pieces fly apart + particle burst) and the next one assembles
+- [x] Hologram alternates sides each chapter (right / left), text panel swaps to the opposite side and fades through the transition
+- [x] `node_modules` box is the recurring character, with a leader-line label
+- [x] Leader-line labels pinned to 3D points (re-projected every frame)
+- [x] Progress dots at the bottom
+- [x] Prologue — college 3rd year → COVID: empty board + box, first browser frame (`HTML · CSS · JS`), ring of book tiles (`2020 / lockdown: learning everything`)
+- [x] 01 Neolen (Mobile App Developer, intern, 6 mos): phone rises → app screens + React atom (`REACT NATIVE`) → cricket app, pick your XI (`10K+ DOWNLOADS`)
+- [x] Interlude: book ring returns (`gap / leveling up`)
+- [x] 02 Caprimul (Jr Fullstack, 4 mos): browser + server blocks linked by packets (`NUXT.JS` / `NODE.JS`) → two shipped apps (`MODERN ELECTRICALS`, `JAMBOREE`)
+- [x] 03 IOCOD (Frontend Engineer, 1 yr 4 mos): marketplace storefront panels (`MERCHANT MARKETPLACE`) → `600+ US USERS` → pipeline conveyor + server splits into microservices + AWS cloud
+- [x] 04 Discern (Fullstack, present): several product blocks merge into one platform (`ONE PLATFORM`) → security shield dome + radar sweep → AWS shapes (`ECS · GLUE · REDSHIFT · DYNAMODB`), box label `ABHIRAM / fullstack engineer · now`
+- [x] Ending: camera pulls back to show the whole board; box packs and heads to Contact (replaces the current conveyor packing during Experience)
+- [x] Mobile / reduced motion: plain vertical timeline (current cards), no hologram
+- [x] Colour: mint/teal (site accent)

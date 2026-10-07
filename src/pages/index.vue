@@ -62,7 +62,8 @@
         <StackSection class="lg:hidden" />
         <NodeModulesStory v-if="storyEnabled && showBackground" />
 
-        <ExperienceSection />
+        <ExperienceStory v-if="storyEnabled" />
+        <ExperienceSection v-else />
         <AboutSection />
         <ContactSection />
         <SiteFooter />
@@ -97,6 +98,7 @@ import { STACK_ANCHOR_TOP, PIN_SCREENS } from "@/composables/storyline.js";
 
 const SpaceTimeGrid = defineAsyncComponent(() => import("@/components/background/SpaceTimeGrid.vue"));
 const NodeModulesStory = defineAsyncComponent(() => import("@/components/story/NodeModulesStory.vue"));
+const ExperienceStory = defineAsyncComponent(() => import("@/components/sections/ExperienceStory.vue"));
 
 const heroRef = ref(null);
 const terminalPanelRef = ref(null);

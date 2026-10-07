@@ -9,6 +9,7 @@ export const story = {
   markers: null,
   flight: { progress: 0, el: null },
   impulses: [],
+  handoff: null,
 };
 
 export function pushImpulse(x, y, strength = 1) {
@@ -59,6 +60,7 @@ export function measureStory() {
     stackStart: docTop(stack) - vh * SECTION_LINE,
     pinEnd,
     experienceTop: docTop(experience),
+    experienceEnd: Math.max(docTop(experience), docTop(experience) + experience.offsetHeight - vh),
     aboutTop: docTop(about),
     contactEnter: Math.min(contactTop - vh, maxScroll - vh * 0.35),
     contactSettle: Math.min(contactTop - vh * 0.15, maxScroll),
