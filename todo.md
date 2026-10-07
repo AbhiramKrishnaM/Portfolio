@@ -231,3 +231,23 @@
 - [x] Reference: https://tympanus.net/codrops/2026/07/09/building-an-interactive-wave-propagation-cube-grid-with-three-js/
 - [x] Decide how the three combine (e.g. dither sky + wave grid floor + box) without getting too busy
 - [x] Keep it all inside the lazy-loaded `SpaceTimeGrid` scene
+
+## 29. Personal 3D objects (guitar, mug, keycaps)
+- [ ] Guitar: keep looking for a model — **[Abhiram to approve]** before anything is downloaded
+- [ ] Check the guitar's license (CC0 / CC-BY only, no non-commercial) and credit it if needed
+- [ ] Compress the guitar (Draco/Meshopt) so it stays small
+- [ ] Build keycaps in code (rounded box, dished top) with Fira Code legends: `$`, `git`, `npm`, `⌘`, `esc`, `vim`
+- [ ] Build the coffee mug in code (lathe body + handle), optional steam
+- [ ] Use the same lighting/material style as the `node_modules` box
+- [ ] Decide where they live (hero sky with the box, physics pile, or a section of their own)
+- [ ] Lazy-load and skip on mobile / reduced motion
+
+## 30. GitHub contributions on the spacetime grid
+- [ ] Build-time script: read the public `github.com/users/AbhiramKrishnaM/contributions` page (no token) → `src/data/contributions.json`
+- [ ] Re-run it on every build/deploy so the data stays fresh
+- [ ] Map days onto grid cells (weeks → columns, weekdays → rows) in one section
+- [ ] Glow intensity by contribution level (none / low / mid / high) in the mint accent
+- [ ] Twinkle: each lit cell dims briefly on its own random cycle (13–21s, random offset), like product.inc
+- [ ] Label: "N contributions since …" + link to GitHub
+- [ ] Reference: https://www.product.inc/#code (`contribution-pulse` effect)
+- [ ] Fallback on mobile / reduced motion: flat 2D calendar, no twinkle
