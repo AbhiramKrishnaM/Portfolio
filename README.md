@@ -8,12 +8,13 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 
 ## Features
 
-- **Interactive Landing Page** - Animated text effects with an interactive terminal on the homepage that launches playable mini-games (Snake, Sudoku, Tetris)
-- **Projects Showcase** - A dedicated projects page with filtering capabilities to browse through different projects by technology stack
-- **Contact Form** - Functional contact form for reaching out
-- **Custom UI Components** - Includes custom shader effects, animated text components, and other interactive elements
-- **Responsive Design** - Fully responsive layout that works seamlessly across different devices
-- **Smooth Animations** - GSAP-powered animations and transitions throughout the site for an enhanced user experience
+- **Interactive terminal** - The landing page is a working terminal: `help`, `whoami`, `projects`, `now`, `git log` (live GitHub commits), `achievements`, and a few hidden commands to discover
+- **Scroll-docked projects** - Scrolling moves the terminal into a projects section, types `$ projects`, and shows a preview card for whichever project you hover
+- **Mini-games** - Snake, Sudoku, and Tetris, launched from the terminal (`/game`) or the command palette
+- **Command palette** - `⌘/Ctrl + K` to jump to projects, open socials, start a game, or switch theme
+- **Achievements & easter eggs** - Unlockable badges with toasts, saved in `localStorage`, plus a Konami-code chaos mode
+- **Light / dark theme** - Toggle by clicking the "h" in the name
+- **Responsive & accessible** - Works from phone to wide desktop, respects reduced-motion, keyboard-friendly
 
 ## Tech Stack
 
@@ -24,6 +25,27 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 - **Three.js** - 3D graphics library
 - **GSAP** - Animation library for JavaScript
 - **PostCSS** - CSS processing tool
+
+## Getting Started
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npx eslint src/  # lint
+```
+
+## Project Structure
+
+```
+src/
+  pages/         one file per route (index.vue = landing page)
+  components/    app/ (global overlays), hero/, cli/ (terminal UI), games/, projects/, background/
+  composables/   behaviour + state (useX.js); composables/cli/ is the terminal engine
+  data/          hand-edited content: profile, projects, socials, games, now
+```
+
+To change copy (projects, links, taglines, `now`), edit `src/data/`. To add a terminal command, add it to `src/composables/cli/commands.js` (or `hiddenCommands.js` for a secret one).
 
 ------
 

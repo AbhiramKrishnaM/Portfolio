@@ -4,9 +4,7 @@ import gsap from "gsap";
 import { RoughEase } from "gsap/EasePack";
 import { TextPlugin } from "gsap/TextPlugin";
 
-import { useAdditional } from "../composables/additional";
-
-const { underConstructionPage } = useAdditional();
+import { UNDER_CONSTRUCTION_SENTENCES } from "@/data/maintenance.js";
 
 onMounted(() => {
   gsap.registerPlugin(TextPlugin, RoughEase);
@@ -26,7 +24,7 @@ function cursorAnimate() {
 function animateWords() {
   let masterTl = gsap.timeline({ repeat: -1 });
 
-  underConstructionPage.value.sentences.forEach((sentence) => {
+  UNDER_CONSTRUCTION_SENTENCES.forEach((sentence) => {
     let tl = gsap.timeline({ repeat: 1, yoyo: true, repeatDelay: 1 });
     tl.to("#sentence", { duration: 3.6, text: sentence, ease: "none" });
 

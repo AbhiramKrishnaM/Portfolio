@@ -130,13 +130,13 @@
 - [x] Lint + build + click through the site after each round
 
 ## 18. Refactor for readability
-- [ ] Split `index.vue` by behaviour (hero text animation, terminal scroll motion, game switching)
-- [ ] Move that logic into composables (e.g. `useHackingText`, `useTerminalScroll`)
-- [ ] Split `useCLI.js` into commands, intro animation, and game registry
-- [ ] Clear, consistent names for files, functions, and variables
-- [ ] Keep components small: one job per file
-- [ ] Update `CLAUDE.md` / `README.md` so a new dev can find things quickly
-- [ ] Lint + build + click through the site to confirm nothing changed visually
+- [x] Split `index.vue` by behaviour (hero text animation, terminal scroll motion, game switching)
+- [x] Move that logic into composables (e.g. `useHackingText`, `useTerminalScroll`)
+- [x] Split `useCLI.js` into commands, intro animation, and game registry
+- [x] Clear, consistent names for files, functions, and variables
+- [x] Keep components small: one job per file
+- [x] Update `CLAUDE.md` / `README.md` so a new dev can find things quickly
+- [x] Lint + build + click through the site to confirm nothing changed visually
 
 ## 19. Experience section
 - [ ] **[Abhiram to provide]** Experience data: company, role, dates, 2–3 impact points each

@@ -46,9 +46,15 @@
 <script setup>
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useCLI } from "@/composables/cli/useCLI.js";
+import { useTabCompletion } from "@/composables/cli/useTabCompletion.js";
 import TerminalOutput from "./TerminalOutput.vue";
 import MatrixRain from "./MatrixRain.vue";
 import VimTrap from "./VimTrap.vue";
+
+const CHAR_WIDTH_PX = 7.2;
+const OUTPUT_INSET_PX = 52;
+const MIN_COLUMNS = 20;
+const SCENE_SWITCH_DEBOUNCE_MS = 150;
 
 const props = defineProps({
   scene: {
@@ -83,17 +89,17 @@ const {
   getSuggestions,
 } = useCLI();
 
+const {
+  suggestions: tabSuggestions,
+  activeIndex: tabIndex,
+  clear: clearTab,
+  next: nextCompletion,
+  highlighted: highlightedCompletion,
+} = useTabCompletion(getSuggestions);
+
 const inputValue = ref("");
 const outputEl = ref(null);
 const inputRef = ref(null);
-
-const tabSuggestions = ref([]);
-const tabIndex = ref(0);
-
-function clearTab() {
-  tabSuggestions.value = [];
-  tabIndex.value = 0;
-}
 
 function onGameExit(gameId) {
   resumeFromGame(gameId);
@@ -105,79 +111,58 @@ function onGameExit(gameId) {
 
 defineExpose({ onGameExit });
 
-function handleKeydown(event) {
-  if (menuState.value) {
-    if (event.key === "Enter" && inputValue.value.trim()) {
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      menuUp();
-      return;
-    } else if (event.key === "ArrowDown") {
-      event.preventDefault();
-      menuDown();
-      return;
-    } else if (event.key === "Enter") {
-      event.preventDefault();
-      const gameId = menuConfirm();
-      if (gameId) {
-        nextTick(scrollToBottom);
-        emit("game-selected", gameId);
-      } else {
-        nextTick(scrollToBottom);
-      }
-      return;
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      menuCancel();
-      nextTick(scrollToBottom);
-      return;
-    } else {
-      return;
-    }
-  }
+function submit(cmd) {
+  inputValue.value = "";
+  execute(cmd);
+  nextTick(scrollToBottom);
+  focusWhenIdle();
+}
 
-  if (event.key === "Tab") {
+function handleMenuKey(event) {
+  if (event.key === "ArrowUp") {
     event.preventDefault();
-    const partial = inputValue.value.trim();
-    if (!partial) return;
-
-    if (tabSuggestions.value.length === 0) {
-      const matches = getSuggestions(partial);
-      if (matches.length === 0) return;
-      if (matches.length === 1) {
-        inputValue.value = matches[0];
-        return;
-      }
-      tabSuggestions.value = matches;
-      tabIndex.value = 0;
-    } else {
-      const dir = event.shiftKey ? -1 : 1;
-      tabIndex.value = (tabIndex.value + dir + tabSuggestions.value.length) % tabSuggestions.value.length;
-    }
-    inputValue.value = tabSuggestions.value[tabIndex.value];
+    menuUp();
+  } else if (event.key === "ArrowDown") {
+    event.preventDefault();
+    menuDown();
+  } else if (event.key === "Enter") {
+    event.preventDefault();
+    const gameId = menuConfirm();
     nextTick(scrollToBottom);
-    return;
+    if (gameId) emit("game-selected", gameId);
+  } else if (event.key === "Escape") {
+    event.preventDefault();
+    menuCancel();
+    nextTick(scrollToBottom);
   }
+}
 
-  if (tabSuggestions.value.length) {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      clearTab();
-      return;
-    }
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const cmd = tabSuggestions.value[tabIndex.value];
-      clearTab();
-      inputValue.value = "";
-      execute(cmd);
-      nextTick(scrollToBottom);
-      focusWhenIdle();
-      return;
-    }
+function handleTabKey(event) {
+  event.preventDefault();
+  const completion = nextCompletion(inputValue.value.trim(), event.shiftKey);
+  if (completion === null) return;
+  inputValue.value = completion;
+  if (tabSuggestions.value.length) nextTick(scrollToBottom);
+}
+
+function handlePickerKey(event) {
+  if (event.key === "Escape") {
+    event.preventDefault();
     clearTab();
+    return true;
   }
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const cmd = highlightedCompletion();
+    clearTab();
+    submit(cmd);
+    return true;
+  }
+  clearTab();
+  return false;
+}
 
+function handlePromptKey(event) {
   if (event.key === "ArrowUp") {
     event.preventDefault();
     inputValue.value = historyUp(inputValue.value);
@@ -185,12 +170,22 @@ function handleKeydown(event) {
     event.preventDefault();
     inputValue.value = historyDown();
   } else if (event.key === "Enter") {
-    const cmd = inputValue.value;
-    inputValue.value = "";
-    execute(cmd);
-    nextTick(scrollToBottom);
-    focusWhenIdle();
+    submit(inputValue.value);
   }
+}
+
+function handleKeydown(event) {
+  const isTypedCommand = event.key === "Enter" && inputValue.value.trim();
+  if (menuState.value && !isTypedCommand) {
+    handleMenuKey(event);
+    return;
+  }
+  if (event.key === "Tab") {
+    handleTabKey(event);
+    return;
+  }
+  if (tabSuggestions.value.length && handlePickerKey(event)) return;
+  handlePromptKey(event);
 }
 
 function onOverlayExit() {
@@ -202,7 +197,8 @@ function onOverlayExit() {
 }
 
 function measureColumns() {
-  if (outputEl.value) columns.value = Math.max(20, Math.floor((outputEl.value.clientWidth - 52) / 7.2));
+  if (!outputEl.value) return;
+  columns.value = Math.max(MIN_COLUMNS, Math.floor((outputEl.value.clientWidth - OUTPUT_INSET_PX) / CHAR_WIDTH_PX));
 }
 
 function focusWhenIdle() {
@@ -229,7 +225,7 @@ watch(lines, () => nextTick(scrollToBottom), { deep: true });
 let sceneTimer = null;
 watch(() => props.scene, (scene) => {
   clearTimeout(sceneTimer);
-  sceneTimer = setTimeout(() => showScene(scene), 150);
+  sceneTimer = setTimeout(() => showScene(scene), SCENE_SWITCH_DEBOUNCE_MS);
 });
 
 onMounted(() => {

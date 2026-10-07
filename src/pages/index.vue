@@ -52,17 +52,17 @@
 import { ref, defineAsyncComponent } from "vue";
 import HeroIntro from "@/components/hero/HeroIntro.vue";
 import TerminalWindow from "@/components/cli/TerminalWindow.vue";
-import SnakeGame from "@/components/SnakeGame.vue";
-import SudokuGame from "@/components/SudokuGame.vue";
-import TetrisGame from "@/components/TetrisGame.vue";
-import ScrollCue from "@/components/ScrollCue.vue";
-import ProjectCard from "@/components/ProjectCard.vue";
+import SnakeGame from "@/components/games/SnakeGame.vue";
+import SudokuGame from "@/components/games/SudokuGame.vue";
+import TetrisGame from "@/components/games/TetrisGame.vue";
+import ScrollCue from "@/components/hero/ScrollCue.vue";
+import ProjectCard from "@/components/projects/ProjectCard.vue";
 import { useWhenIdle } from "@/composables/useWhenIdle.js";
 import { useTerminalScroll } from "@/composables/useTerminalScroll.js";
 import { useGameSwitcher } from "@/composables/useGameSwitcher.js";
 import { useProjectSelection } from "@/composables/useProjectSelection.js";
 
-const SpaceTimeGrid = defineAsyncComponent(() => import("@/components/SpaceTimeGrid.vue"));
+const SpaceTimeGrid = defineAsyncComponent(() => import("@/components/background/SpaceTimeGrid.vue"));
 
 const heroRef = ref(null);
 const terminalPanelRef = ref(null);
