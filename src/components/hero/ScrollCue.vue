@@ -1,6 +1,7 @@
 <template>
   <button
     type="button"
+    v-show="atTop"
     class="scroll-cue hidden sm:flex"
     data-cursor="scroll down"
     aria-label="Scroll to explore more"
@@ -22,9 +23,27 @@
 </template>
 
 <script setup>
-function scrollToNext() {
-  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+import { ref, onMounted, onUnmounted } from "vue";
+import { scrollToSection } from "@/composables/useNavLinks.js";
+
+const HIDE_AFTER_VIEWPORT_FRACTION = 0.3;
+
+const atTop = ref(true);
+
+function syncVisibility() {
+  atTop.value = window.scrollY < window.innerHeight * HIDE_AFTER_VIEWPORT_FRACTION;
 }
+
+function scrollToNext() {
+  if (!scrollToSection("projects")) scrollToSection("experience");
+}
+
+onMounted(() => {
+  syncVisibility();
+  window.addEventListener("scroll", syncVisibility, { passive: true });
+});
+
+onUnmounted(() => window.removeEventListener("scroll", syncVisibility));
 </script>
 
 <style scoped>

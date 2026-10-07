@@ -1,7 +1,6 @@
 import { ref, nextTick, onMounted, onUnmounted } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useNavLinks } from "@/composables/useNavLinks.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,12 +19,10 @@ function bezierPoint(t, p1, p2, dx, dy) {
 
 export function useTerminalScroll({ heroRef, panelRef, dockRef }) {
   const terminalScene = ref("intro");
-  const { activeSection } = useNavLinks();
   let matchMedia = null;
 
   function setScene(scene) {
     terminalScene.value = scene;
-    activeSection.value = scene === "projects" ? "projects" : null;
   }
 
   function setupMotionPath() {

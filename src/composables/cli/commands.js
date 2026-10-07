@@ -1,6 +1,9 @@
 import { GAME_REGISTRY } from "@/data/games.js";
 import { EMAIL, social } from "@/data/socials.js";
 import { NOW } from "@/data/now.js";
+import { EXPERIENCE } from "@/data/experience.js";
+import { ABOUT_PARAGRAPHS } from "@/data/about.js";
+import { hasResume, downloadResume } from "@/composables/contactActions.js";
 import { ACHIEVEMENTS, isUnlocked, unlockedCount, unlock } from "@/composables/achievements.js";
 import { getRecentCommits, timeAgo, GITHUB_USER } from "./githubLog.js";
 import { nextLineId } from "./terminalState.js";
@@ -16,6 +19,9 @@ const HELP_ROWS = [
   { cmd: "cat cv", desc: "quick CV overview" },
   { cmd: "cd cv", desc: "view full CV" },
   { cmd: "whoami", desc: "who am I?" },
+  { cmd: "experience", desc: "where I've worked" },
+  { cmd: "cat about.txt", desc: "a bit more about me" },
+  { cmd: "resume", desc: "download my resume" },
   { cmd: "now", desc: "what I'm up to" },
   { cmd: "achievements", desc: "badges you've unlocked" },
   { cmd: "git log", desc: "my recent commits" },
@@ -109,6 +115,28 @@ export function createCommands(term, scenes) {
       addLine("pair", { label: "BUILD", value: NOW.building });
       addLine("pair", { label: "LEARN", value: NOW.learning });
       addLine("pair", { label: "MUSIC", value: `♪ ${NOW.listening}` });
+      blank();
+    },
+
+    experience() {
+      addLine("comment", "// experience");
+      EXPERIENCE.forEach((job) => addLine("job", job));
+      blank();
+    },
+
+    "cat about.txt"() {
+      ABOUT_PARAGRAPHS.forEach((paragraph) => addLine("text", paragraph));
+      blank();
+    },
+
+    resume() {
+      if (hasResume()) {
+        downloadResume();
+        addLine("comment", "// downloading resume…");
+      } else {
+        addLine("comment", "// resume coming soon — meanwhile, the full story is here:");
+        term.addLink(social("linkedin"));
+      }
       blank();
     },
 

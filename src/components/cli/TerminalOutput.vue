@@ -13,6 +13,22 @@
         {{ line.content }}
       </div>
 
+      <p v-else-if="line.type === 'text'" class="pl-5 text-sm text-white-gradient-01 leading-relaxed">
+        {{ line.content }}
+      </p>
+
+      <div v-else-if="line.type === 'job'" class="pl-5 text-sm flex flex-col gap-0.5 mb-1">
+        <div class="flex flex-wrap items-baseline gap-x-2">
+          <span class="text-accent-url font-medium">{{ line.content.company }}</span>
+          <span class="text-white-gradient-01">{{ line.content.role }}</span>
+          <span class="text-gray-gradient-01 text-xs">({{ line.content.dates }})</span>
+        </div>
+        <div v-for="(point, i) in line.content.points" :key="i" class="flex gap-2 pl-2 text-gray-gradient-01">
+          <span class="text-accent-variable shrink-0">&gt;</span>
+          <span>{{ point }}</span>
+        </div>
+      </div>
+
       <div v-else-if="line.type === 'pair'" class="pl-5 flex gap-3 text-sm">
         <span class="text-accent-underline font-medium w-14 shrink-0">
           {{ line.content.label }}

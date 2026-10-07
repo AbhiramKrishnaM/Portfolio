@@ -140,31 +140,31 @@
 
 ## 19. Experience section
 - [ ] **[Abhiram to provide]** Experience data: company, role, dates, 2–3 impact points each
-- [ ] Build a timeline-style section on the page
-- [ ] Add an `experience` terminal command that prints the same data
-- [ ] Add it to the navbar and `help`
+- [x] Build a timeline-style section on the page
+- [x] Add an `experience` terminal command that prints the same data
+- [x] Add it to the navbar and `help`
 
 ## 20. About section
 - [ ] **[Abhiram to provide]** Short About story: background, what I care about, a bit of personality (guitar!)
-- [ ] Add an About section on the page
-- [ ] Expand `whoami` or add `cat about.txt` in the terminal
-- [ ] Add it to the navbar
+- [x] Add an About section on the page
+- [x] Expand `whoami` or add `cat about.txt` in the terminal
+- [x] Add it to the navbar
 
 ## 21. Contact call to action
-- [ ] Add a clear "let's talk" section near the end of the page
-- [ ] Copy-email-to-clipboard button with a "copied" toast
-- [ ] Add a `contact` terminal command
-- [ ] Add it to the navbar
+- [x] Add a clear "let's talk" section near the end of the page
+- [x] Copy-email-to-clipboard button with a "copied" toast
+- [x] Add a `contact` terminal command
+- [x] Add it to the navbar
 
 ## 22. Footer
-- [ ] Build a `Footer` component: socials, email, copyright
-- [ ] Add a closing line ("let's build something together")
-- [ ] Match the terminal style from `DESIGN.md`
+- [x] Build a `Footer` component: socials, email, copyright
+- [x] Add a closing line ("let's build something together")
+- [x] Match the terminal style from `DESIGN.md`
 
 ## 23. Resume download
 - [ ] **[Abhiram to provide]** Resume PDF (then add it to `public/`)
-- [ ] Add a "download resume" button (hero or navbar)
-- [ ] Add a `resume` terminal command that opens/downloads it
+- [x] Add a "download resume" button (hero or navbar)
+- [x] Add a `resume` terminal command that opens/downloads it
 
 ## 24. `node_modules` box story (projects → stack → contact)
 - [ ] Reference: https://tympanus.net/codrops/2022/12/13/how-to-code-an-on-scroll-folding-3d-cardboard-box-animation-with-three-js-and-gsap/
@@ -188,11 +188,11 @@
 - [ ] Simple fallback on mobile / reduced motion (static box image or skip)
 
 ## 25. Better notifications (replace `AchievementToast`)
-- [ ] Use `vue-sonner` (Vue port of Sonner: stacking, swipe to dismiss, smooth animations)
-- [ ] Replace `AchievementToast.vue` + the manual `toastQueue` with `toast()` calls
-- [ ] Drop the left accent-stripe card look
-- [ ] Style it to match the terminal (Fira Code, theme colors from `DESIGN.md`, light + dark)
-- [ ] Reuse it for other toasts (e.g. "email copied" in task 21)
+- [x] Use `vue-sonner` (Vue port of Sonner: stacking, swipe to dismiss, smooth animations)
+- [x] Replace `AchievementToast.vue` + the manual `toastQueue` with `toast()` calls
+- [x] Drop the left accent-stripe card look
+- [x] Style it to match the terminal (Fira Code, theme colors from `DESIGN.md`, light + dark)
+- [x] Reuse it for other toasts (e.g. "email copied" in task 21)
 
 ## 26. Intro loader (letter wall → name)
 - [ ] Reference: https://www.eugeniagrab.com/en (intro animation)

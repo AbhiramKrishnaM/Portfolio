@@ -5,3 +5,8 @@ export const WHOAMI = [
 ];
 
 export const TAGLINES = ["Fullstack Engineer", "Coding Enthusiast", "Guitarist"];
+
+export const RESUME = {
+  url: null,
+  filename: "Abhiram-Krishna-M-Resume.pdf",
+};

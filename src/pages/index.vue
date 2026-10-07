@@ -44,6 +44,11 @@
             </div>
         </section>
 
+        <ExperienceSection />
+        <AboutSection />
+        <ContactSection />
+        <SiteFooter />
+
         <ScrollCue />
     </div>
 </template>
@@ -57,10 +62,15 @@ import SudokuGame from "@/components/games/SudokuGame.vue";
 import TetrisGame from "@/components/games/TetrisGame.vue";
 import ScrollCue from "@/components/hero/ScrollCue.vue";
 import ProjectCard from "@/components/projects/ProjectCard.vue";
+import ExperienceSection from "@/components/sections/ExperienceSection.vue";
+import AboutSection from "@/components/sections/AboutSection.vue";
+import ContactSection from "@/components/sections/ContactSection.vue";
+import SiteFooter from "@/components/sections/SiteFooter.vue";
 import { useWhenIdle } from "@/composables/useWhenIdle.js";
 import { useTerminalScroll } from "@/composables/useTerminalScroll.js";
 import { useGameSwitcher } from "@/composables/useGameSwitcher.js";
 import { useProjectSelection } from "@/composables/useProjectSelection.js";
+import { useSectionSpy } from "@/composables/useSectionSpy.js";
 
 const SpaceTimeGrid = defineAsyncComponent(() => import("@/components/background/SpaceTimeGrid.vue"));
 
@@ -73,6 +83,7 @@ const showBackground = useWhenIdle();
 const { terminalScene } = useTerminalScroll({ heroRef, panelRef: terminalPanelRef, dockRef });
 const { view, activeGame, activeGameGithubUrl, launchGame, exitGame } = useGameSwitcher({ terminalRef, panelRef: terminalPanelRef });
 const { selectedIdx, selectedProject, selectProject, stepProject, projectCount } = useProjectSelection(terminalScene);
+useSectionSpy(["projects", "experience", "about", "contact"]);
 </script>
 
 <style scoped>

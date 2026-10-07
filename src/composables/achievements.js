@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+import { notifyAchievement } from "@/composables/notify.js";
 
 const STORAGE_KEY = "achievements-v1";
 const CURIOUS_THRESHOLD = 5;
@@ -43,8 +44,6 @@ function save() {
 
 const state = ref(load());
 
-export const toastQueue = ref([]);
-
 export const isUnlocked = (id) => Boolean(state.value.unlocked[id]);
 
 export const unlockedCount = computed(() => ACHIEVEMENTS.filter((a) => isUnlocked(a.id)).length);
@@ -53,7 +52,7 @@ export function unlock(id) {
   const achievement = ACHIEVEMENTS.find((a) => a.id === id);
   if (!achievement || isUnlocked(id)) return false;
   state.value.unlocked[id] = Date.now();
-  toastQueue.value.push({ ...achievement, key: `${id}-${Date.now()}` });
+  notifyAchievement(achievement);
   const othersDone = ACHIEVEMENTS.every((a) => a.id === "completionist" || isUnlocked(a.id));
   if (othersDone) unlock("completionist");
   save();

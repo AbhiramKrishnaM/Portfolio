@@ -14,7 +14,7 @@
         v-for="(link, index) in visibleLinks"
         :key="link.id"
         class="relative items-center justify-center sm:w-full"
-        :class="link.section ? 'hidden lg:flex' : 'flex'"
+        :class="link.desktopOnly ? 'hidden lg:flex' : 'flex'"
         :ref="(el) => setItemRef(el, index)"
       >
         <RouterLink :to="link.to" custom v-slot="{ href, navigate }">
@@ -38,6 +38,17 @@
                 <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <path d="m10 11-2 2 2 2" />
                 <path d="m14 11 2 2-2 2" />
+              </svg>
+
+              <svg v-else-if="link.id === 'experience'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7" width="18" height="13" rx="2" />
+                <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                <path d="M3 12h18" />
+              </svg>
+
+              <svg v-else-if="link.id === 'about'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" />
               </svg>
 
               <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

@@ -10,6 +10,7 @@ I'm Abhiram Krishna M, a software engineer from Kozhikode, Kerala, India. I'm pa
 
 - **Interactive terminal** - The landing page is a working terminal: `help`, `whoami`, `projects`, `now`, `git log` (live GitHub commits), `achievements`, and a few hidden commands to discover
 - **Scroll-docked projects** - Scrolling moves the terminal into a projects section, types `$ projects`, and shows a preview card for whichever project you hover
+- **Experience, About & Contact** - A timeline, an About write-up, and a contact section with copy-email; each also has a terminal command (`experience`, `cat about.txt`, `contact`, `resume`)
 - **Mini-games** - Snake, Sudoku, and Tetris, launched from the terminal (`/game`) or the command palette
 - **Command palette** - `⌘/Ctrl + K` to jump to projects, open socials, start a game, or switch theme
 - **Achievements & easter eggs** - Unlockable badges with toasts, saved in `localStorage`, plus a Konami-code chaos mode
@@ -40,12 +41,12 @@ npx eslint src/  # lint
 ```
 src/
   pages/         one file per route (index.vue = landing page)
-  components/    app/ (global overlays), hero/, cli/ (terminal UI), games/, projects/, background/
+  components/    app/ (global overlays), hero/, sections/ (experience, about, contact, footer), cli/ (terminal UI), games/, projects/, background/
   composables/   behaviour + state (useX.js); composables/cli/ is the terminal engine
-  data/          hand-edited content: profile, projects, socials, games, now
+  data/          hand-edited content: profile, projects, experience, about, socials, games, now
 ```
 
-To change copy (projects, links, taglines, `now`), edit `src/data/`. To add a terminal command, add it to `src/composables/cli/commands.js` (or `hiddenCommands.js` for a secret one).
+To change copy (projects, experience, about, links, taglines, `now`), edit `src/data/`. Placeholders read "— to be added". To enable the resume download, put the PDF in `public/` and set `RESUME.url` in `src/data/profile.js`. To add a terminal command, add it to `src/composables/cli/commands.js` (or `hiddenCommands.js` for a secret one).
 
 ------
 

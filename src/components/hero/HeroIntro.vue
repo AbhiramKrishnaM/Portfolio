@@ -27,6 +27,12 @@
         <li>// open the terminal and explore.</li>
         <li>// type /game to play a mini-game.</li>
       </ul>
+
+      <div class="mt-5 flex justify-center lg:justify-start">
+        <button type="button" class="resume-btn" data-cursor="download resume" @click="downloadResume">
+          resume.pdf <span aria-hidden="true">↓</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -34,6 +40,7 @@
 <script setup>
 import HackingText from "@/components/hero/HackingText.vue";
 import { useTheme } from "@/composables/useTheme.js";
+import { downloadResume } from "@/composables/contactActions.js";
 
 defineProps({
   githubUrl: {
@@ -61,6 +68,20 @@ const { theme, toggleTheme } = useTheme();
 
 .theme-toggle-h--flipped {
   transform: rotate(180deg);
+}
+
+.resume-btn {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--color-accent-variable);
+  border-radius: 8px;
+  color: var(--color-accent-variable);
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.resume-btn:hover {
+  background-color: var(--color-accent-variable);
+  color: var(--color-theme-main);
 }
 
 .github-link-enter-active {

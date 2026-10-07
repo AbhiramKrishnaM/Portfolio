@@ -61,6 +61,7 @@ import { SOCIALS, EMAIL } from "@/data/socials.js";
 import { GAME_REGISTRY } from "@/data/games.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { unlock } from "@/composables/achievements.js";
+import { downloadResume, copyEmail } from "@/composables/contactActions.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -79,6 +80,26 @@ const items = computed(() => [
     label: "Jump to projects",
     keywords: "work portfolio section",
     run: () => goToSection("projects"),
+  },
+  ...[
+    ["experience", "Jump to experience", "work jobs career history timeline"],
+    ["about", "Jump to about", "bio story me"],
+    ["contact", "Jump to contact", "email hire talk reach"],
+  ].map(([id, label, keywords]) => ({ id, group: "navigate", label, keywords, run: () => goToSection(id) })),
+  {
+    id: "resume",
+    group: "contact",
+    label: "Download resume",
+    keywords: "cv pdf resume",
+    run: downloadResume,
+  },
+  {
+    id: "copy-email",
+    group: "contact",
+    label: "Copy email address",
+    detail: EMAIL,
+    keywords: "clipboard mail",
+    run: copyEmail,
   },
   ...SOCIALS.map((s) => ({
     id: `social-${s.id}`,

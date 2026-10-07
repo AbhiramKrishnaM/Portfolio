@@ -25,6 +25,25 @@ export function useNavLinks() {
       to: "/",
       section: "projects",
       name: "Projects",
+      desktopOnly: true,
+    },
+    {
+      id: "experience",
+      to: "/",
+      section: "experience",
+      name: "Experience",
+    },
+    {
+      id: "about",
+      to: "/",
+      section: "about",
+      name: "About",
+    },
+    {
+      id: "contact",
+      to: "/",
+      section: "contact",
+      name: "Contact",
     },
   ]);
 
