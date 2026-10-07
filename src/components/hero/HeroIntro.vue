@@ -2,11 +2,14 @@
   <div class="relative z-10 w-full lg:w-auto text-center lg:text-left">
     <div id="section-1" class="text-white-gradient-01 font-normal">
       <p class="text-base md:text-lg">Hi all, I am</p>
-      <h1 class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl">
-        Abhiram Kris<button type="button" class="theme-toggle-h"
-          :class="{ 'theme-toggle-h--flipped': theme === 'light' }" data-cursor="toggle theme"
-          aria-label="Toggle light and dark theme" @click="toggleTheme">h</button>na M
-      </h1>
+      <div class="relative">
+        <h1 ref="nameRef" class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl" :class="{ 'name--glass': glassReady }">
+          Abhiram Kris<button type="button" class="theme-toggle-h"
+            :class="{ 'theme-toggle-h--flipped': theme === 'light' }" data-cursor="toggle theme"
+            aria-label="Toggle light and dark theme" @click="toggleTheme">h</button>na M
+        </h1>
+        <GlassName v-if="glassEnabled && nameRef" :target="nameRef" @ready="glassReady = $event" />
+      </div>
       <HackingText />
     </div>
 
@@ -38,7 +41,10 @@
 </template>
 
 <script setup>
+import { ref, computed, defineAsyncComponent } from "vue";
 import HackingText from "@/components/hero/HackingText.vue";
+import { useMediaQuery } from "@/composables/useMediaQuery.js";
+import { useWhenIdle } from "@/composables/useWhenIdle.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { downloadResume } from "@/composables/contactActions.js";
 
@@ -50,6 +56,13 @@ defineProps({
 });
 
 const { theme, toggleTheme } = useTheme();
+
+const GlassName = defineAsyncComponent(() => import("@/components/hero/GlassName.vue"));
+const nameRef = ref(null);
+const glassReady = ref(false);
+const idle = useWhenIdle();
+const glassMedia = useMediaQuery("(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+const glassEnabled = computed(() => idle.value && glassMedia.value);
 </script>
 
 <style scoped>
@@ -64,6 +77,10 @@ const { theme, toggleTheme } = useTheme();
   line-height: inherit;
   transform: rotate(0deg);
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.name--glass {
+  color: transparent;
 }
 
 .theme-toggle-h--flipped {

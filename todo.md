@@ -88,13 +88,13 @@
 - [ ] Fall back to a plain image if WebGL isn't available
 
 ## 13. Glass refraction on the hero name
-- [ ] Reference: https://www.dorianlods.fr/ (match this feel)
-- [ ] Use the 2D lens shader approach (name drawn to a WebGL texture, bent around the cursor)
-- [ ] Add subtle rainbow edge split (chromatic aberration)
-- [ ] Prototype the glass/refraction effect on the name text
-- [ ] Make the distortion follow the cursor
-- [ ] Keep the real `h1` text in the DOM for SEO and screen readers
-- [ ] Make sure the theme-toggle "h" still works
+- [x] Reference: https://www.dorianlods.fr/ (match this feel)
+- [x] Use the 2D lens shader approach (name drawn to a WebGL texture, bent around the cursor)
+- [x] Add subtle rainbow edge split (chromatic aberration)
+- [x] Prototype the glass/refraction effect on the name text
+- [x] Make the distortion follow the cursor
+- [x] Keep the real `h1` text in the DOM for SEO and screen readers
+- [x] Make sure the theme-toggle "h" still works
 
 ## 14. Tech stack physics pile
 - [x] Add a new Stack section right after projects
@@ -223,11 +223,11 @@
 - [ ] Fallback: plain photo if WebGL isn't available
 
 ## 28. Sky / background upgrades
-- [ ] Floating box (Hubtown-style): sealed `node_modules` box floats and slowly turns in the hero sky, drops onto the grid at projects (ties into task 24)
-- [ ] Reference: https://www.awwwards.com/sites/hubtown
-- [ ] Bayer dither: retro pixel layer in the sky, click sends a ripple
-- [ ] Reference: https://tympanus.net/codrops/2025/07/30/interactive-webgl-backgrounds-a-quick-guide-to-bayer-dithering/
-- [ ] Wave grid: waves ripple across the grid
-- [ ] Reference: https://tympanus.net/codrops/2026/07/09/building-an-interactive-wave-propagation-cube-grid-with-three-js/
-- [ ] Decide how the three combine (e.g. dither sky + wave grid floor + box) without getting too busy
-- [ ] Keep it all inside the lazy-loaded `SpaceTimeGrid` scene
+- [x] Floating box (Hubtown-style): sealed `node_modules` box floats and slowly turns in the hero sky, drops onto the grid at projects (ties into task 24)
+- [x] Reference: https://www.awwwards.com/sites/hubtown
+- [x] ~~Bayer dither sky~~ — tried and removed (dots read as jitter over the grid)
+- [ ] Find a replacement idea for the empty sky above the grid
+- [x] Wave grid: waves ripple across the grid
+- [x] Reference: https://tympanus.net/codrops/2026/07/09/building-an-interactive-wave-propagation-cube-grid-with-three-js/
+- [x] Decide how the three combine (e.g. dither sky + wave grid floor + box) without getting too busy
+- [x] Keep it all inside the lazy-loaded `SpaceTimeGrid` scene

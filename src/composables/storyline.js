@@ -8,7 +8,13 @@ export const STACK_ANCHOR_TOP = `${(STACK_START * (PIN_SCREENS - 1) + SECTION_LI
 export const story = {
   markers: null,
   flight: { progress: 0, el: null },
+  impulses: [],
 };
+
+export function pushImpulse(x, y, strength = 1) {
+  story.impulses.push({ x, y, strength });
+  if (story.impulses.length > 8) story.impulses.shift();
+}
 
 export const contactRevealed = ref(true);
 

@@ -119,9 +119,9 @@ const WAVE_RING_LIFETIME = 2.4;
 let activeWaves = [];
 let currentT = 0;
 
-function spawnEnergyWave(x, y) {
+function spawnEnergyWave(x, y, strength = 1) {
   if (activeWaves.length >= MAX_WAVES) activeWaves.shift();
-  activeWaves.push({ x, y, start: currentT });
+  activeWaves.push({ x, y, start: currentT, strength });
 }
 
 let cellCenters = null;
@@ -276,15 +276,21 @@ function updateGroundPlane() {
   groundPlane.setFromNormalAndCoplanarPoint(_planeNormal, group.position);
 }
 
-function onPointerDown(e) {
-  const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
-  const ndcY = -((e.clientY / window.innerHeight) * 2 - 1);
-  raycaster.setFromCamera(new Vector2(ndcX, ndcY), camera);
+function waveFromScreen(clientX, clientY, strength) {
+  const ndcX = (clientX / window.innerWidth) * 2 - 1;
+  const ndcY = -((clientY / window.innerHeight) * 2 - 1);
   updateGroundPlane();
-  if (raycaster.ray.intersectPlane(groundPlane, _mousePoint)) {
-    const p = _mousePoint.clone();
-    group.worldToLocal(p);
-    spawnEnergyWave(p.x, p.y);
+  if (groundPointFromScreen(ndcX, ndcY, _mousePoint)) spawnEnergyWave(_mousePoint.x, _mousePoint.y, strength);
+}
+
+function onPointerDown(e) {
+  waveFromScreen(e.clientX, e.clientY, 1);
+}
+
+function consumeImpulses() {
+  while (story.impulses.length) {
+    const impulse = story.impulses.shift();
+    if (motionAllowed) waveFromScreen(impulse.x, impulse.y, impulse.strength * 1.4);
   }
 }
 
@@ -348,6 +354,7 @@ function startLoop() {
       localY = _mousePoint.y;
     }
     const mass = terminalWell();
+    consumeImpulses();
 
     if (activeWaves.length) {
       activeWaves = activeWaves.filter((w) => t - w.start < WAVE_RING_LIFETIME);
@@ -381,7 +388,7 @@ function startLoop() {
         const distToRing = Math.abs(dist - radius);
         const front = Math.max(0, 1 - distToRing / WAVE_RING_WIDTH);
         const decay = Math.max(0, 1 - age / WAVE_RING_LIFETIME);
-        ring += front * front * decay;
+        ring += front * front * decay * rw.strength;
       }
 
       _matrix.makeTranslation(cx, cy, wave - well[i] + ring * WAVE_RING_HEIGHT);

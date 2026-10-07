@@ -24,7 +24,7 @@ import {
 } from "three";
 import StackTile from "@/components/stack/StackTile.vue";
 import { STACK } from "@/data/stack.js";
-import { story, progressBetween, contactRevealed } from "@/composables/storyline.js";
+import { story, progressBetween, contactRevealed, pushImpulse } from "@/composables/storyline.js";
 import { unlock } from "@/composables/achievements.js";
 import { createCardboardBox, BOX } from "./cardboardBox.js";
 import { createStackPhysics } from "./stackPhysics.js";
@@ -57,6 +57,8 @@ const stampLevels = [];
 let stampTimeline = null;
 let stamped = false;
 let shake = 0;
+let spin = 0;
+let lastDrop = 1;
 
 let logoState = "boxed";
 let captured = null;
@@ -70,6 +72,15 @@ const segment = (t, a, b) => smooth(progressBetween(t, a, b));
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const lerpPose = (a, b, t) => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), size: lerp(a.size, b.size, t) });
+
+function bounceOut(t) {
+  const n = 7.5625;
+  const d = 2.75;
+  if (t < 1 / d) return n * t * t;
+  if (t < 2 / d) return n * (t -= 1.5 / d) * t + 0.75;
+  if (t < 2.5 / d) return n * (t -= 2.25 / d) * t + 0.9375;
+  return n * (t -= 2.625 / d) * t + 0.984375;
+}
 
 function anchorRect(name) {
   return document.querySelector(`[data-story-anchor="${name}"]`)?.getBoundingClientRect() ?? null;
@@ -107,15 +118,18 @@ function init() {
 }
 
 function layoutPoses(m, vw, vh) {
+  const heroPanel = anchorRect("hero-panel");
   const dock = anchorRect("dock");
   const slot = anchorRect("slot");
   const contact = anchorRect("contact");
-  if (!dock || !slot || !contact) return null;
+  if (!heroPanel || !dock || !slot || !contact) return null;
   const pinnedSlotBottom = (vh + slot.height) / 2;
   const small = clamp((vh - pinnedSlotBottom - 28) / 0.85, 80, 150);
   const big = clamp(slot.width * 0.42, 150, 240);
   const lane = vh - LANE_INSET_PX;
+  const skySize = clamp((heroPanel.top - 40) / 0.9, 70, 130);
   return {
+    sky: { x: heroPanel.left + heroPanel.width * 0.72, y: heroPanel.top - 24, size: skySize },
     start: { x: dock.left + small * 0.7, y: lane, size: small },
     laneEnd: { x: slot.left + slot.width / 2, y: lane, size: small },
     stack: { x: slot.left + slot.width / 2, y: slot.bottom - 6, size: big },
@@ -130,14 +144,20 @@ function layoutPoses(m, vw, vh) {
 function storyFrame(s, m, poses) {
   const vh = m.vh;
   const laneEnd = m.stackStart - vh * 0.15;
-  if (s < m.projectsTop - vh * 0.3) return null;
+  if (s < m.projectsTop) {
+    const d = progressBetween(s, m.heroTop, m.projectsTop);
+    const target = {
+      x: lerp(poses.sky.x, poses.start.x, smooth(d)),
+      y: lerp(poses.sky.y, poses.start.y, bounceOut(d)),
+      size: lerp(poses.sky.size, poses.start.size, smooth(d)),
+    };
+    return { target, open: 0, tape: 1, packing: 0, drop: d };
+  }
 
   if (s < laneEnd) {
     const p = progressBetween(s, m.projectsTop, laneEnd);
-    const appear = segment(s, m.projectsTop - vh * 0.3, m.projectsTop);
     const target = lerpPose(poses.start, poses.laneEnd, smooth(p));
-    target.size *= 0.4 + 0.6 * appear;
-    return { target, open: segment(p, 0.35, 0.95), tape: 1 - segment(p, 0.1, 0.35), packing: 0 };
+    return { target, open: segment(p, 0.35, 0.95), tape: 1 - segment(p, 0.1, 0.35), packing: 0, drop: 1 };
   }
 
   if (s <= m.pinEnd) {
@@ -170,8 +190,22 @@ function placeBoxAt(target, rotY, jolt) {
 
 function placeBox(t) {
   const jolt = shake * Math.sin(t * 60) * 0.05;
-  placeBoxAt(pose, BASE_ROT_Y + Math.sin(t * 0.6) * 0.06, jolt);
+  const bob = { x: pose.x, y: pose.y + Math.sin(t * 1.4) * 6 * spin, size: pose.size };
+  placeBoxAt(bob, BASE_ROT_Y + Math.sin(t * 0.6) * 0.06 + Math.sin(t * 0.45) * 0.9 * spin, jolt);
   shake *= 0.86;
+}
+
+function boxFloorScreen() {
+  return toScreen(_corner.set(0, -BOX.depth / 2, BOX.width / 2));
+}
+
+function trackDrop(drop) {
+  const landed = drop >= 0.97;
+  if (landed && lastDrop < 0.97) {
+    const floor = boxFloorScreen();
+    pushImpulse(floor.x, floor.y, 1);
+  }
+  lastDrop = drop;
 }
 
 function toScreen(vec) {
@@ -321,7 +355,11 @@ function playStamps() {
       duration: 0.16,
       ease: "power3.in",
       onUpdate: () => { stampLevels[i] = level.value; },
-      onComplete: () => { shake = 1; },
+      onComplete: () => {
+        shake = 1;
+        const floor = boxFloorScreen();
+        pushImpulse(floor.x, floor.y, 0.6);
+      },
     }, 0.15 + i * STAMP_GAP_S);
   });
   stampTimeline.add(() => {
@@ -380,11 +418,13 @@ function tick(now) {
     pose.size = lerp(pose.size, frame.target.size, POSE_EASE);
   }
 
+  spin = lerp(spin, 1 - (frame.drop ?? 1), 0.12);
   box.setOpen(frame.open);
   box.setTape(frame.tape);
   updateStamps(frame, s, m);
   stampLevels.forEach((level, i) => box.setStamp(i, level));
   placeBox(t);
+  trackDrop(frame.drop ?? 1);
   updateLogos(s, m, frame, now);
 
   renderer.render(scene, camera);
