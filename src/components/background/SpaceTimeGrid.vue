@@ -24,6 +24,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { useTheme } from "@/composables/useTheme.js";
+import { story, progressBetween, prefersReducedMotion } from "@/composables/storyline.js";
 
 const { theme } = useTheme();
 
@@ -53,9 +54,39 @@ const COLS = 64;
 const ROWS = 60;
 const CELL = 0.34;
 const FILL = 0.72;
-const LIFT_RADIUS = 1.6;
-const MAX_LIFT = 0.42;
-const LIFT_EASE = 0.12;
+const WELL_RADIUS = 2.2;
+const WELL_DEPTH = 0.55;
+const TERMINAL_WELL_RADIUS = 4.2;
+const TERMINAL_WELL_DEPTH = 1.15;
+const WELL_EASE = 0.1;
+const CAMERA_EASE = 0.06;
+
+const CAMERA_POSES = {
+  hero: { pos: [0, 1.3, 6], look: [0, -1, -3] },
+  projects: { pos: [0.6, 0.75, 4.6], look: [0.5, -1.25, -3.4] },
+  stack: { pos: [1.1, 2.7, 3.6], look: [1.0, -1.5, -1.6] },
+  experience: { pos: [-1.8, 1.0, 4.9], look: [-1.6, -1.1, -3] },
+  about: { pos: [1.7, 1.15, 5.0], look: [1.4, -1.0, -3] },
+  contact: { pos: [0, 2.4, 8.2], look: [0, -1.2, -3] },
+};
+
+function cameraSegments(m) {
+  return [
+    { from: "hero", to: "projects", start: m.heroTop, end: m.projectsTop },
+    { from: "projects", to: "stack", start: m.stackStart - m.vh * 0.35, end: m.stackStart },
+    { from: "stack", to: "experience", start: m.pinEnd, end: m.experienceTop - m.vh * 0.2 },
+    { from: "experience", to: "about", start: m.aboutTop - m.vh, end: m.aboutTop - m.vh * 0.2 },
+    { from: "about", to: "contact", start: m.contactEnter, end: m.contactSettle },
+  ];
+}
+
+const easeInOut = (t) => t * t * (3 - 2 * t);
+
+function wellFalloff(dist, radius) {
+  if (dist >= radius) return 0;
+  const k = 1 - (dist / radius) ** 2;
+  return k * k;
+}
 
 const WAVE_AMPLITUDE = 0.09;
 const WAVE_OCTAVES = 6;
@@ -94,13 +125,22 @@ function spawnEnergyWave(x, y) {
 }
 
 let cellCenters = null;
-let lift = null;
+let well = null;
 const _matrix = new Matrix4();
 const _mousePoint = new Vector3();
 const _planeNormal = new Vector3();
 const groundPlane = new ThreePlane();
 
 let tmx = null, tmy = null;
+let finePointer = true;
+let motionAllowed = true;
+const cameraPos = new Vector3(...CAMERA_POSES.hero.pos);
+const cameraLook = new Vector3(...CAMERA_POSES.hero.look);
+const targetPos = new Vector3();
+const targetLook = new Vector3();
+const _poseA = new Vector3();
+const _poseB = new Vector3();
+const _ndc = new Vector2();
 
 const gridVert = `
   varying vec3 vColor;
@@ -163,7 +203,7 @@ function buildGrid() {
   mesh.instanceColor = null;
 
   cellCenters = new Float32Array(count * 2);
-  lift = new Float32Array(count);
+  well = new Float32Array(count);
 
   const w = COLS * CELL;
   const h = ROWS * CELL;
@@ -205,8 +245,8 @@ function init() {
   scene = new Scene();
   scene.fog = new Fog(0x011627, 5, 12);
   camera = new PerspectiveCamera(50, w / h, 0.1, 100);
-  camera.position.set(0, 1.3, 6);
-  camera.lookAt(0, -1.0, -3);
+  camera.position.copy(cameraPos);
+  camera.lookAt(cameraLook);
 
   raycaster = new Raycaster();
 
@@ -221,6 +261,7 @@ function init() {
 }
 
 function onMouseMove(e) {
+  if (!finePointer || !motionAllowed) return;
   tmx = (e.clientX / window.innerWidth) * 2 - 1;
   tmy = -((e.clientY / window.innerHeight) * 2 - 1);
 }
@@ -247,6 +288,42 @@ function onPointerDown(e) {
   }
 }
 
+function groundPointFromScreen(ndcX, ndcY, out) {
+  _ndc.set(ndcX, ndcY);
+  raycaster.setFromCamera(_ndc, camera);
+  if (!raycaster.ray.intersectPlane(groundPlane, out)) return false;
+  group.worldToLocal(out);
+  return true;
+}
+
+function terminalWell() {
+  const { progress, el } = story.flight;
+  if (!motionAllowed || !el || progress <= 0 || progress >= 1) return null;
+  const rect = el.getBoundingClientRect();
+  const ndcX = ((rect.left + rect.width / 2) / window.innerWidth) * 2 - 1;
+  const ndcY = -(((rect.top + rect.height / 2) / window.innerHeight) * 2 - 1);
+  if (!groundPointFromScreen(ndcX, ndcY, _mousePoint)) return null;
+  return { x: _mousePoint.x, y: _mousePoint.y, strength: Math.sin(Math.PI * progress) };
+}
+
+function updateCameraTarget(scroll) {
+  const markers = story.markers;
+  let fromPose = CAMERA_POSES.hero;
+  let toPose = CAMERA_POSES.hero;
+  let t = 0;
+  if (markers && motionAllowed) {
+    for (const seg of cameraSegments(markers)) {
+      const segT = progressBetween(scroll, seg.start, seg.end);
+      if (segT <= 0) break;
+      fromPose = CAMERA_POSES[seg.from];
+      toPose = CAMERA_POSES[seg.to];
+      t = easeInOut(segT);
+    }
+  }
+  targetPos.copy(_poseA.fromArray(fromPose.pos)).lerp(_poseB.fromArray(toPose.pos), t);
+  targetLook.copy(_poseA.fromArray(fromPose.look)).lerp(_poseB.fromArray(toPose.look), t);
+}
+
 function startLoop() {
   const t0 = performance.now();
 
@@ -257,17 +334,20 @@ function startLoop() {
 
     group.rotation.z = Math.sin(t * 0.12) * 0.03;
 
+    updateCameraTarget(window.scrollY);
+    cameraPos.lerp(targetPos, CAMERA_EASE);
+    cameraLook.lerp(targetLook, CAMERA_EASE);
+    camera.position.copy(cameraPos);
+    camera.lookAt(cameraLook);
+
     updateGroundPlane();
 
     let localX = null, localY = null;
-    if (tmx !== null) {
-      raycaster.setFromCamera(new Vector2(tmx, tmy), camera);
-      if (raycaster.ray.intersectPlane(groundPlane, _mousePoint)) {
-        group.worldToLocal(_mousePoint);
-        localX = _mousePoint.x;
-        localY = _mousePoint.y;
-      }
+    if (tmx !== null && groundPointFromScreen(tmx, tmy, _mousePoint)) {
+      localX = _mousePoint.x;
+      localY = _mousePoint.y;
     }
+    const mass = terminalWell();
 
     if (activeWaves.length) {
       activeWaves = activeWaves.filter((w) => t - w.start < WAVE_RING_LIFETIME);
@@ -280,15 +360,14 @@ function startLoop() {
 
       let target = 0;
       if (localX !== null) {
-        const dx = cx - localX;
-        const dy = cy - localY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        target = dist < LIFT_RADIUS ? 1 - dist / LIFT_RADIUS : 0;
-        target = target * target;
+        target += wellFalloff(Math.hypot(cx - localX, cy - localY), WELL_RADIUS) * WELL_DEPTH;
+      }
+      if (mass) {
+        target += wellFalloff(Math.hypot(cx - mass.x, cy - mass.y), TERMINAL_WELL_RADIUS) * TERMINAL_WELL_DEPTH * mass.strength;
       }
 
-      lift[i] += (target - lift[i]) * LIFT_EASE;
-      const l = lift[i];
+      well[i] += (target - well[i]) * WELL_EASE;
+      const l = Math.min(1, well[i] / WELL_DEPTH);
       const wave = waveHeight(cx, cy, t);
 
       let ring = 0;
@@ -305,7 +384,7 @@ function startLoop() {
         ring += front * front * decay;
       }
 
-      _matrix.makeTranslation(cx, cy, wave + l * MAX_LIFT + ring * WAVE_RING_HEIGHT);
+      _matrix.makeTranslation(cx, cy, wave - well[i] + ring * WAVE_RING_HEIGHT);
       mesh.setMatrixAt(i, _matrix);
 
       tmpColor.copy(baseColor).lerp(hoverColor, l);
@@ -333,6 +412,8 @@ function onResize() {
 }
 
 onMounted(() => {
+  finePointer = window.matchMedia("(pointer: fine)").matches;
+  motionAllowed = !prefersReducedMotion();
   init();
   startLoop();
   window.addEventListener("mousemove", onMouseMove);

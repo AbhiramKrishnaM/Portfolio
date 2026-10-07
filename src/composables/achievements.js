@@ -16,6 +16,8 @@ export const ACHIEVEMENTS = [
   { id: "power-user", name: "power user", desc: "open the command palette" },
   { id: "game-over", name: "game over", desc: "finish a round of any game" },
   { id: "sudoku", name: "number cruncher", desc: "solve a sudoku" },
+  { id: "stack", name: "npm install", desc: "unpack the node_modules box" },
+  { id: "shipped", name: "shipped", desc: "watch the box get shipped" },
   { id: "secret", name: "off the menu", desc: "run a hidden command", secret: true },
   { id: "escape-vim", name: "escape artist", desc: "get out of vim", secret: true },
   { id: "konami", name: "↑↑↓↓←→←→BA", desc: "enter the konami code", secret: true },

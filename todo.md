@@ -69,17 +69,17 @@
 
 // version 2 next week updates
 ## 10. Gravity well in the spacetime grid
-- [ ] Pass the cursor position into `SpaceTimeGrid.vue` (as a shader uniform)
-- [ ] Bend the grid down around the cursor like a mass warping space
-- [ ] Add a second, heavier "mass" that follows the terminal while it flies down
-- [ ] Ease the warp in/out so it feels smooth, not jumpy
-- [ ] Turn it off on touch devices / low-power mode
+- [x] Pass the cursor position into `SpaceTimeGrid.vue` (as a shader uniform)
+- [x] Bend the grid down around the cursor like a mass warping space
+- [x] Add a second, heavier "mass" that follows the terminal while it flies down
+- [x] Ease the warp in/out so it feels smooth, not jumpy
+- [x] Turn it off on touch devices / low-power mode
 
 ## 11. Scroll-driven camera flight
-- [ ] Decide a camera position for each section (hero, projects, …)
-- [ ] Move the grid camera between them with a GSAP ScrollTrigger
-- [ ] Sync it with the existing terminal motion path so both move together
-- [ ] Keep the page usable on mobile (simpler or no camera move)
+- [x] Decide a camera position for each section (hero, projects, …)
+- [x] Move the grid camera between them with a GSAP ScrollTrigger
+- [x] Sync it with the existing terminal motion path so both move together
+- [x] Keep the page usable on mobile (simpler or no camera move)
 
 ## 12. WebGL hover effect on project images
 - [ ] Pick the effect (liquid warp or RGB split)
@@ -97,18 +97,18 @@
 - [ ] Make sure the theme-toggle "h" still works
 
 ## 14. Tech stack physics pile
-- [ ] Add a new Stack section right after projects
-- [ ] Keep the terminal pinned on the left from projects through stack
-- [ ] Use the right side as the physics area (same spot as the project card)
-- [ ] On scroll into stack, terminal clears and types `$ ls stack`
-- [ ] Pick the engine (Matter.js for 2D or Rapier for 3D)
-- [ ] Make tech logos (Vue, React, Node, Python, Docker, AWS) physics bodies
-- [ ] Logos tumble out of the `node_modules` box (see task 24) and pile up on the floor
-- [ ] Let people grab and throw them with the mouse
-- [ ] Logos stay piled while in stack; they get repacked into the box when leaving (task 24)
-- [ ] Add a "Stack" navbar link and an `ls stack` command
-- [ ] Static logo grid on mobile and for reduced-motion users
-- [ ] Lazy-load the physics engine so it doesn't slow the landing page
+- [x] Add a new Stack section right after projects
+- [x] Keep the terminal pinned on the left from projects through stack
+- [x] Use the right side as the physics area (same spot as the project card)
+- [x] On scroll into stack, terminal clears and types `$ ls stack`
+- [x] Pick the engine (Matter.js for 2D or Rapier for 3D)
+- [x] Make tech logos (Vue, React, Node, Python, Docker, AWS) physics bodies
+- [x] Logos tumble out of the `node_modules` box (see task 24) and pile up on the floor
+- [x] Let people grab and throw them with the mouse
+- [x] Logos stay piled while in stack; they get repacked into the box when leaving (task 24)
+- [x] Add a "Stack" navbar link and an `ls stack` command
+- [x] Static logo grid on mobile and for reduced-motion users
+- [x] Lazy-load the physics engine so it doesn't slow the landing page
 
 ## 15. Day/night mode from local time
 - [ ] Read the visitor's local time
@@ -167,25 +167,25 @@
 - [x] Add a `resume` terminal command that opens/downloads it
 
 ## 24. `node_modules` box story (projects → stack → contact)
-- [ ] Reference: https://tympanus.net/codrops/2022/12/13/how-to-code-an-on-scroll-folding-3d-cardboard-box-animation-with-three-js-and-gsap/
-- [ ] Box code source: https://github.com/uuuulala/Threejs-folding-cardboard-box-tutorial (MIT, built in code, no model file)
-- [ ] Port its `main.js` box code into a Vue component, update for three 0.180 (`mergeBufferGeometries` → `mergeGeometries`)
-- [ ] Keep the MIT license notice + credit to Ksenia Kondrashova / Codrops
-- [ ] Draw the `node_modules` label and stamps on canvas textures (same trick the demo uses)
-- [ ] Projects: box appears sealed near the terminal (left)
-- [ ] Projects: on scroll, box slides left → right while the tape peels and flaps unfold
-- [ ] Stack: box lands open on the right, logos tumble out into the physics pile (task 14)
-- [ ] Leaving stack: box shrinks and jumps back to the left
-- [ ] Experience + About: small box travels left → right (conveyor belt) while packing
-- [ ] Packing is visible: logos fly back in one by one, flaps fold, tape seals the top
-- [ ] Time it so packing finishes exactly as Contact arrives
-- [ ] Keep the small box out of the way of Experience/About content
-- [ ] Contact: box grows big, sitting slightly off-center to the right
-- [ ] Contact: stamps hit in sequence with a thud/shake (`FRAGILE` → `node_modules` → `FROM: abhiram` → `SHIPPED`)
-- [ ] Then the "let's talk" CTA appears (task 21)
-- [ ] Make sure the box doesn't cover the project card while it moves
-- [ ] Scroll back up reverses everything cleanly
-- [ ] Simple fallback on mobile / reduced motion (static box image or skip)
+- [x] Reference: https://tympanus.net/codrops/2022/12/13/how-to-code-an-on-scroll-folding-3d-cardboard-box-animation-with-three-js-and-gsap/
+- [x] Box code source: https://github.com/uuuulala/Threejs-folding-cardboard-box-tutorial (MIT, built in code, no model file)
+- [x] Port its `main.js` box code into a Vue component, update for three 0.180 (`mergeBufferGeometries` → `mergeGeometries`)
+- [x] Keep the MIT license notice + credit to Ksenia Kondrashova / Codrops
+- [x] Draw the `node_modules` label and stamps on canvas textures (same trick the demo uses)
+- [x] Projects: box appears sealed near the terminal (left)
+- [x] Projects: on scroll, box slides left → right while the tape peels and flaps unfold
+- [x] Stack: box lands open on the right, logos tumble out into the physics pile (task 14)
+- [x] Leaving stack: box shrinks and jumps back to the left
+- [x] Experience + About: small box travels left → right (conveyor belt) while packing
+- [x] Packing is visible: logos fly back in one by one, flaps fold, tape seals the top
+- [x] Time it so packing finishes exactly as Contact arrives
+- [x] Keep the small box out of the way of Experience/About content
+- [x] Contact: box grows big, sitting slightly off-center to the right
+- [x] Contact: stamps hit in sequence with a thud/shake (`FRAGILE` → `node_modules` → `FROM: abhiram` → `SHIPPED`)
+- [x] Then the "let's talk" CTA appears (task 21)
+- [x] Make sure the box doesn't cover the project card while it moves
+- [x] Scroll back up reverses everything cleanly
+- [x] Simple fallback on mobile / reduced motion (static box image or skip)
 
 ## 25. Better notifications (replace `AchievementToast`)
 - [x] Use `vue-sonner` (Vue port of Sonner: stacking, swipe to dismiss, smooth animations)
@@ -195,17 +195,17 @@
 - [x] Reuse it for other toasts (e.g. "email copied" in task 21)
 
 ## 26. Intro loader (letter wall → name)
-- [ ] Reference: https://www.eugeniagrab.com/en (intro animation)
-- [ ] Build a `PageLoader` component: 5 rows of random Fira Code characters
-- [ ] Hide `ABHIRAM` + `KRISHNA` in the middle row with filler letters between them
-- [ ] Random letters slide in in random order; name letters slide in left → right
-- [ ] Fade filler letters to gray so the name pops
-- [ ] Filler slides out, letters between first/last name collapse, name snaps together
-- [ ] Exit with a Bayer dither wipe that reveals the page
-- [ ] Keep it ~2–3s total
-- [ ] Page loads underneath (non-blocking), so it doesn't hurt speed or SEO
-- [ ] Skip it on repeat visits (`sessionStorage`)
-- [ ] Reduced motion: quick fade instead
+- [x] Reference: https://www.eugeniagrab.com/en (intro animation)
+- [x] Build a `PageLoader` component: 5 rows of random Fira Code characters
+- [x] Hide `ABHIRAM` + `KRISHNA` in the middle row with filler letters between them
+- [x] Random letters slide in in random order; name letters slide in left → right
+- [x] Fade filler letters to gray so the name pops
+- [x] Filler slides out, letters between first/last name collapse, name snaps together
+- [x] Exit with a Bayer dither wipe that reveals the page
+- [x] Keep it ~2–3s total
+- [x] Page loads underneath (non-blocking), so it doesn't hurt speed or SEO
+- [x] Skip it on repeat visits (`sessionStorage`)
+- [x] Reduced motion: quick fade instead
 
 ## 27. Photo particles (About section)
 - [ ] Reference: https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/

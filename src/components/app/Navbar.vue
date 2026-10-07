@@ -40,6 +40,12 @@
                 <path d="m14 11 2 2-2 2" />
               </svg>
 
+              <svg v-else-if="link.id === 'stack'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" />
+                <path d="m4 7.5 8 4.5 8-4.5" />
+                <path d="M12 12v9" />
+              </svg>
+
               <svg v-else-if="link.id === 'experience'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="7" width="18" height="13" rx="2" />
                 <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />

@@ -28,6 +28,12 @@ export function useNavLinks() {
       desktopOnly: true,
     },
     {
+      id: "stack",
+      to: "/",
+      section: "stack",
+      name: "Stack",
+    },
+    {
       id: "experience",
       to: "/",
       section: "experience",

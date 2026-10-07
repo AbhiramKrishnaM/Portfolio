@@ -2,7 +2,7 @@ import { WHOAMI } from "@/data/profile.js";
 import { SOCIALS } from "@/data/socials.js";
 import { PROJECTS } from "@/data/projects.js";
 import { nextLineId } from "./terminalState.js";
-import { printWhoami, printSocials, HELP_HINT } from "./printers.js";
+import { printWhoami, printSocials, STACK_LINE, HELP_HINT } from "./printers.js";
 
 const TYPE_DELAY_MS = 55;
 const AFTER_TYPING_MS = 220;
@@ -48,7 +48,18 @@ async function projectsScene(term, { wait, typeCommand }) {
   term.blank();
 }
 
-const SCENES = { intro: introScene, projects: projectsScene };
+async function stackScene(term, { wait, typeCommand }) {
+  await typeCommand("ls stack");
+  term.addLine("comment", "// node_modules");
+  await wait(160);
+  term.addLine("text", STACK_LINE);
+  await wait(200);
+  term.blank();
+  term.addLine("comment", "// unpacking node_modules →");
+  term.blank();
+}
+
+const SCENES = { intro: introScene, projects: projectsScene, stack: stackScene };
 
 export function createScenes(term) {
   let sceneToken = 0;

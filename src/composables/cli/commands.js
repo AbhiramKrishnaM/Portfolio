@@ -7,12 +7,13 @@ import { hasResume, downloadResume } from "@/composables/contactActions.js";
 import { ACHIEVEMENTS, isUnlocked, unlockedCount, unlock } from "@/composables/achievements.js";
 import { getRecentCommits, timeAgo, GITHUB_USER } from "./githubLog.js";
 import { nextLineId } from "./terminalState.js";
-import { printWhoami, printSocials, printProjects } from "./printers.js";
+import { printWhoami, printSocials, printProjects, printStack } from "./printers.js";
 
 const HELP_ROWS = [
   { cmd: "projects", desc: "list projects" },
   { cmd: "ls blog", desc: "list blog posts" },
   { cmd: "ls socials", desc: "list social links" },
+  { cmd: "ls stack", desc: "what I build with" },
   { cmd: "cd projects", desc: "go to projects" },
   { cmd: "cd blog", desc: "go to blog" },
   { cmd: "cd home", desc: "go home" },
@@ -87,6 +88,8 @@ export function createCommands(term, scenes) {
     "ls socials": () => printSocials(term),
     projects: () => printProjects(term),
     "ls projects": () => printProjects(term),
+    "ls stack": () => printStack(term),
+    stack: () => printStack(term),
 
     achievements() {
       addLine("comment", `// achievements · ${unlockedCount.value}/${ACHIEVEMENTS.length} unlocked`);

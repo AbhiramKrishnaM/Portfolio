@@ -1,7 +1,6 @@
 import { onMounted, onUnmounted } from "vue";
 import { useNavLinks } from "@/composables/useNavLinks.js";
-
-const ACTIVATION_LINE = 0.4;
+import { SECTION_LINE } from "@/composables/storyline.js";
 
 export function useSectionSpy(ids) {
   const { activeSection } = useNavLinks();
@@ -9,7 +8,7 @@ export function useSectionSpy(ids) {
 
   function update() {
     frame = null;
-    const line = window.innerHeight * ACTIVATION_LINE;
+    const line = window.innerHeight * SECTION_LINE;
     let current = null;
     for (const id of ids) {
       const el = document.getElementById(id);

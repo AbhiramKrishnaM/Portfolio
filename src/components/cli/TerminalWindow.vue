@@ -47,6 +47,7 @@
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useCLI } from "@/composables/cli/useCLI.js";
 import { useTabCompletion } from "@/composables/cli/useTabCompletion.js";
+import { introDone } from "@/composables/introGate.js";
 import TerminalOutput from "./TerminalOutput.vue";
 import MatrixRain from "./MatrixRain.vue";
 import VimTrap from "./VimTrap.vue";
@@ -231,9 +232,11 @@ watch(() => props.scene, (scene) => {
 onMounted(() => {
   measureColumns();
   window.addEventListener("resize", measureColumns);
-  const start = props.scene === "intro" ? bootAnimated() : showScene(props.scene);
-  start.then(() => {
-    nextTick(() => focusInput());
+  introDone.then(() => {
+    const start = props.scene === "intro" ? bootAnimated() : showScene(props.scene);
+    start.then(() => {
+      nextTick(() => focusInput());
+    });
   });
 });
 
