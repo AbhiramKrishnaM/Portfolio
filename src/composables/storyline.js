@@ -10,6 +10,7 @@ export const story = {
   flight: { progress: 0, el: null },
   impulses: [],
   handoff: null,
+  extraSnaps: null,
 };
 
 export function pushImpulse(x, y, strength = 1) {

@@ -71,6 +71,7 @@
 
 <script setup>
 import { useNavLinks, scrollToSection } from "@/composables/useNavLinks.js";
+import { scrollToY } from "@/composables/smoothScroll.js";
 import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
@@ -97,7 +98,7 @@ function onNavClick(event, link, navigate) {
   }
   event.preventDefault();
   if (!(link.section && scrollToSection(link.section))) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToY(0);
   }
 }
 

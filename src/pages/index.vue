@@ -93,6 +93,7 @@ import { useTerminalScroll } from "@/composables/useTerminalScroll.js";
 import { useGameSwitcher } from "@/composables/useGameSwitcher.js";
 import { useProjectSelection } from "@/composables/useProjectSelection.js";
 import { useSectionSpy } from "@/composables/useSectionSpy.js";
+import { useSmoothScroll } from "@/composables/smoothScroll.js";
 import { useMediaQuery } from "@/composables/useMediaQuery.js";
 import { STACK_ANCHOR_TOP, PIN_SCREENS } from "@/composables/storyline.js";
 
@@ -113,6 +114,7 @@ const { terminalScene } = useTerminalScroll({ heroRef, panelRef: terminalPanelRe
 const storyEnabled = useMediaQuery("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
 const { view, activeGame, activeGameGithubUrl, launchGame, exitGame } = useGameSwitcher({ terminalRef, panelRef: terminalPanelRef });
 const { selectedIdx, selectedProject, selectProject, stepProject, projectCount } = useProjectSelection(terminalScene);
+useSmoothScroll();
 useSectionSpy(["projects", "stack", "experience", "about", "contact"]);
 </script>
 

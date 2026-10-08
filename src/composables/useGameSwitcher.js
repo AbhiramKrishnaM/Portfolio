@@ -1,4 +1,5 @@
 import { ref, computed, watch, nextTick } from "vue";
+import { scrollToElement } from "@/composables/smoothScroll.js";
 import { GAME_REGISTRY } from "@/data/games.js";
 import { pendingGame } from "@/composables/commandPalette.js";
 
@@ -32,7 +33,7 @@ export function useGameSwitcher({ terminalRef, panelRef }) {
     pendingGame.value = null;
     launchGame(gameId);
     if (window.innerWidth < DESKTOP_MIN_WIDTH) {
-      panelRef.value?.scrollIntoView({ behavior: "smooth", block: "center" });
+      scrollToElement(panelRef.value, "center");
     }
   }, { immediate: true });
 

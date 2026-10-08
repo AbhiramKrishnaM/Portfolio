@@ -1,4 +1,5 @@
 import { ref } from "vue";
+import { scrollToElement } from "@/composables/smoothScroll.js";
 
 const activeSection = ref(null);
 
@@ -9,7 +10,7 @@ export function scrollToSection(id) {
   ];
   const target = candidates.find((el) => el && el.offsetParent !== null);
   if (!target) return false;
-  target.scrollIntoView({ behavior: "smooth", block: target.id === id ? "start" : "center" });
+  scrollToElement(target, target.id === id ? "start" : "center");
   return true;
 }
 

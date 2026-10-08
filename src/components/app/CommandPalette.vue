@@ -21,7 +21,7 @@
         </div>
 
         <ul id="palette-list" ref="listRef" role="listbox" aria-label="Commands"
-          class="max-h-[50vh] overflow-y-auto scrollbar-thin py-2">
+          data-lenis-prevent class="max-h-[50vh] overflow-y-auto scrollbar-thin py-2">
           <template v-for="(item, i) in filtered" :key="item.id">
             <li v-if="i === 0 || filtered[i - 1].group !== item.group" role="presentation"
               class="px-4 pt-2 pb-1 text-xs italic text-gray-gradient-01">

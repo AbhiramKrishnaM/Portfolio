@@ -10,7 +10,7 @@
     </div>
 
     <div class="relative flex-1 min-h-0">
-      <div ref="outputEl" class="h-full overflow-y-auto px-4 py-3 scrollbar-thin">
+      <div ref="outputEl" data-lenis-prevent class="h-full overflow-y-auto px-4 py-3 scrollbar-thin">
         <TerminalOutput :lines="lines" :menu-state="menuState" :selected-project="selectedProject"
           @project-select="emit('project-select', $event)" />
 

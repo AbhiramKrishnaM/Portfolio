@@ -59,6 +59,7 @@ import { EXPERIENCE } from "@/data/experience.js";
 import { JOURNEY } from "@/data/journey.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { story } from "@/composables/storyline.js";
+import { scrollToY } from "@/composables/smoothScroll.js";
 import { buildTimeline } from "@/components/story/hologram/journeyTimeline.js";
 import { createJourneyHologram, sideOf } from "@/components/story/hologram/journeyHologram.js";
 
@@ -194,12 +195,20 @@ function onResize() {
   holo?.resize(rect.width, rect.height);
 }
 
+function chapterSnaps() {
+  const section = sectionRef.value;
+  if (!section) return [];
+  const top = section.getBoundingClientRect().top + window.scrollY;
+  const range = section.offsetHeight - window.innerHeight;
+  return timeline.ranges.map((r) => top + range * (r.start + (r.end - r.start) * 0.35));
+}
+
 function goToChapter(i) {
   const section = sectionRef.value;
   const top = section.getBoundingClientRect().top + window.scrollY;
   const range = section.offsetHeight - window.innerHeight;
   const target = top + range * (timeline.ranges[i].start + 0.01);
-  window.scrollTo({ top: target, behavior: "smooth" });
+  scrollToY(target);
 }
 
 watch(theme, () => requestAnimationFrame(applyTheme));
@@ -212,6 +221,7 @@ onMounted(() => {
   smoothP = scrollProgress().p;
   resizeObserver = new ResizeObserver(onResize);
   resizeObserver.observe(stageRef.value);
+  story.extraSnaps = chapterSnaps;
   frameId = requestAnimationFrame(tick);
   nextTick(() => ScrollTrigger.refresh());
 });
@@ -219,6 +229,7 @@ onMounted(() => {
 onUnmounted(() => {
   cancelAnimationFrame(frameId);
   story.handoff = null;
+  story.extraSnaps = null;
   resizeObserver?.disconnect();
   holo?.dispose();
   nextTick(() => ScrollTrigger.refresh());
