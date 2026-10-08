@@ -5,6 +5,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import {
+  BoxGeometry,
   Color,
   DynamicDrawUsage,
   Fog,
@@ -128,9 +129,13 @@ function spawnEnergyWave(x, y, strength = 1) {
 const CONTRIB_SCREEN = [0.0, -0.45];
 const CONTRIB_GLOW = [0, 0.35, 0.55, 0.8, 1];
 const CONTRIB_LIFT = 0.06;
+const BAR_HEIGHT = [0, 0.22, 0.45, 0.75, 1.15];
+const BAR_STAGGER = 0.55;
 
 let cellCenters = null;
 let contribGlow = null;
+let cellZ = null;
+let bars = null;
 let contribPeriod = null;
 let contribOffset = null;
 let well = null;
@@ -256,7 +261,75 @@ function contributionOrigin() {
   };
 }
 
+const barVert = `
+  varying vec3 vColor;
+  varying vec2 vUv;
+  #include <fog_pars_vertex>
+
+  void main() {
+    vColor = instanceColor;
+    vUv = uv;
+    vec4 mvPosition = viewMatrix * modelMatrix * instanceMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    #include <fog_vertex>
+  }
+`;
+
+const barFrag = `
+  uniform float uOpacity;
+  varying vec3 vColor;
+  varying vec2 vUv;
+  #include <fog_pars_fragment>
+
+  void main() {
+    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+    float rim = 1.0 - smoothstep(0.03, 0.09, edge);
+    vec3 col = vColor * (0.45 + rim * 1.1);
+    gl_FragColor = vec4(col, uOpacity * (0.4 + 0.6 * rim));
+    #include <fog_fragment>
+  }
+`;
+
+function buildBars(entries) {
+  const geometry = new BoxGeometry(CELL * FILL, CELL * FILL, 1);
+  geometry.translate(0, 0, 0.5);
+  const material = new ShaderMaterial({
+    vertexShader: barVert,
+    fragmentShader: barFrag,
+    uniforms: { ...UniformsUtils.clone(UniformsLib.fog), uOpacity: { value: 0.85 } },
+    transparent: true,
+    depthWrite: false,
+    fog: true,
+  });
+  const mesh = new InstancedMesh(geometry, material, entries.length);
+  mesh.instanceMatrix.setUsage(DynamicDrawUsage);
+  entries.forEach((_, i) => mesh.setColorAt(i, hoverColor));
+  mesh.visible = false;
+  group.add(mesh);
+  bars = { mesh, entries };
+}
+
+function updateBars(contrib, t) {
+  if (!bars) return;
+  bars.mesh.visible = contrib > 0.001;
+  if (!bars.mesh.visible) return;
+  const weeks = Math.ceil(CONTRIBUTIONS.days.length / 7);
+  bars.entries.forEach((bar, i) => {
+    const rise = Math.min(1, Math.max(0, (contrib * (1 + BAR_STAGGER) - (bar.week / weeks) * BAR_STAGGER)));
+    const eased = rise * rise * (3 - 2 * rise);
+    const h = Math.max(0.001, BAR_HEIGHT[bar.level] * eased);
+    _matrix.makeScale(1, 1, h).setPosition(cellCenters[bar.cell * 2], cellCenters[bar.cell * 2 + 1], cellZ[bar.cell]);
+    bars.mesh.setMatrixAt(i, _matrix);
+    tmpColor.copy(hoverColor).multiplyScalar((0.55 + 0.45 * (bar.level / 4)) * twinkle(bar.cell, t));
+    bars.mesh.setColorAt(i, tmpColor);
+  });
+  bars.mesh.instanceMatrix.needsUpdate = true;
+  bars.mesh.instanceColor.needsUpdate = true;
+}
+
 function mapContributions(count) {
+  cellZ = new Float32Array(count);
+  const barEntries = [];
   contribGlow = new Float32Array(count);
   contribPeriod = new Float32Array(count);
   contribOffset = new Float32Array(count);
@@ -269,7 +342,9 @@ function mapContributions(count) {
     contribGlow[index] = CONTRIB_GLOW[day.level] ?? 0;
     contribPeriod[index] = 13 + Math.random() * 8;
     contribOffset[index] = Math.random() * 21;
+    if (day.level > 0) barEntries.push({ cell: index, level: day.level, week: Math.floor(i / 7) });
   });
+  buildBars(barEntries);
 }
 
 function twinkle(index, t) {
@@ -453,7 +528,8 @@ function startLoop() {
 
       const glow = contrib > 0 && contribGlow[i] > 0 ? contribGlow[i] * contrib * twinkle(i, t) : 0;
 
-      _matrix.makeTranslation(cx, cy, wave - well[i] + ring * WAVE_RING_HEIGHT + glow * CONTRIB_LIFT);
+      cellZ[i] = wave - well[i] + ring * WAVE_RING_HEIGHT + glow * CONTRIB_LIFT;
+      _matrix.makeTranslation(cx, cy, cellZ[i]);
       mesh.setMatrixAt(i, _matrix);
 
       tmpColor.copy(baseColor).lerp(hoverColor, Math.max(l, glow));
@@ -465,6 +541,7 @@ function startLoop() {
     }
     mesh.instanceMatrix.needsUpdate = true;
     mesh.instanceColor.needsUpdate = true;
+    updateBars(contrib, t);
 
     renderer.render(scene, camera);
   }
