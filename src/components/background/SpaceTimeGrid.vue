@@ -5,7 +5,10 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import {
+  AdditiveBlending,
   BoxGeometry,
+  BufferAttribute,
+  BufferGeometry,
   Color,
   DynamicDrawUsage,
   Fog,
@@ -14,6 +17,8 @@ import {
   Matrix4,
   PerspectiveCamera,
   PlaneGeometry,
+  Points,
+  PointsMaterial,
   Plane as ThreePlane,
   Raycaster,
   Scene,
@@ -131,11 +136,20 @@ const CONTRIB_GLOW = [0, 0.35, 0.55, 0.8, 1];
 const CONTRIB_LIFT = 0.06;
 const BAR_HEIGHT = [0, 0.22, 0.45, 0.75, 1.15];
 const BAR_STAGGER = 0.55;
+const BURST_LEVEL = 4;
+const BURST_EVERY = [3.5, 8];
+const BURST_FLASH = 0.35;
+const SPARK_GRAVITY = 3.2;
+const SPARK_SHARDS = 5;
+const SHARD_LIFE = [0.5, 0.9];
 
 let cellCenters = null;
 let contribGlow = null;
 let cellZ = null;
 let bars = null;
+let sparks = null;
+let shards = null;
+let lastTickT = 0;
 let contribPeriod = null;
 let contribOffset = null;
 let well = null;
@@ -309,6 +323,92 @@ function buildBars(entries) {
   bars = { mesh, entries };
 }
 
+function createParticlePool(max, size) {
+  const positions = new Float32Array(max * 3);
+  const colors = new Float32Array(max * 3);
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new BufferAttribute(colors, 3));
+  const material = new PointsMaterial({
+    size,
+    sizeAttenuation: false,
+    vertexColors: true,
+    transparent: true,
+    depthWrite: false,
+    blending: AdditiveBlending,
+    fog: false,
+  });
+  const points = new Points(geometry, material);
+  points.frustumCulled = false;
+  group.add(points);
+  return { points, geometry, positions, colors, vel: new Float32Array(max * 3), life: new Float32Array(max), maxLife: new Float32Array(max), max, next: 0 };
+}
+
+function emit(pool, x, y, z, vx, vy, vz, life) {
+  const i = pool.next;
+  pool.next = (pool.next + 1) % pool.max;
+  pool.positions.set([x, y, z], i * 3);
+  pool.vel.set([vx, vy, vz], i * 3);
+  pool.life[i] = life;
+  pool.maxLife[i] = life;
+}
+
+function burst(x, y, z) {
+  const count = 18 + Math.floor(Math.random() * 8);
+  for (let k = 0; k < count; k++) {
+    const a = Math.random() * Math.PI * 2;
+    const speed = 0.5 + Math.random() * 1.1;
+    emit(sparks, x, y, z, Math.cos(a) * speed, Math.sin(a) * speed, 1.2 + Math.random() * 1.3, 9);
+  }
+}
+
+function shatter(x, y) {
+  for (let k = 0; k < SPARK_SHARDS; k++) {
+    const a = Math.random() * Math.PI * 2;
+    const speed = 0.35 + Math.random() * 0.6;
+    const life = SHARD_LIFE[0] + Math.random() * (SHARD_LIFE[1] - SHARD_LIFE[0]);
+    emit(shards, x, y, 0.02, Math.cos(a) * speed, Math.sin(a) * speed, 0.3 + Math.random() * 0.5, life);
+  }
+}
+
+function stepPool(pool, dt, gravity, onLand) {
+  const { positions, colors, vel, life, maxLife } = pool;
+  for (let i = 0; i < pool.max; i++) {
+    const o = i * 3;
+    if (life[i] <= 0) {
+      colors[o] = colors[o + 1] = colors[o + 2] = 0;
+      positions[o + 2] = -50;
+      continue;
+    }
+    life[i] -= dt;
+    vel[o + 2] -= gravity * dt;
+    positions[o] += vel[o] * dt;
+    positions[o + 1] += vel[o + 1] * dt;
+    positions[o + 2] += vel[o + 2] * dt;
+    if (onLand && positions[o + 2] <= 0.02 && vel[o + 2] < 0) {
+      onLand(positions[o], positions[o + 1]);
+      life[i] = 0;
+      colors[o] = colors[o + 1] = colors[o + 2] = 0;
+      continue;
+    }
+    const fade = onLand ? 1 : Math.max(0, life[i] / maxLife[i]);
+    colors[o] = Math.min(1, hoverColor.r * 1.3 + 0.35) * fade;
+    colors[o + 1] = Math.min(1, hoverColor.g * 1.3 + 0.35) * fade;
+    colors[o + 2] = Math.min(1, hoverColor.b * 1.3 + 0.35) * fade;
+  }
+  pool.geometry.attributes.position.needsUpdate = true;
+  pool.geometry.attributes.color.needsUpdate = true;
+}
+
+function updateSparks(dt, visible) {
+  if (!sparks) return;
+  sparks.points.visible = visible;
+  shards.points.visible = visible;
+  if (!visible) return;
+  stepPool(sparks, dt, SPARK_GRAVITY, shatter);
+  stepPool(shards, dt, SPARK_GRAVITY * 0.8, null);
+}
+
 function updateBars(contrib, t) {
   if (!bars) return;
   bars.mesh.visible = contrib > 0.001;
@@ -320,7 +420,17 @@ function updateBars(contrib, t) {
     const h = Math.max(0.001, BAR_HEIGHT[bar.level] * eased);
     _matrix.makeScale(1, 1, h).setPosition(cellCenters[bar.cell * 2], cellCenters[bar.cell * 2 + 1], cellZ[bar.cell]);
     bars.mesh.setMatrixAt(i, _matrix);
-    tmpColor.copy(hoverColor).multiplyScalar((0.55 + 0.45 * (bar.level / 4)) * twinkle(bar.cell, t));
+    let flash = 0;
+    if (bar.level === BURST_LEVEL && motionAllowed && eased > 0.98) {
+      if (bar.nextBurst === undefined) bar.nextBurst = t + Math.random() * BURST_EVERY[0];
+      if (t >= bar.nextBurst) {
+        burst(cellCenters[bar.cell * 2], cellCenters[bar.cell * 2 + 1], cellZ[bar.cell] + h);
+        bar.flashAt = t;
+        bar.nextBurst = t + BURST_EVERY[0] + Math.random() * (BURST_EVERY[1] - BURST_EVERY[0]);
+      }
+      if (bar.flashAt !== undefined) flash = Math.max(0, 1 - (t - bar.flashAt) / BURST_FLASH);
+    }
+    tmpColor.copy(hoverColor).multiplyScalar((0.55 + 0.45 * (bar.level / 4)) * twinkle(bar.cell, t) + flash * 2.2);
     bars.mesh.setColorAt(i, tmpColor);
   });
   bars.mesh.instanceMatrix.needsUpdate = true;
@@ -345,6 +455,8 @@ function mapContributions(count) {
     if (day.level > 0) barEntries.push({ cell: index, level: day.level, week: Math.floor(i / 7) });
   });
   buildBars(barEntries);
+  sparks = createParticlePool(600, 5);
+  shards = createParticlePool(3000, 2.6);
 }
 
 function twinkle(index, t) {
@@ -542,6 +654,8 @@ function startLoop() {
     mesh.instanceMatrix.needsUpdate = true;
     mesh.instanceColor.needsUpdate = true;
     updateBars(contrib, t);
+    updateSparks(Math.min(0.05, t - lastTickT), contrib > 0.001);
+    lastTickT = t;
 
     renderer.render(scene, camera);
   }
