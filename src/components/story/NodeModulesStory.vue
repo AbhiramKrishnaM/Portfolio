@@ -1,5 +1,6 @@
 <template>
   <div class="node-modules-story" aria-hidden="true">
+    <canvas ref="keyboardCanvasRef" class="keyboard-canvas" />
     <canvas ref="canvasRef" class="box-canvas" />
     <div class="logo-layer">
       <div v-for="(item, i) in STACK" :key="item.id" :ref="(el) => { tileEls[i] = el; }" class="logo-body"
@@ -44,6 +45,7 @@ const STAMP_GAP_S = 0.42;
 const LANE_INSET_PX = 20;
 
 const canvasRef = ref(null);
+const keyboardCanvasRef = ref(null);
 const tileEls = [];
 const grabbable = ref(false);
 
@@ -70,6 +72,8 @@ let captured = null;
 let returnStart = 0;
 let dragPointer = null;
 let keyboard = null;
+let keyboardRenderer = null;
+let keyboardScene = null;
 let stopKeystrokes = null;
 let lastFrameAt = 0;
 const { theme } = useTheme();
@@ -118,6 +122,7 @@ function resize() {
   lastWidth = w;
   lastHeight = h;
   renderer.setSize(w, h);
+  keyboardRenderer?.setSize(w, h);
   camera.left = -w / 2;
   camera.right = w / 2;
   camera.top = h / 2;
@@ -139,8 +144,15 @@ function init() {
   box = createCardboardBox();
   for (let i = 0; i < box.stampCount; i++) stampLevels.push(0);
   scene.add(box.group);
+  keyboardRenderer = new WebGLRenderer({ canvas: keyboardCanvasRef.value, antialias: true, alpha: true });
+  keyboardRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  keyboardScene = new Scene();
+  keyboardScene.add(new AmbientLight(0xffffff, 1.3));
+  const keyboardKey = new DirectionalLight(0xffffff, 2.2);
+  keyboardKey.position.set(-0.8, 1.6, 1.4);
+  keyboardScene.add(keyboardKey);
   keyboard = createKeyboard(keyboardColors());
-  scene.add(keyboard.group);
+  keyboardScene.add(keyboard.group);
   stopKeystrokes = onKeystroke((key) => keyboard.external(key, performance.now() / 1000));
   resize();
 }
@@ -158,7 +170,6 @@ function layoutPoses(m, vw, vh) {
   const skySize = clamp((heroPanel.top - 40) / 0.9, 70, 130);
   return {
     sky: { x: heroPanel.left + heroPanel.width * 0.72, y: heroPanel.top - 24, size: skySize },
-    keyboard: { x: heroPanel.left - clamp(heroPanel.left * 0.36, 260, 380), y: heroPanel.top - 30, width: clamp(heroPanel.width * 0.5, 260, 360) },
     start: { x: dock.left + small * 0.7, y: lane, size: small },
     laneEnd: { x: slot.left + slot.width / 2, y: lane, size: small },
     stack: { x: slot.left + slot.width / 2, y: slot.bottom - 6, size: big },
@@ -214,6 +225,24 @@ function storyFrame(s, m, poses) {
 
   const v = progressBetween(s, m.contactEnter, m.contactSettle);
   return { target: lerpPose(poses.conveyorEnd, poses.contact, smooth(v)), open: 0, tape: 1, packing: 1, contact: v };
+}
+
+function keyboardPose(s, m) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = clamp(vw * 0.16, 240, 320);
+  const margin = width * 0.55;
+  const mirror = { x: clamp(vw - pose.x, margin + 90, vw - margin), y: clamp(vh - pose.y + 40, 140, vh - 110) };
+  const corner = { x: margin + 120, y: vh - 95 };
+  const pinned = smooth(progressBetween(s, m.stackStart - vh * 0.5, m.stackStart)) * (1 - smooth(progressBetween(s, m.pinEnd, m.pinEnd + vh * 0.4)));
+  return {
+    x: lerp(mirror.x, corner.x, pinned),
+    y: lerp(mirror.y, corner.y, pinned),
+    width,
+    form: s >= m.stackStart && s <= m.pinEnd,
+    center: { x: vw * 0.84, y: vh * 0.22 },
+    cell: clamp(vh * 0.032, 24, 34),
+  };
 }
 
 function placeBoxAt(target, rotY, jolt) {
@@ -430,7 +459,10 @@ function tick(now) {
   const t = now / 1000;
   if (!m) {
     contactRevealed.value = true;
-    if (boxVisible) renderer.clear();
+    if (boxVisible) {
+      renderer.clear();
+      keyboardRenderer.clear();
+    }
     boxVisible = false;
     return;
   }
@@ -440,7 +472,10 @@ function tick(now) {
   const frame = poses ? storyFrame(s, m, poses) : null;
 
   if (!frame) {
-    if (boxVisible) renderer.clear();
+    if (boxVisible) {
+      renderer.clear();
+      keyboardRenderer.clear();
+    }
     boxVisible = false;
     pose.ready = false;
     if (logoState !== "boxed") {
@@ -466,18 +501,18 @@ function tick(now) {
   stampLevels.forEach((level, i) => box.setStamp(i, level));
   placeBox(t);
   keyboard.update({
-    ...poses.keyboard,
+    ...keyboardPose(s, m),
     vw: window.innerWidth,
     vh: window.innerHeight,
     time: t,
     dt: Math.min(0.05, t - lastFrameAt),
-    scatter: frame.drop ?? 1,
   });
   lastFrameAt = t;
   trackDrop(frame.drop ?? 1);
   updateLogos(s, m, frame, now);
 
   renderer.render(scene, camera);
+  keyboardRenderer.render(keyboardScene, camera);
   boxVisible = true;
 }
 
@@ -524,11 +559,21 @@ onUnmounted(() => {
   stopKeystrokes?.();
   keyboard?.dispose();
   renderer?.dispose();
+  keyboardRenderer?.dispose();
   contactRevealed.value = true;
 });
 </script>
 
 <style scoped>
+.keyboard-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .box-canvas {
   position: fixed;
   inset: 0;

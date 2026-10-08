@@ -235,6 +235,7 @@
 
 ## 29. Personal 3D objects (guitar, mug, keycaps)
 - [x] Replaced the floating keycaps + mug with a 60% mechanical keyboard (Benbop, CC-BY) that types on a screen, synced with the terminal
+- [x] Keyboard mirrors the box (opposite corner); in Stack its keys form a morphing character in the background, then return
 - [ ] Guitar: keep looking for a model — **[Abhiram to approve]** before anything is downloaded
 - [ ] Check the guitar's license (CC0 / CC-BY only, no non-commercial) and credit it if needed
 - [ ] Compress the guitar (Draco/Meshopt) so it stays small
