@@ -244,14 +244,14 @@
 - [ ] Lazy-load and skip on mobile / reduced motion
 
 ## 30. GitHub contributions on the spacetime grid
-- [ ] Build-time script: read the public `github.com/users/AbhiramKrishnaM/contributions` page (no token) → `src/data/contributions.json`
-- [ ] Re-run it on every build/deploy so the data stays fresh
-- [ ] Map days onto grid cells (weeks → columns, weekdays → rows) in one section
-- [ ] Glow intensity by contribution level (none / low / mid / high) in the mint accent
-- [ ] Twinkle: each lit cell dims briefly on its own random cycle (13–21s, random offset), like product.inc
-- [ ] Label: "N contributions since …" + link to GitHub
-- [ ] Reference: https://www.product.inc/#code (`contribution-pulse` effect)
-- [ ] Fallback on mobile / reduced motion: flat 2D calendar, no twinkle
+- [x] Build-time script: read the public `github.com/users/AbhiramKrishnaM/contributions` page (no token) → `src/data/contributions.json`
+- [x] Re-run it on every build/deploy so the data stays fresh
+- [x] Map days onto grid cells (weeks → columns, weekdays → rows) in one section
+- [x] Glow intensity by contribution level (none / low / mid / high) in the mint accent
+- [x] Twinkle: each lit cell dims briefly on its own random cycle (13–21s, random offset), like product.inc
+- [x] Label: "N contributions since …" + link to GitHub
+- [x] Reference: https://www.product.inc/#code (`contribution-pulse` effect)
+- [x] Fallback on mobile / reduced motion: flat 2D calendar, no twinkle
 
 ## 31. Experience as a hologram story (Eddy-style)
 - [x] Reference: https://eddy-naboulet.dev/profile ("How I work" section)

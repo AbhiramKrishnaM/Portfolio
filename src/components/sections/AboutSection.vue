@@ -17,11 +17,13 @@
 <template v-for="fact in facts" :key="fact.key">  <span class="text-accent-underline">{{ fact.key }}</span><span class="text-white-gradient-01">:</span> <span class="text-accent-url">{{ fact.value }}</span><span class="text-white-gradient-01">,</span>
 </template><span class="text-white-gradient-01">};</span></pre>
     </div>
+    <ContributionCalendar class="mt-8" />
   </PageSection>
 </template>
 
 <script setup>
 import PageSection from "@/components/sections/PageSection.vue";
+import ContributionCalendar from "@/components/about/ContributionCalendar.vue";
 import { ABOUT_PARAGRAPHS, OFF_SCREEN } from "@/data/about.js";
 import { WHOAMI } from "@/data/profile.js";
 

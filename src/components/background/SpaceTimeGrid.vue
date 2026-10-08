@@ -25,6 +25,7 @@ import {
 } from "three";
 import { useTheme } from "@/composables/useTheme.js";
 import { story, progressBetween, prefersReducedMotion } from "@/composables/storyline.js";
+import CONTRIBUTIONS from "@/data/contributions.json";
 
 const { theme } = useTheme();
 
@@ -124,7 +125,14 @@ function spawnEnergyWave(x, y, strength = 1) {
   activeWaves.push({ x, y, start: currentT, strength });
 }
 
+const CONTRIB_SCREEN = [0.0, -0.45];
+const CONTRIB_GLOW = [0, 0.35, 0.55, 0.8, 1];
+const CONTRIB_LIFT = 0.06;
+
 let cellCenters = null;
+let contribGlow = null;
+let contribPeriod = null;
+let contribOffset = null;
 let well = null;
 const _matrix = new Matrix4();
 const _mousePoint = new Vector3();
@@ -227,6 +235,56 @@ function buildGrid() {
   group.add(mesh);
 }
 
+function contributionOrigin() {
+  const pose = CAMERA_POSES.about;
+  const saved = { pos: camera.position.clone(), quat: camera.quaternion.clone() };
+  camera.position.fromArray(pose.pos);
+  camera.lookAt(_poseA.fromArray(pose.look));
+  camera.updateMatrixWorld();
+  group.updateMatrixWorld();
+  updateGroundPlane();
+  const hit = groundPointFromScreen(CONTRIB_SCREEN[0], CONTRIB_SCREEN[1], _mousePoint);
+  camera.position.copy(saved.pos);
+  camera.quaternion.copy(saved.quat);
+  camera.updateMatrixWorld();
+  const weeks = Math.ceil(CONTRIBUTIONS.days.length / 7);
+  const centerCol = hit ? Math.round((_mousePoint.x + (COLS * CELL) / 2) / CELL) : COLS / 2;
+  const centerRow = hit ? Math.round((_mousePoint.y + (ROWS * CELL) / 2) / CELL) : ROWS / 2;
+  return {
+    col0: Math.max(0, Math.min(COLS - weeks, centerCol - Math.floor(weeks / 2))),
+    row0: Math.max(0, Math.min(ROWS - 7, centerRow - 3)),
+  };
+}
+
+function mapContributions(count) {
+  contribGlow = new Float32Array(count);
+  contribPeriod = new Float32Array(count);
+  contribOffset = new Float32Array(count);
+  const { col0, row0 } = contributionOrigin();
+  CONTRIBUTIONS.days.forEach((day, i) => {
+    const col = col0 + Math.floor(i / 7);
+    const row = row0 + 6 - (i % 7);
+    if (col >= COLS || row >= ROWS) return;
+    const index = row * COLS + col;
+    contribGlow[index] = CONTRIB_GLOW[day.level] ?? 0;
+    contribPeriod[index] = 13 + Math.random() * 8;
+    contribOffset[index] = Math.random() * 21;
+  });
+}
+
+function twinkle(index, t) {
+  if (!motionAllowed) return 1;
+  const phase = ((t + contribOffset[index]) / contribPeriod[index]) % 1;
+  if (phase < 0.92) return 1;
+  return 1 - 0.8 * (1 - Math.abs(phase - 0.96) / 0.04);
+}
+
+function contributionStrength(scroll) {
+  const m = story.markers;
+  if (!m) return 0;
+  return progressBetween(scroll, m.aboutTop - m.vh, m.aboutTop - m.vh * 0.4);
+}
+
 function applyResponsiveLayout(w) {
   const mobile = w < 1024;
   group.position.set(0, mobile ? -1.6 : -1.3, mobile ? -1.6 : -1.2);
@@ -258,6 +316,7 @@ function init() {
   buildGrid();
   applyThemeColors();
   applyResponsiveLayout(w);
+  mapContributions(COLS * ROWS);
 }
 
 function onMouseMove(e) {
@@ -361,6 +420,7 @@ function startLoop() {
     }
 
     const count = COLS * ROWS;
+    const contrib = contributionStrength(window.scrollY);
     for (let i = 0; i < count; i++) {
       const cx = cellCenters[i * 2];
       const cy = cellCenters[i * 2 + 1];
@@ -391,11 +451,13 @@ function startLoop() {
         ring += front * front * decay * rw.strength;
       }
 
-      _matrix.makeTranslation(cx, cy, wave - well[i] + ring * WAVE_RING_HEIGHT);
+      const glow = contrib > 0 && contribGlow[i] > 0 ? contribGlow[i] * contrib * twinkle(i, t) : 0;
+
+      _matrix.makeTranslation(cx, cy, wave - well[i] + ring * WAVE_RING_HEIGHT + glow * CONTRIB_LIFT);
       mesh.setMatrixAt(i, _matrix);
 
-      tmpColor.copy(baseColor).lerp(hoverColor, l);
-      tmpColor.multiplyScalar(1 + wave * 0.9);
+      tmpColor.copy(baseColor).lerp(hoverColor, Math.max(l, glow));
+      tmpColor.multiplyScalar(1 + wave * 0.9 + glow * 0.5);
       tmpColor.r = Math.min(1, tmpColor.r + hoverColor.r * ring);
       tmpColor.g = Math.min(1, tmpColor.g + hoverColor.g * ring);
       tmpColor.b = Math.min(1, tmpColor.b + hoverColor.b * ring);
