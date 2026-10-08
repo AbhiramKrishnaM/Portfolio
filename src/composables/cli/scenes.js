@@ -2,6 +2,7 @@ import { WHOAMI } from "@/data/profile.js";
 import { SOCIALS } from "@/data/socials.js";
 import { PROJECTS } from "@/data/projects.js";
 import { nextLineId } from "./terminalState.js";
+import { emitKeystroke } from "@/composables/typingBus.js";
 import { printWhoami, printSocials, STACK_LINE, HELP_HINT } from "./printers.js";
 
 const TYPE_DELAY_MS = 55;
@@ -92,9 +93,11 @@ export function createScenes(term) {
       term.lines.value.push({ id: lineId, type: "input", content: "", cursor: true });
       for (let i = 0; i <= cmd.length; i++) {
         await wait(TYPE_DELAY_MS);
+        if (i > 0) emitKeystroke(cmd[i - 1]);
         term.replaceLine(lineId, { type: "input", content: cmd.slice(0, i), cursor: i < cmd.length });
       }
       await wait(AFTER_TYPING_MS);
+      emitKeystroke("Enter");
     }
 
     try {

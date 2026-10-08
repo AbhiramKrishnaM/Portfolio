@@ -48,6 +48,7 @@ import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useCLI } from "@/composables/cli/useCLI.js";
 import { useTabCompletion } from "@/composables/cli/useTabCompletion.js";
 import { introDone } from "@/composables/introGate.js";
+import { emitKeystroke } from "@/composables/typingBus.js";
 import TerminalOutput from "./TerminalOutput.vue";
 import MatrixRain from "./MatrixRain.vue";
 import VimTrap from "./VimTrap.vue";
@@ -176,6 +177,7 @@ function handlePromptKey(event) {
 }
 
 function handleKeydown(event) {
+  emitKeystroke(event.key);
   const isTypedCommand = event.key === "Enter" && inputValue.value.trim();
   if (menuState.value && !isTypedCommand) {
     handleMenuKey(event);

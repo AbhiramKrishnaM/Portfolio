@@ -25,3 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+# Third-party notice: mechanical keyboard model
+
+`public/models/keyboard.glb` is converted from [Mechanical keyboard 60%](https://blendswap.com/blend/28909) by Benbop on Blend Swap, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: exported to glTF with modifiers applied, the desk plane, camera and lights removed, meshopt-compressed, and recoloured at runtime.

@@ -234,14 +234,15 @@
 - [x] Keep it all inside the lazy-loaded `SpaceTimeGrid` scene
 
 ## 29. Personal 3D objects (guitar, mug, keycaps)
+- [x] Replaced the floating keycaps + mug with a 60% mechanical keyboard (Benbop, CC-BY) that types on a screen, synced with the terminal
 - [ ] Guitar: keep looking for a model — **[Abhiram to approve]** before anything is downloaded
 - [ ] Check the guitar's license (CC0 / CC-BY only, no non-commercial) and credit it if needed
 - [ ] Compress the guitar (Draco/Meshopt) so it stays small
-- [ ] Build keycaps in code (rounded box, dished top) with Fira Code legends: `$`, `git`, `npm`, `⌘`, `esc`, `vim`
-- [ ] Build the coffee mug in code (lathe body + handle), optional steam
-- [ ] Use the same lighting/material style as the `node_modules` box
-- [ ] Decide where they live (hero sky with the box, physics pile, or a section of their own)
-- [ ] Lazy-load and skip on mobile / reduced motion
+- [x] Build keycaps in code (rounded box, dished top) with Fira Code legends: `$`, `git`, `npm`, `⌘`, `esc`, `vim`
+- [x] Build the coffee mug in code (lathe body + handle), optional steam
+- [x] Use the same lighting/material style as the `node_modules` box
+- [x] Decide where they live — hero sky around the floating box; they scatter as the box drops
+- [x] Lazy-load and skip on mobile / reduced motion
 
 ## 30. GitHub contributions on the spacetime grid
 - [x] Build-time script: read the public `github.com/users/AbhiramKrishnaM/contributions` page (no token) → `src/data/contributions.json`

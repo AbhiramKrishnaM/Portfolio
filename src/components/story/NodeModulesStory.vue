@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import gsap from "gsap";
 import {
   AmbientLight,
@@ -28,6 +28,9 @@ import { story, progressBetween, contactRevealed, pushImpulse } from "@/composab
 import { unlock } from "@/composables/achievements.js";
 import { createCardboardBox, BOX } from "./cardboardBox.js";
 import { createStackPhysics } from "./stackPhysics.js";
+import { createKeyboard } from "./keyboard.js";
+import { onKeystroke } from "@/composables/typingBus.js";
+import { useTheme } from "@/composables/useTheme.js";
 
 const TILE_PX = 84;
 const TILT_X = 0.38;
@@ -66,6 +69,26 @@ let logoState = "boxed";
 let captured = null;
 let returnStart = 0;
 let dragPointer = null;
+let keyboard = null;
+let stopKeystrokes = null;
+let lastFrameAt = 0;
+const { theme } = useTheme();
+
+function cssVar(name, fallback) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
+function keyboardColors() {
+  return {
+    key: cssVar("--color-bg-button-default", "#1c2b3a"),
+    accent: cssVar("--color-accent-variable", "#43d9ad"),
+    case: cssVar("--color-border-white", "#1e2d3d"),
+    screen: cssVar("--color-bg-field-default", "#011221"),
+    text: cssVar("--color-white-gradient-01", "#e5e9f0"),
+  };
+}
+
+watch(theme, () => requestAnimationFrame(() => keyboard?.setColors(keyboardColors())));
 
 const _top = new Vector3();
 const _corner = new Vector3();
@@ -116,6 +139,9 @@ function init() {
   box = createCardboardBox();
   for (let i = 0; i < box.stampCount; i++) stampLevels.push(0);
   scene.add(box.group);
+  keyboard = createKeyboard(keyboardColors());
+  scene.add(keyboard.group);
+  stopKeystrokes = onKeystroke((key) => keyboard.external(key, performance.now() / 1000));
   resize();
 }
 
@@ -132,6 +158,7 @@ function layoutPoses(m, vw, vh) {
   const skySize = clamp((heroPanel.top - 40) / 0.9, 70, 130);
   return {
     sky: { x: heroPanel.left + heroPanel.width * 0.72, y: heroPanel.top - 24, size: skySize },
+    keyboard: { x: heroPanel.left - clamp(heroPanel.left * 0.36, 260, 380), y: heroPanel.top - 30, width: clamp(heroPanel.width * 0.5, 260, 360) },
     start: { x: dock.left + small * 0.7, y: lane, size: small },
     laneEnd: { x: slot.left + slot.width / 2, y: lane, size: small },
     stack: { x: slot.left + slot.width / 2, y: slot.bottom - 6, size: big },
@@ -438,6 +465,15 @@ function tick(now) {
   updateStamps(frame, s, m);
   stampLevels.forEach((level, i) => box.setStamp(i, level));
   placeBox(t);
+  keyboard.update({
+    ...poses.keyboard,
+    vw: window.innerWidth,
+    vh: window.innerHeight,
+    time: t,
+    dt: Math.min(0.05, t - lastFrameAt),
+    scatter: frame.drop ?? 1,
+  });
+  lastFrameAt = t;
   trackDrop(frame.drop ?? 1);
   updateLogos(s, m, frame, now);
 
@@ -485,6 +521,8 @@ onUnmounted(() => {
   window.removeEventListener("pointercancel", onPointerUp);
   physics?.dispose();
   box?.dispose();
+  stopKeystrokes?.();
+  keyboard?.dispose();
   renderer?.dispose();
   contactRevealed.value = true;
 });

@@ -13,7 +13,15 @@
         </li>
       </ul>
 
-      <p class="text-xs text-gray-gradient-01">© {{ year }} Abhiram Krishna M · <span class="text-accent-variable">$</span> exit 0</p>
+      <div class="flex flex-col gap-1 text-xs text-gray-gradient-01">
+        <p>© {{ year }} Abhiram Krishna M · <span class="text-accent-variable">$</span> exit 0</p>
+        <p>
+          keyboard model by
+          <a href="https://blendswap.com/blend/28909" target="_blank" rel="noopener noreferrer" class="hover:text-accent-url"
+            data-cursor="model credit">Benbop</a>
+          (CC-BY)
+        </p>
+      </div>
     </div>
   </footer>
 </template>
