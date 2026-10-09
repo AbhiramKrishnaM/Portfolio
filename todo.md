@@ -111,10 +111,10 @@
 - [x] Lazy-load the physics engine so it doesn't slow the landing page
 
 ## 15. Day/night mode from local time
-- [ ] Read the visitor's local time
-- [ ] Define looks for dawn / day / dusk / night (grid color, glow, background)
-- [ ] Blend smoothly between them
-- [ ] Theme toggle still overrides it manually
+- [x] Read the visitor's local time
+- [x] Define looks for dawn / day / dusk / night (grid color, glow, background)
+- [x] Blend smoothly between them
+- [x] Theme toggle still overrides it manually
 
 ## 16. Remove code comments
 - [x] Remove comments from all files in `src/`

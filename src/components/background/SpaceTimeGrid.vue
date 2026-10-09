@@ -30,6 +30,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { useTheme } from "@/composables/useTheme.js";
+import { useDayPhase } from "@/composables/dayPhase.js";
 import { story, progressBetween, prefersReducedMotion } from "@/composables/storyline.js";
 import CONTRIBUTIONS from "@/data/contributions.json";
 
@@ -39,7 +40,6 @@ const canvasRef = ref(null);
 let renderer, scene, camera, group, mesh, raycaster, animFrameId, gridUniforms;
 
 const THEME_COLORS = {
-  dark: { base: 0x0c1f33, hover: 0x43d9ad, fog: 0x011627, fresnel: 0xbfe9ff },
   light: { base: 0xc7d4de, hover: 0x4049b0, fog: 0xeff4f8, fresnel: 0xd7e6f5 },
 };
 
@@ -47,15 +47,18 @@ const baseColor = new Color();
 const hoverColor = new Color();
 const tmpColor = new Color();
 
+const { palette } = useDayPhase();
+
 function applyThemeColors() {
-  const c = THEME_COLORS[theme.value] ?? THEME_COLORS.dark;
+  const p = palette.value;
+  const c = theme.value === "light" ? THEME_COLORS.light : { base: p.base, hover: p.hover, fog: p.bg, fresnel: p.fresnel };
   baseColor.set(c.base);
   hoverColor.set(c.hover);
   if (scene?.fog) scene.fog.color.set(c.fog);
   if (gridUniforms) gridUniforms.uFresnelColor.value.set(c.fresnel);
 }
 
-watch(theme, applyThemeColors);
+watch([theme, palette], applyThemeColors);
 
 const COLS = 64;
 const ROWS = 60;

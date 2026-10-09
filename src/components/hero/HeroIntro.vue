@@ -27,6 +27,7 @@
       </Transition>
 
       <ul class="text-gray-gradient-01 font-normal flex flex-col items-center lg:items-start">
+        <li class="text-accent-variable">// {{ greeting }} — it's {{ phaseLabel }} where you are.</li>
         <li>// open the terminal and explore.</li>
         <li>// type /game to play a mini-game.</li>
       </ul>
@@ -45,6 +46,7 @@ import { ref, computed, defineAsyncComponent } from "vue";
 import HackingText from "@/components/hero/HackingText.vue";
 import { useMediaQuery } from "@/composables/useMediaQuery.js";
 import { useWhenIdle } from "@/composables/useWhenIdle.js";
+import { useDayPhase } from "@/composables/dayPhase.js";
 import { useTheme } from "@/composables/useTheme.js";
 import { downloadResume } from "@/composables/contactActions.js";
 
@@ -56,6 +58,8 @@ defineProps({
 });
 
 const { theme, toggleTheme } = useTheme();
+const { palette, greeting } = useDayPhase();
+const phaseLabel = computed(() => (palette.value.phase === "day" ? "daytime" : palette.value.phase === "night" ? "night" : palette.value.phase));
 
 const GlassName = defineAsyncComponent(() => import("@/components/hero/GlassName.vue"));
 const nameRef = ref(null);
