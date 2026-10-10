@@ -14,7 +14,7 @@
         <div class="flex items-center gap-2 px-4 py-3 border-b border-border-white">
           <span class="text-accent-variable text-sm select-none">$</span>
           <input ref="inputRef" v-model="query" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
-            placeholder="search commands…" role="combobox" aria-expanded="true" aria-controls="palette-list"
+            placeholder="search commands…" aria-label="Search commands" role="combobox" aria-expanded="true" aria-controls="palette-list"
             aria-autocomplete="list" :aria-activedescendant="activeItem ? `palette-item-${activeItem.id}` : undefined"
             class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable placeholder:text-gray-gradient-01"
             @keydown="onKeydown" />

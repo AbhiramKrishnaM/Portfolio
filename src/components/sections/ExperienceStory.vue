@@ -42,7 +42,7 @@
           </ul>
         </article>
 
-        <nav class="mt-10 flex items-center gap-2" aria-label="Experience chapters">
+        <nav class="mt-10 flex items-center" aria-label="Experience chapters">
           <button v-for="(item, i) in JOURNEY" :key="item.id" type="button" class="journey-dot"
             :class="{ 'journey-dot--active': i === chapterIndex, 'journey-dot--done': i < chapterIndex }"
             :aria-label="`Go to ${item.title}`" :data-cursor="item.title" @click="goToChapter(i)" />
@@ -117,7 +117,12 @@ function applyTheme() {
 function scrollProgress() {
   const rect = sectionRef.value.getBoundingClientRect();
   const range = rect.height - window.innerHeight;
-  return { p: range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0, onScreen: rect.top < window.innerHeight && rect.bottom > 0 };
+  const vh = window.innerHeight;
+  return {
+    p: range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0,
+    onScreen: rect.top < vh && rect.bottom > 0,
+    nearScreen: rect.top < vh * 3 && rect.bottom > -vh,
+  };
 }
 
 function placeLabels() {
@@ -173,12 +178,12 @@ function publishHandoff() {
 
 function tick(now) {
   frameId = requestAnimationFrame(tick);
-  const { p, onScreen } = scrollProgress();
+  const { p, onScreen, nearScreen } = scrollProgress();
   smoothP += (p - smoothP) * PROGRESS_EASE;
   if (Math.abs(p - smoothP) < 1e-4) smoothP = p;
   const index = timeline.chapterIndexAt(smoothP);
   if (index !== chapterIndex.value) chapterIndex.value = index;
-  publishHandoff();
+  if (nearScreen) publishHandoff();
   if (!onScreen || !holo) return;
   holo.update(smoothP, now / 1000);
   const textAlpha = holo.textAlphaAt(smoothP);
@@ -363,20 +368,30 @@ onUnmounted(() => {
 }
 
 .journey-dot {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.journey-dot::before {
+  content: "";
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 9999px;
   border: 1px solid var(--color-accent-variable);
-  background: transparent;
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-.journey-dot--done {
+.journey-dot--done::before {
   background-color: var(--color-accent-variable);
   opacity: 0.45;
 }
 
-.journey-dot--active {
+.journey-dot--active::before {
   width: 1.6rem;
   background-color: var(--color-accent-variable);
 }

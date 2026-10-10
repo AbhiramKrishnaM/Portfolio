@@ -22,7 +22,7 @@ Dark is the default and the primary design target; light is a real second theme 
 | `--color-accent-underline` | `#fea55f` | `#a85519` | Underlines / tertiary accent |
 | `--color-border-white` | `#1e2d3d` | `#d7e0e7` | Hairline borders |
 | `--color-white-gradient-01` | `#e5e9f0` | `#011627` | Primary text (the two themes swap brand-navy between bg and ink) |
-| `--color-gray-gradient-01` | `#607b96` | `#52697d` | Secondary text |
+| `--color-gray-gradient-01` | `#7890aa` | `#52697d` | Secondary text (lightened from `#607b96` so it clears 4.5:1 on every day/night background) |
 | `--color-bg-field-default` | `#011221` | `#ffffff` | Form field background |
 | `--color-bg-button-default` | `#1c2b3a` | `#4049b0` | Primary button background |
 

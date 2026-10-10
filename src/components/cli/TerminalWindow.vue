@@ -17,7 +17,7 @@
         <div v-if="!booting && !overlay">
           <div class="flex items-center gap-2 mt-1">
             <span class="text-accent-variable text-sm select-none">$</span>
-            <input ref="inputRef" v-model="inputValue" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+            <input ref="inputRef" v-model="inputValue" type="text" aria-label="Terminal command input" autocomplete="off" autocorrect="off" spellcheck="false"
               class="flex-1 bg-transparent outline-none text-white-gradient-01 text-sm caret-accent-variable"
               @keydown="handleKeydown" />
           </div>

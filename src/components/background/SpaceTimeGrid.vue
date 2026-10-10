@@ -113,12 +113,40 @@ const waveField = Array.from({ length: WAVE_OCTAVES }, () => {
 });
 const waveWeightSum = waveField.reduce((sum, w) => sum + w.weight, 0);
 
-function waveHeight(x, y, t) {
-  let h = 0;
-  for (const w of waveField) {
-    h += Math.sin((x * w.dx + y * w.dy) * w.freq + t * w.speed + w.phase) * w.weight;
+const WAVE_SCALE = WAVE_AMPLITUDE / waveWeightSum;
+const waveSinT = new Float32Array(WAVE_OCTAVES);
+const waveCosT = new Float32Array(WAVE_OCTAVES);
+let cellWaveSin = null;
+let cellWaveCos = null;
+
+function precomputeWaves(count) {
+  cellWaveSin = new Float32Array(count * WAVE_OCTAVES);
+  cellWaveCos = new Float32Array(count * WAVE_OCTAVES);
+  for (let i = 0; i < count; i++) {
+    const x = cellCenters[i * 2];
+    const y = cellCenters[i * 2 + 1];
+    waveField.forEach((w, o) => {
+      const a = (x * w.dx + y * w.dy) * w.freq + w.phase;
+      cellWaveSin[i * WAVE_OCTAVES + o] = Math.sin(a) * w.weight;
+      cellWaveCos[i * WAVE_OCTAVES + o] = Math.cos(a) * w.weight;
+    });
   }
-  return (h / waveWeightSum) * WAVE_AMPLITUDE;
+}
+
+function prepareWaveFrame(t) {
+  waveField.forEach((w, o) => {
+    waveSinT[o] = Math.sin(t * w.speed);
+    waveCosT[o] = Math.cos(t * w.speed);
+  });
+}
+
+function waveHeightAt(i) {
+  const base = i * WAVE_OCTAVES;
+  let h = 0;
+  for (let o = 0; o < WAVE_OCTAVES; o++) {
+    h += cellWaveSin[base + o] * waveCosT[o] + cellWaveCos[base + o] * waveSinT[o];
+  }
+  return h * WAVE_SCALE;
 }
 
 const MAX_WAVES = 6;
@@ -253,6 +281,7 @@ function buildGrid() {
   }
   mesh.instanceMatrix.needsUpdate = true;
   mesh.instanceColor.needsUpdate = true;
+  precomputeWaves(count);
 
   group.add(mesh);
 }
@@ -611,6 +640,7 @@ function startLoop() {
 
     const count = COLS * ROWS;
     const contrib = contributionStrength(window.scrollY);
+    prepareWaveFrame(t);
     for (let i = 0; i < count; i++) {
       const cx = cellCenters[i * 2];
       const cy = cellCenters[i * 2 + 1];
@@ -625,7 +655,7 @@ function startLoop() {
 
       well[i] += (target - well[i]) * WELL_EASE;
       const l = Math.min(1, well[i] / WELL_DEPTH);
-      const wave = waveHeight(cx, cy, t);
+      const wave = waveHeightAt(i);
 
       let ring = 0;
       for (let w = 0; w < activeWaves.length; w++) {
