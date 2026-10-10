@@ -2,7 +2,7 @@ export const EXPERIENCE = [
   {
     company: "Discern Security",
     role: "Fullstack Engineer",
-    dates: "present",
+    dates: "Jun 2023 – present",
     current: true,
     points: [
       "Bringing several cybersecurity products together into one platform",
@@ -13,7 +13,7 @@ export const EXPERIENCE = [
   {
     company: "IOCOD Infotech",
     role: "Frontend Engineer",
-    dates: "1 yr 4 mos",
+    dates: "Feb 2022 – May 2023",
     current: false,
     points: [
       "Core member of the merchant marketplace that funds startups and small businesses",

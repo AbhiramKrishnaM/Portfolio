@@ -140,13 +140,14 @@
 
 ## 19. Experience section
 - [x] Experience data: company, role, duration, impact points (in `src/data/experience.js`)
-- [ ] **[Abhiram to provide]** Exact start/end months for each job (only durations so far)
+- [x] Exact months for Discern + IOCOD (from resume)
+- [ ] **[Abhiram to provide]** Exact start/end months for Neolen + Caprimul (only durations so far)
 - [x] Build a timeline-style section on the page
 - [x] Add an `experience` terminal command that prints the same data
 - [x] Add it to the navbar and `help`
 
 ## 20. About section
-- [ ] **[Abhiram to provide]** Short About story: background, what I care about, a bit of personality (guitar!)
+- [x] Short About story: background, what I care about, a bit of personality (guitar!)
 - [x] Add an About section on the page
 - [x] Expand `whoami` or add `cat about.txt` in the terminal
 - [x] Add it to the navbar
