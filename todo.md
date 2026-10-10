@@ -57,3 +57,15 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] README with a live demo, install + usage examples, and screenshots
 - [ ] Bundle (ESM + types), set `three` as a peer dependency, add a demo page, publish to npm
 - [ ] Use the published package back in this portfolio
+
+## 11. Publish the spacetime grid as an npm package
+- [ ] Pick a name and check it's free on npm (e.g. `spacetime-grid`)
+- [ ] Extract the grid out of `SpaceTimeGrid.vue` into a standalone three.js module (no Vue, no portfolio-specific scroll/story code)
+- [ ] Keep the core effects: idle waves, cursor gravity well, click ripples, fog, theme colours
+- [ ] Make the extras opt-in plugins/hooks: camera poses per section, extra wells (e.g. a moving element), impulses, data overlays (like the contribution bars from task 10)
+- [ ] Options: grid size/density, colours, wave strength, well radius/depth, ripple speed, pixel ratio cap, reduced-motion fallback
+- [ ] Keep the per-tile tick fast (precomputed sin/cos, no allocations) and pause when off-screen
+- [ ] Framework-agnostic core + thin wrappers (Vue, React, Web Component)
+- [ ] README with a live demo, usage examples, screenshots
+- [ ] Bundle (ESM + types), `three` as a peer dependency, publish to npm
+- [ ] Use the published package back in this portfolio
