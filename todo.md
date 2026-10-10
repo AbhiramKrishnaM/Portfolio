@@ -39,3 +39,9 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] **[Abhiram to provide]** Create a Spotify developer app (I'll walk you through it)
 - [ ] Small Vercel serverless function that holds the token and returns the current track
 - [ ] Show it in the `now` command
+
+## 9. Keyboard → character formation fixes (Stack)
+- [ ] Many characters form wrong or incomplete (e.g. `?` missing its top-left keys while the screen shows `?`) — find why some keys never reach their cell and fix it
+- [ ] Every glyph (`# @ 1 2 3 4 5 $ & % * ? !`) should read clearly; check each one
+- [ ] Make the formation smaller
+- [ ] Re-check it stays clear of the "Stack" heading and the box
