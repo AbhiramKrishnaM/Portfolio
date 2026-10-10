@@ -45,3 +45,15 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] Every glyph (`# @ 1 2 3 4 5 $ & % * ? !`) should read clearly; check each one
 - [ ] Make the formation smaller
 - [ ] Re-check it stays clear of the "Stack" heading and the box
+
+## 10. Publish the GitHub contributions skyline as an npm package
+- [ ] Pick a name and check it's free on npm (e.g. `contribution-skyline`)
+- [ ] Extract the 3D bars + twinkle + burst particles out of `SpaceTimeGrid` into a standalone three.js module
+- [ ] Keep the flat calendar (`ContributionCalendar.vue`) as the lightweight 2D option
+- [ ] Input: a GitHub **username** — fetch public contributions with no token by default; optional GitHub token only for private contributions
+- [ ] Never ship a token to the browser — document a tiny server/serverless helper (or build-time script like `scripts/fetch-contributions.mjs`) for fetching
+- [ ] Framework-agnostic core + thin wrappers (Vue component, React component, Web Component)
+- [ ] Options: colours/theme, bar height scale, twinkle on/off, bursts on/off, reduced-motion fallback
+- [ ] README with a live demo, install + usage examples, and screenshots
+- [ ] Bundle (ESM + types), set `three` as a peer dependency, add a demo page, publish to npm
+- [ ] Use the published package back in this portfolio
