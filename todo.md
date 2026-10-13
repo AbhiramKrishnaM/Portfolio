@@ -69,3 +69,13 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] README with a live demo, usage examples, screenshots
 - [ ] Bundle (ESM + types), `three` as a peer dependency, publish to npm
 - [ ] Use the published package back in this portfolio
+
+## 12. Docs site for the packages (Astro)
+- [ ] Decide the setup: monorepo (`packages/spacetime-grid`, `packages/contribution-skyline`, `apps/docs`) vs a separate docs repo
+- [ ] Scaffold Astro with the Starlight docs theme (sidebar, search, dark mode, MDX)
+- [ ] Match the portfolio look: Fira Code, the dark theme tokens from `DESIGN.md`
+- [ ] Per package: overview, install, quick start, framework guides (Vue / React / Web Component)
+- [ ] Props/options reference table for every parameter (type, default, description)
+- [ ] Live playground per component: interactive demo with controls to tweak props in real time, plus a copy-paste code snippet
+- [ ] Customization recipes: colours/theme, performance tuning, reduced motion, combining the grid + skyline
+- [ ] Deploy on Vercel at a subdomain (e.g. `docs.abhiramkrishna.com`) and link it from the portfolio + both npm READMEs
