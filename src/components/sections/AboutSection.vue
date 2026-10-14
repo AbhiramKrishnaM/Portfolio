@@ -13,9 +13,12 @@
         </div>
       </article>
 
-      <pre class="terminal-panel p-5 sm:p-6 text-sm leading-relaxed whitespace-pre-wrap"><span class="text-accent-sub">const</span> <span class="text-accent-variable">abhiram</span> <span class="text-white-gradient-01">= {</span>
+      <div class="flex flex-col gap-6">
+        <PhotoParticles />
+        <pre class="terminal-panel p-5 sm:p-6 text-sm leading-relaxed whitespace-pre-wrap"><span class="text-accent-sub">const</span> <span class="text-accent-variable">abhiram</span> <span class="text-white-gradient-01">= {</span>
 <template v-for="fact in facts" :key="fact.key">  <span class="text-accent-underline">{{ fact.key }}</span><span class="text-white-gradient-01">:</span> <span class="text-accent-url">{{ fact.value }}</span><span class="text-white-gradient-01">,</span>
 </template><span class="text-white-gradient-01">};</span></pre>
+      </div>
     </div>
     <ContributionCalendar class="mt-8" />
   </PageSection>
@@ -24,6 +27,7 @@
 <script setup>
 import PageSection from "@/components/sections/PageSection.vue";
 import ContributionCalendar from "@/components/about/ContributionCalendar.vue";
+import PhotoParticles from "@/components/about/PhotoParticles.vue";
 import { ABOUT_PARAGRAPHS, OFF_SCREEN } from "@/data/about.js";
 import { WHOAMI } from "@/data/profile.js";
 

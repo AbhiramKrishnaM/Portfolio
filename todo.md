@@ -30,10 +30,10 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] Keep it calm — no pixel/dither noise over the grid
 
 ## 7. Photo particles in About (was #27)
-- [ ] Reference: https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/
-- [ ] **[Abhiram to provide]** iPhone photo: plain or dark background, good light, head + shoulders, roughly square
-- [ ] Turn the photo into particles that scatter under the cursor and re-form
-- [ ] Lazy-load when About scrolls in; plain photo on mobile / no WebGL
+- [x] Reference: https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/
+- [x] **[Abhiram to provide]** iPhone photo: plain or dark background, good light, head + shoulders, roughly square
+- [x] Turn the photo into particles that scatter under the cursor and re-form
+- [x] Lazy-load when About scrolls in; plain photo on mobile / no WebGL
 
 ## 8. Spotify "now playing" (was #8)
 - [ ] **[Abhiram to provide]** Create a Spotify developer app (I'll walk you through it)
