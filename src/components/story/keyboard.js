@@ -275,7 +275,7 @@ export function createKeyboard(colors) {
   let slots = null;
 
   function assignSlots(center, cell) {
-    const cells = glyphCells(glyph).map(([cx, cy]) => ({ x: center.x + cx * cell, y: center.y + cy * cell }));
+    const cells = glyphCells(glyph).map(([cx, cy]) => ({ x: center.x + cx * cell, y: center.y - cy * cell }));
     const crew = units.slice(0, MAX_CELLS);
     const free = new Set(crew.keys());
     const next = new Array(crew.length).fill(null);

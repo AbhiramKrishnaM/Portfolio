@@ -41,10 +41,10 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] Show it in the `now` command
 
 ## 9. Keyboard → character formation fixes (Stack)
-- [ ] Many characters form wrong or incomplete (e.g. `?` missing its top-left keys while the screen shows `?`) — find why some keys never reach their cell and fix it
-- [ ] Every glyph (`# @ 1 2 3 4 5 $ & % * ? !`) should read clearly; check each one
-- [ ] Make the formation smaller
-- [ ] Re-check it stays clear of the "Stack" heading and the box
+- [x] Many characters form wrong or incomplete (e.g. `?` missing its top-left keys while the screen shows `?`) — find why some keys never reach their cell and fix it
+- [x] Every glyph (`# @ 1 2 3 4 5 $ & % * ? !`) should read clearly; check each one
+- [x] Make the formation smaller
+- [x] Re-check it stays clear of the "Stack" heading and the box
 
 ## 10. Publish the GitHub contributions skyline as an npm package
 - [ ] Pick a name and check it's free on npm (e.g. `contribution-skyline`)

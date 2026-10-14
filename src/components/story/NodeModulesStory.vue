@@ -241,7 +241,7 @@ function keyboardPose(s, m) {
     width,
     form: s >= m.stackStart && s <= m.pinEnd,
     center: { x: vw * 0.84, y: vh * 0.22 },
-    cell: clamp(vh * 0.032, 24, 34),
+    cell: clamp(vh * 0.024, 18, 26),
   };
 }
 
