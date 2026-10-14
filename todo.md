@@ -40,12 +40,9 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] Small Vercel serverless function that holds the token and returns the current track
 - [ ] Show it in the `now` command
 
-## 9. Keyboard → character formation fixes (Stack)
-- [x] Many characters form wrong or incomplete (e.g. `?` missing its top-left keys while the screen shows `?`) — find why some keys never reach their cell and fix it
-- [x] Every glyph (`# @ 1 2 3 4 5 $ & % * ? !`) should read clearly; check each one
-- [x] Make the formation smaller
-- [x] Re-check it stays clear of the "Stack" heading and the box
-
+## 9. Keyboard → character formation (Stack)
+- [x] Fixed the upside-down glyphs and shrank them, then tried landing them on the grid
+- [x] Decided to remove the character formation entirely — keyboard stays intact in Stack
 ## 10. Publish the GitHub contributions skyline as an npm package
 - [ ] Pick a name and check it's free on npm (e.g. `contribution-skyline`)
 - [ ] Extract the 3D bars + twinkle + burst particles out of `SpaceTimeGrid` into a standalone three.js module

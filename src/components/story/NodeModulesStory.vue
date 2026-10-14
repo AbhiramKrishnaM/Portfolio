@@ -239,9 +239,6 @@ function keyboardPose(s, m) {
     x: lerp(mirror.x, corner.x, pinned),
     y: lerp(mirror.y, corner.y, pinned),
     width,
-    form: s >= m.stackStart && s <= m.pinEnd,
-    center: { x: vw * 0.84, y: vh * 0.22 },
-    cell: clamp(vh * 0.024, 18, 26),
   };
 }
 
