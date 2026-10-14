@@ -7,6 +7,6 @@ export const WHOAMI = [
 export const TAGLINES = ["Fullstack Engineer", "Coding Enthusiast", "Guitarist"];
 
 export const RESUME = {
-  url: null,
+  url: "/Abhiram-Krishna-M-Resume.pdf",
   filename: "Abhiram-Krishna-M-Resume.pdf",
 };

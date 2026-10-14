@@ -18,8 +18,8 @@ Last week's finished work is archived in `docs/archive/todo-2026-10-week1.md`.
 - [ ] Plain image fallback when WebGL isn't available
 
 ## 4. Resume download (was #23)
-- [ ] **[Abhiram to provide]** Corrected PDF: real email (not `mail@abhiram.com`), decide on the phone number
-- [ ] Add it to `public/` and set `RESUME.url` in `src/data/profile.js`
+- [x] Corrected PDF: email fixed to abhiramkrishna.8921@gmail.com, phone number kept (user's call)
+- [x] Add it to `public/` and set `RESUME.url` in `src/data/profile.js`
 
 ## 5. Experience months (was #19)
 - [ ] **[Abhiram to provide]** Exact start/end months for Neolen and Caprimul
